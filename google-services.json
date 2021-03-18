@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "863113852884",
+    "project_id": "fooducate-app",
+    "storage_bucket": "fooducate-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:863113852884:android:68d39608e2cd4528cc8841",
+        "android_client_info": {
+          "package_name": "com.nidhib.fooducate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "863113852884-3tpncgou484dgrgaenl870mtepoen77o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoscpipF6bfWWLxG_Nqgj-JpBM_PsQKJM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "863113852884-3tpncgou484dgrgaenl870mtepoen77o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
