@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 import 'signup_screen.dart';
+import 'home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 //import 'package:firebase_database/firebase_database.dart';//not present
-import 'main.dart';
+import '../main.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'dart:async';
 
 class StartScreen extends StatelessWidget {
   static String id = 'startScreen';

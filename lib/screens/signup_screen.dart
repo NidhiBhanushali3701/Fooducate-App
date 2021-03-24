@@ -5,9 +5,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/services.dart';
 //import 'package:firebase_database/firebase_database.dart';//not present yet
 import 'login_screen.dart';
-import 'main.dart';
+import '../main.dart';
 import 'home_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+//import 'dart:async';
 
 class SignUpScreen extends StatefulWidget {
   static String id = 'signUpScreen';
@@ -19,7 +20,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   //TextEditingController _emailController = TextEditingController();
   bool showSpinner = false;
   final _auth = FirebaseAuth.instance;
-  String _email,_password,_username;
+  String _email, _password, _username;
   @override
   void initState() {
     super.initState();
@@ -28,6 +29,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       setState(() {});
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return ModalProgressHUD(
@@ -102,7 +104,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           //onSaved: (newValue) => _emailController.text = newValue,//commented on 6.11pm 17-3-21
                           onChanged: (value) => _email = value,
                         ),
-                          /*TextFormField(
+                        /*TextFormField(
                           textAlign: TextAlign.center,
                           keyboardType: TextInputType.emailAddress,
                           // ignore: missing_return
@@ -187,23 +189,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           onPressed: () async {
                             /*if (_formKey.currentState.validate()) {
                               registerToFireBase();
-                            }*///commented on 6.11pm 17-3-21
+                            }*/ //commented on 6.11pm 17-3-21
                             setState(() {
                               showSpinner = true;
                             });
-                            try{
+                            try {
                               print(_email);
                               print(_password);
-                              final newUser = await _auth.createUserWithEmailAndPassword(email: _email, password: _password);
-                               //UserCredential user = newUser.user;
-                              if(newUser!=null){
+                              final newUser =
+                                  await _auth.createUserWithEmailAndPassword(
+                                      email: _email, password: _password);
+                              //UserCredential user = newUser.user;
+                              if (newUser != null) {
                                 Navigator.pushNamed(context, HomeScreen.id);
                               }
                               setState(() {
                                 showSpinner = false;
                               });
-                            }
-                            catch(e){
+                            } catch (e) {
                               print(e);
                             }
                           },

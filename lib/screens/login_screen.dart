@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:fooducate/home_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 //import 'package:firebase_database/firebase_database.dart';//not present yet
 import 'signup_screen.dart';
-import 'main.dart';
+import '../main.dart';
+import 'home_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+//import 'dart:async';
 
 class LogInScreen extends StatefulWidget {
   static String id = 'logInScreen';
@@ -17,7 +18,7 @@ class LogInScreen extends StatefulWidget {
 class _LogInScreenState extends State<LogInScreen> {
   bool showSpinner = false;
   final _auth = FirebaseAuth.instance;
-  String _email,_password;
+  String _email, _password;
   @override
   Widget build(BuildContext context) {
     return ModalProgressHUD(
@@ -67,7 +68,8 @@ class _LogInScreenState extends State<LogInScreen> {
                                   borderSide: BorderSide(color: Colors.purple)),
                               labelText: 'Email',
                               labelStyle: TextStyle(color: Colors.purple),
-                              hintText: 'Enter valid email id as abc@gmail.com'),
+                              hintText:
+                                  'Enter valid email id as abc@gmail.com'),
                           onChanged: (value) => _email = value,
                         ),
                       ),
@@ -110,16 +112,16 @@ class _LogInScreenState extends State<LogInScreen> {
                               showSpinner = true;
                             });
                             try {
-                              final cUser = await _auth
-                                  .signInWithEmailAndPassword(
-                                  email: _email, password: _password);
-                              if(cUser!=null){
+                              final cUser =
+                                  await _auth.signInWithEmailAndPassword(
+                                      email: _email, password: _password);
+                              if (cUser != null) {
                                 Navigator.pushNamed(context, HomeScreen.id);
                               }
                               setState(() {
                                 showSpinner = false;
                               });
-                            }catch(e){
+                            } catch (e) {
                               print(e);
                             }
                           },
