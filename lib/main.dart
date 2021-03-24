@@ -1,19 +1,22 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:fooducate/home_screen.dart';
-import 'package:fooducate/user_data_input.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'start_screen.dart';
-import 'login_screen.dart';
-import 'signup_screen.dart';
-import 'home_screen.dart';
+
 import 'user_data_input.dart';
+
+import 'package:google_sign_in/google_sign_in.dart';
+import 'screens/start_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/signup_screen.dart';
+import 'screens/home_screen.dart';
+
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+//import 'dart:async';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,

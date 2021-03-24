@@ -5,8 +5,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 //import 'package:firebase_database/firebase_database.dart';//not present yet
 import 'signup_screen.dart';
 import 'login_screen.dart';
-import 'main.dart';
+import 'start_screen.dart';
+import '../main.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+//import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
   static String id = 'homeScreen';
@@ -75,6 +77,22 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           )),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_rounded),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.search),
+              label: 'option 2',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle_rounded),
+              label: 'Me',
+            ),
+          ],
         ),
       ),
     );
