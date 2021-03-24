@@ -20,6 +20,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   //TextEditingController _emailController = TextEditingController();
   bool showSpinner = false;
   final _auth = FirebaseAuth.instance;
+  User _user = FirebaseAuth.instance.currentUser;
   String _email, _password, _username;
   @override
   void initState() {

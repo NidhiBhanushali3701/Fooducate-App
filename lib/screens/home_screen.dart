@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fooducate/user_data_input.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 //import 'package:firebase_database/firebase_database.dart';//not present yet
 import 'signup_screen.dart';
@@ -24,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     getCurrentUser();
+    verifyUserEmail();
   }
 
   void getCurrentUser() async {
@@ -32,6 +34,18 @@ class _HomeScreenState extends State<HomeScreen> {
       if (user != null) {
         //currentUser = user;
         print(user.email);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void verifyUserEmail() async {
+    try {
+      final user = await _auth.currentUser;
+      if (!user.emailVerified) {
+        await user.sendEmailVerification();
+        print('verification mail sent');
       }
     } catch (e) {
       print(e);
@@ -79,18 +93,24 @@ class _HomeScreenState extends State<HomeScreen> {
           )),
         ),
         bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
+          items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home_rounded),
+              icon: Icon(Icons.home_rounded, color: Colors.purple),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.search),
-              label: 'option 2',
+              icon: Icon(Icons.search, color: Colors.purple),
+              label: 'search',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle_rounded),
               label: 'Me',
+              icon: IconButton(
+                icon: Icon(Icons.account_circle_rounded,
+                    color: Colors.purple), //Icon(Icons.account_circle_rounded)
+                onPressed: () {
+                  Navigator.pushNamed(context, UserData.id);
+                },
+              ),
             ),
           ],
         ),

@@ -6,6 +6,9 @@ import 'screens/login_screen.dart';
 import 'screens/signup_screen.dart';
 import 'screens/home_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'user_data_input.dart';
+import 'package:fooducate/user_data_input.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 //import 'dart:async';
 
 void main() async {
@@ -15,6 +18,7 @@ void main() async {
     theme: ThemeData(
       visualDensity: VisualDensity.adaptivePlatformDensity,
     ),
+    //initialRoute: StartScreen.id,
     initialRoute: StartScreen.id,
     routes: {
       StartScreen.id: (context) {
@@ -26,8 +30,11 @@ void main() async {
       SignUpScreen.id: (context) {
         return SignUpScreen();
       },
-      HomeScreen.id : (context) {
+      HomeScreen.id: (context) {
         return HomeScreen();
+      },
+      UserData.id: (context) {
+        return UserData();
       }
     },
   ));
