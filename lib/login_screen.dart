@@ -17,7 +17,7 @@ class LogInScreen extends StatefulWidget {
 class _LogInScreenState extends State<LogInScreen> {
   bool showSpinner = false;
   final _auth = FirebaseAuth.instance;
-  String _email,_password;
+  String _email, _password;
   @override
   Widget build(BuildContext context) {
     return ModalProgressHUD(
@@ -67,7 +67,8 @@ class _LogInScreenState extends State<LogInScreen> {
                                   borderSide: BorderSide(color: Colors.purple)),
                               labelText: 'Email',
                               labelStyle: TextStyle(color: Colors.purple),
-                              hintText: 'Enter valid email id as abc@gmail.com'),
+                              hintText:
+                                  'Enter valid email id as abc@gmail.com'),
                           onChanged: (value) => _email = value,
                         ),
                       ),
@@ -102,6 +103,7 @@ class _LogInScreenState extends State<LogInScreen> {
                         decoration: BoxDecoration(
                             color: Colors.purple,
                             borderRadius: BorderRadius.circular(20)),
+                        // ignore: deprecated_member_use
                         child: FlatButton(
                           onPressed: () async {
                             // Navigator.push(
@@ -110,16 +112,16 @@ class _LogInScreenState extends State<LogInScreen> {
                               showSpinner = true;
                             });
                             try {
-                              final cUser = await _auth
-                                  .signInWithEmailAndPassword(
-                                  email: _email, password: _password);
-                              if(cUser!=null){
+                              final cUser =
+                                  await _auth.signInWithEmailAndPassword(
+                                      email: _email, password: _password);
+                              if (cUser != null) {
                                 Navigator.pushNamed(context, HomeScreen.id);
                               }
                               setState(() {
                                 showSpinner = false;
                               });
-                            }catch(e){
+                            } catch (e) {
                               print(e);
                             }
                           },
