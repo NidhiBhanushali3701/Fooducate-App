@@ -9,7 +9,7 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'user_data_input.dart';
 import 'package:fooducate/user_data_input.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-//import 'dart:async';
+import 'dart:async';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

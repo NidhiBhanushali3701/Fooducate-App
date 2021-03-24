@@ -8,7 +8,7 @@ import 'login_screen.dart';
 import '../main.dart';
 import 'home_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-//import 'dart:async';
+import 'dart:async';
 
 class SignUpScreen extends StatefulWidget {
   static String id = 'signUpScreen';
