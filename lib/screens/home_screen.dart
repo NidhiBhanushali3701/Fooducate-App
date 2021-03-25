@@ -175,7 +175,11 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: IconButton(
                 icon: Icon(Icons.home_rounded,
                     color: Colors.purple), //Icon(Icons.account_circle_rounded)
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {
+                    updateUserHealth();
+                  });
+                },
               ),
             ),
             BottomNavigationBarItem(
