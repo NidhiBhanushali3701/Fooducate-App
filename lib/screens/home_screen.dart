@@ -93,65 +93,72 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: SafeArea(
           child: Container(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Image(
-                image: AssetImage('images/start_img.png'),
-              ),
-              Container(
-                height: 200.0,
-                width: 200.0,
-                margin: EdgeInsets.all(20.0),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey,
-                        offset: Offset(1.0, 1.0),
-                        blurRadius: 2.0,
-                      )
-                    ]),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "CALORIES: ",
-                          style: klabelTextStyle.copyWith(color: Colors.purple),
-                        ),
-                        Text(
-                          //Update the actual Calories value here
-                          cAppUser.getCalorieIn().toString(),
-                          style: klabelTextStyle.copyWith(color: Colors.purple),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "BMI: ",
-                          style: klabelTextStyle.copyWith(color: Colors.purple),
-                        ),
-                        Text(
-                          //update the actual BMI values here
-                          cAppUser.getBMI().toString(),
-                          style: klabelTextStyle.copyWith(color: Colors.purple),
-                        ),
-                      ],
-                    ),
-                  ],
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Image(
+                  image: AssetImage('images/start_img.png'),
                 ),
-              )
-            ],
-          )),
+                //TODO: Card added for displaying bmi and calories
+                Container(
+                  height: 200.0,
+                  width: 200.0,
+                  margin: EdgeInsets.all(20.0),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey,
+                          offset: Offset(1.0, 1.0),
+                          blurRadius: 2.0,
+                        )
+                      ]),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "CALORIES: ",
+                            style:
+                                klabelTextStyle.copyWith(color: Colors.purple),
+                          ),
+                          Text(
+                            //TODO: Update the actual Calories value here
+                            cAppUser.getCalorieIn().toString(),
+                            style:
+                                klabelTextStyle.copyWith(color: Colors.purple),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "BMI: ",
+                            style:
+                                klabelTextStyle.copyWith(color: Colors.purple),
+                          ),
+                          Text(
+                            //TODO: update the actual BMI values here
+                            cAppUser.getBMI().toString(),
+                            style:
+                                klabelTextStyle.copyWith(color: Colors.purple),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+          //TODO: ending of container
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: <BottomNavigationBarItem>[
