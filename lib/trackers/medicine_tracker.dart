@@ -1,3 +1,3 @@
 import '../tracker.dart';
 
-class MedicineTracker extends Tracker {}
+class MedicineTracker with Tracker {}

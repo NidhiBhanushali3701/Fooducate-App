@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fooducate/app_user.dart';
-import 'package:fooducate/constants.dart';
+
+import 'package:fooducate/trackers/step_tracker.dart';
+
 import 'package:fooducate/user_data_input.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 //import 'package:firebase_database/firebase_database.dart';//not present yet
@@ -11,6 +13,7 @@ import 'login_screen.dart';
 import 'start_screen.dart';
 import '../main.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:fooducate/constants.dart';
 
 import 'dart:async';
 
@@ -161,11 +164,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             BottomNavigationBarItem(
-              label: 'search',
+              label: 'Steps',
               icon: IconButton(
-                icon: Icon(Icons.search,
+                icon: Icon(Icons.directions_walk_rounded,
                     color: Colors.purple), //Icon(Icons.account_circle_rounded)
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, StepTracker.id);
+                },
               ),
             ),
             BottomNavigationBarItem(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fooducate/trackers/step_tracker.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'screens/start_screen.dart';
 import 'screens/login_screen.dart';
@@ -11,7 +12,7 @@ import 'package:fooducate/user_data_input.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import 'package:fooducate/app_user.dart';
-
+import 'trackers/step_tracker.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -36,7 +37,10 @@ void main() async {
       },
       UserData.id: (context) {
         return UserData();
-      }
+      },
+      StepTracker.id: (context) {
+        return StepTracker();
+      },
     },
   ));
 }

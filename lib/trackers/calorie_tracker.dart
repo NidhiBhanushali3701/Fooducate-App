@@ -1,3 +1,3 @@
 import '../tracker.dart';
 
-class CalorieTracker extends Tracker {}
+class CalorieTracker with Tracker {}
