@@ -95,18 +95,25 @@ class _HomeScreenState extends State<HomeScreen> {
         bottomNavigationBar: BottomNavigationBar(
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home_rounded, color: Colors.purple),
               label: 'Home',
+              icon: IconButton(
+                icon: Icon(Icons.home_rounded,
+                    color: Colors.purple), //Icon(Icons.account_circle_rounded)
+                onPressed: () {},
+              ),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.search, color: Colors.purple),
               label: 'search',
+              icon: IconButton(
+                icon: Icon(Icons.search,
+                    color: Colors.purple), //Icon(Icons.account_circle_rounded)
+                onPressed: () {},
+              ),
             ),
             BottomNavigationBarItem(
               label: 'Me',
               icon: IconButton(
-                icon: Icon(Icons.account_circle_rounded,
-                    color: Colors.purple), //Icon(Icons.account_circle_rounded)
+                icon: Icon(Icons.account_circle_rounded, color: Colors.purple),
                 onPressed: () {
                   Navigator.pushNamed(context, UserData.id);
                 },
