@@ -1,7 +1,7 @@
 import '../tracker.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'package:pedometer/pedometer.dart';
+import 'dart:async';
 
 class StepTracker extends StatefulWidget {
   static String id = 'StepTracker';
