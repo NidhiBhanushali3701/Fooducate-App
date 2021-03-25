@@ -197,7 +197,11 @@ class _UserDataState extends State<UserData> {
                   height: height, age: age, weight: weight, cUser: cAppUser);
               cBrain.calculateBMI();
               cBrain.calculateCalories();
-              Navigator.pushNamed(context, HomeScreen.id);
+              setState(() {
+
+              });
+              Navigator.of(context).pop();
+              //Navigator.pushNamed(context, HomeScreen.id,arguments: {'CurrentAppUserData': cAppUser});
             },
             buttonTitle: "CALCULATE",
           )

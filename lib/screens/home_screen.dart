@@ -25,11 +25,16 @@ class _HomeScreenState extends State<HomeScreen> {
   final _auth = FirebaseAuth.instance;
   bool showSpinner = false;
   AppUser cAppUser = AppUser();
+  String sBMI = ' ', sCalorie = ' ';
+
   @override
   void initState() {
     super.initState();
     getCurrentUser();
     verifyUserEmail();
+    if (sBMI == null || sCalorie == null) {
+      updateUserHealth();
+    }
   }
 
   void getCurrentUser() async {
@@ -55,6 +60,11 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (e) {
       print(e);
     }
+  }
+
+  void updateUserHealth() {
+    sBMI = cAppUser.getBMI().toString();
+    sCalorie = cAppUser.getCalorieIn().toString();
   }
 
   @override
@@ -97,8 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     image: AssetImage('images/start_img.png'),
                   ),
                 ),
-                //TODO: Card added for displaying bmi and calories
-               Expanded(
+                Expanded(
                   child: Container(
                     height: 200.0,
                     width: 200.0,
@@ -121,33 +130,33 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Text(
                               "CALORIES: ",
-                              style:
-                                  klabelTextStyle.copyWith(color: Colors.purple),
+                              style: klabelTextStyle.copyWith(
+                                  color: Colors.purple),
                             ),
                             Text(
                               //TODO: Update the actual Calories value here
-                              cAppUser.getCalorieIn().toString(),
-                              style:
-                                  klabelTextStyle.copyWith(color: Colors.purple),
+                              sCalorie,
+                              style: klabelTextStyle.copyWith(
+                                  color: Colors.purple),
                             ),
                           ],
                         ),
                         SizedBox(
-                          height: 12.0,
+                          height: 24.0,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
                               "BMI: ",
-                              style:
-                                  klabelTextStyle.copyWith(color: Colors.purple),
+                              style: klabelTextStyle.copyWith(
+                                  color: Colors.purple),
                             ),
                             Text(
                               //TODO: update the actual BMI values here
-                              cAppUser.getBMI().toString(),
-                              style:
-                                  klabelTextStyle.copyWith(color: Colors.purple),
+                              sBMI,
+                              style: klabelTextStyle.copyWith(
+                                  color: Colors.purple),
                             ),
                           ],
                         ),
@@ -196,17 +205,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-/*
-SafeArea(
-          child: Container(
-              child: Column(
-            children: <Widget>[
-              Text('Home Screen'),
-              Image(
-                image: AssetImage('images/start_img.png'),
-              ),
-            ],
-          )),
-        ),
-*/
