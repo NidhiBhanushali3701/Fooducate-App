@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fooducate/app_user.dart';
 import 'package:fooducate/calculate_button.dart';
 import 'package:fooducate/constants.dart';
 import 'package:fooducate/reusable_card.dart';
 import 'package:fooducate/round_icon_button.dart';
 import 'screens/home_screen.dart';
+
 class UserData extends StatefulWidget {
   static String id = "userBMIData";
+  AppUser cAppUser;
+  UserData({Key key, @required this.cAppUser}) : super(key: key);
   @override
   _UserDataState createState() => _UserDataState();
 }
@@ -17,10 +21,19 @@ class _UserDataState extends State<UserData> {
   int age = 20;
   @override
   Widget build(BuildContext context) {
+    final Map arguments = ModalRoute.of(context).settings.arguments as Map;
+    if (arguments != null) {
+      //if string data
+      print(arguments['CurrentAppUserData']);
+      //if you passed object
+      //final cAppUser = arguments['CurrentAppUserData'];
+      final AppUser cAppUser = arguments['CurrentAppUserData'];
+      print('inBmi${cAppUser.getEmail()}');
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple,
-        title: Text('USER PROFILE'),
+        title: Text('USER BMI PROFILE'),
         centerTitle: true,
       ),
       body: Column(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fooducate/app_user.dart';
 import 'package:fooducate/user_data_input.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 //import 'package:firebase_database/firebase_database.dart';//not present yet
@@ -21,6 +22,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _auth = FirebaseAuth.instance;
   bool showSpinner = false;
+  AppUser cAppUser = AppUser();
   @override
   void initState() {
     super.initState();
@@ -33,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final user = await _auth.currentUser;
       if (user != null) {
         //currentUser = user;
+        cAppUser.setEmail(user.email);
         print(user.email);
       }
     } catch (e) {
@@ -70,8 +73,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     showSpinner = true;
                   });
                   await _auth.signOut();
-                  Navigator.pop(context);
-                  Navigator.pop(context);
+                  Navigator.pushNamed(context, StartScreen.id);
+                  //Navigator.pop(context);
+                  //Navigator.pop(context);
                   setState(() {
                     showSpinner = false;
                   });
@@ -115,7 +119,9 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: IconButton(
                 icon: Icon(Icons.account_circle_rounded, color: Colors.purple),
                 onPressed: () {
-                  Navigator.pushNamed(context, UserData.id);
+                  Navigator.pushNamed(context, UserData.id,
+                      arguments: {'CurrentAppUserData': cAppUser});
+                  //Navigator.pushNamed(context, routeName)
                 },
               ),
             ),

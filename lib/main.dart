@@ -10,6 +10,7 @@ import 'user_data_input.dart';
 import 'package:fooducate/user_data_input.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
+import 'package:fooducate/app_user.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
