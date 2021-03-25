@@ -63,8 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void updateUserHealth() {
-    sBMI = cAppUser.getBMI().toString();
-    sCalorie = cAppUser.getCalorieIn().toString();
+    sBMI = cAppUser.getBMI().toStringAsFixed(1);
+    sCalorie = cAppUser.getCalorieIn().toStringAsFixed(1);
   }
 
   @override
@@ -195,6 +195,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   Navigator.pushNamed(context, UserData.id,
                       arguments: {'CurrentAppUserData': cAppUser});
+                  setState(() {
+                    updateUserHealth();
+                  });
                   //Navigator.pushNamed(context, routeName)
                 },
               ),

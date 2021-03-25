@@ -198,7 +198,7 @@ class _UserDataState extends State<UserData> {
               cBrain.calculateBMI();
               cBrain.calculateCalories();
               setState(() {
-
+                //updateUserHealth();
               });
               Navigator.of(context).pop();
               //Navigator.pushNamed(context, HomeScreen.id,arguments: {'CurrentAppUserData': cAppUser});
