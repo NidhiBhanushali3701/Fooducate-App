@@ -6,6 +6,7 @@ import 'package:fooducate/constants.dart';
 import 'package:fooducate/reusable_card.dart';
 import 'package:fooducate/round_icon_button.dart';
 import 'screens/home_screen.dart';
+import 'calculator_brain.dart';
 
 class UserData extends StatefulWidget {
   static String id = "userBMIData";
@@ -19,6 +20,8 @@ class _UserDataState extends State<UserData> {
   int height = 180;
   int weight = 60;
   int age = 20;
+  AppUser cAppUser;
+  CalculatorBrain cBrain;
   @override
   Widget build(BuildContext context) {
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;
@@ -27,8 +30,8 @@ class _UserDataState extends State<UserData> {
       print(arguments['CurrentAppUserData']);
       //if you passed object
       //final cAppUser = arguments['CurrentAppUserData'];
-      final AppUser cAppUser = arguments['CurrentAppUserData'];
-      print('inBmi${cAppUser.getEmail()}');
+      cAppUser = arguments['CurrentAppUserData'];
+      print('in BMI calc ${cAppUser.getEmail()}');
     }
     return Scaffold(
       appBar: AppBar(
@@ -190,6 +193,10 @@ class _UserDataState extends State<UserData> {
           ),
           CalculateButton(
             onTap: () {
+              cBrain = CalculatorBrain(
+                  height: height, age: age, weight: weight, cUser: cAppUser);
+              cBrain.calculateBMI();
+              cBrain.calculateCalories();
               Navigator.pushNamed(context, HomeScreen.id);
             },
             buttonTitle: "CALCULATE",

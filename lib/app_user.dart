@@ -31,7 +31,7 @@ class AppUser {
     _weight = w;
   }
 
-  void setGender(var gender) {
+  void setGender(String gender) {
     _gender = gender;
   }
 
