@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fooducate/app_user.dart';
+import 'package:fooducate/constants.dart';
 import 'package:fooducate/user_data_input.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 //import 'package:firebase_database/firebase_database.dart';//not present yet
@@ -10,6 +11,7 @@ import 'login_screen.dart';
 import 'start_screen.dart';
 import '../main.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+
 import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
@@ -23,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final _auth = FirebaseAuth.instance;
   bool showSpinner = false;
   AppUser cAppUser = AppUser();
+
   @override
   void initState() {
     super.initState();
@@ -88,11 +91,62 @@ class _HomeScreenState extends State<HomeScreen> {
         body: SafeArea(
           child: Container(
               child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Text('Home Screen'),
               Image(
                 image: AssetImage('images/start_img.png'),
               ),
+              Container(
+                height: 200.0,
+                width: 200.0,
+                margin: EdgeInsets.all(20.0),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey,
+                        offset: Offset(1.0, 1.0),
+                        blurRadius: 2.0,
+                      )
+                    ]),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "CALORIES: ",
+                          style: klabelTextStyle.copyWith(color: Colors.purple),
+                        ),
+                        Text(
+                          //Update the actual Calories value here
+                          cAppUser.getCalorieIn().toString(),
+                          style: klabelTextStyle.copyWith(color: Colors.purple),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "BMI: ",
+                          style: klabelTextStyle.copyWith(color: Colors.purple),
+                        ),
+                        Text(
+                          //update the actual BMI values here
+                          cAppUser.getBMI().toString(),
+                          style: klabelTextStyle.copyWith(color: Colors.purple),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )
             ],
           )),
         ),
