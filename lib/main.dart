@@ -13,6 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import 'package:fooducate/app_user.dart';
 import 'trackers/step_tracker.dart';
+import 'package:http/http.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +23,7 @@ void main() async {
       visualDensity: VisualDensity.adaptivePlatformDensity,
     ),
     //initialRoute: StartScreen.id,
-    initialRoute: StartScreen.id,
+    initialRoute: StepTracker.id,
     routes: {
       StartScreen.id: (context) {
         return StartScreen();
