@@ -8,7 +8,7 @@ import 'login_screen.dart';
 import '../main.dart';
 import 'home_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-//import 'dart:async';
+import 'dart:async';
 
 class SignUpScreen extends StatefulWidget {
   static String id = 'signUpScreen';
@@ -20,6 +20,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   //TextEditingController _emailController = TextEditingController();
   bool showSpinner = false;
   final _auth = FirebaseAuth.instance;
+  User _user = FirebaseAuth.instance.currentUser;
   String _email, _password, _username;
   @override
   void initState() {

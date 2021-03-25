@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fooducate/app_user.dart';
 import 'package:fooducate/calculate_button.dart';
 import 'package:fooducate/constants.dart';
 import 'package:fooducate/reusable_card.dart';
 import 'package:fooducate/round_icon_button.dart';
+import 'screens/home_screen.dart';
+import 'calculator_brain.dart';
 
 class UserData extends StatefulWidget {
-  static String id = "userData";
-
+  static String id = "userBMIData";
+  AppUser cAppUser;
+  UserData({Key key, @required this.cAppUser}) : super(key: key);
   @override
   _UserDataState createState() => _UserDataState();
 }
@@ -16,12 +20,23 @@ class _UserDataState extends State<UserData> {
   int height = 180;
   int weight = 60;
   int age = 20;
+  AppUser cAppUser;
+  CalculatorBrain cBrain;
   @override
   Widget build(BuildContext context) {
+    final Map arguments = ModalRoute.of(context).settings.arguments as Map;
+    if (arguments != null) {
+      //if string data
+      print(arguments['CurrentAppUserData']);
+      //if you passed object
+      //final cAppUser = arguments['CurrentAppUserData'];
+      cAppUser = arguments['CurrentAppUserData'];
+      print('in BMI calc ${cAppUser.getEmail()}');
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple,
-        title: Text('USER PROFILE'),
+        title: Text('USER BMI PROFILE'),
         centerTitle: true,
       ),
       body: Column(
@@ -177,7 +192,13 @@ class _UserDataState extends State<UserData> {
             ),
           ),
           CalculateButton(
-            onTap: () {},
+            onTap: () {
+              cBrain = CalculatorBrain(
+                  height: height, age: age, weight: weight, cUser: cAppUser);
+              cBrain.calculateBMI();
+              cBrain.calculateCalories();
+              Navigator.pushNamed(context, HomeScreen.id);
+            },
             buttonTitle: "CALCULATE",
           )
         ],
