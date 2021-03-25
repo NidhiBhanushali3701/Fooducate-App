@@ -1,6 +1,6 @@
 import 'dart:async';
 
-class Tracker{
+mixin Tracker{
   String _type,_tip;
   var input,output;
 

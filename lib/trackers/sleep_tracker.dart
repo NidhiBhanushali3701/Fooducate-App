@@ -1,3 +1,3 @@
 import '../tracker.dart';
 
-class SleepTracker extends Tracker {}
+class SleepTracker with Tracker {}

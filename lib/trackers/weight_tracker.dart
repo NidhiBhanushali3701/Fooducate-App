@@ -1,3 +1,3 @@
 import '../tracker.dart';
 
-class WeightTracker extends Tracker {}
+class WeightTracker with Tracker {}
