@@ -50,8 +50,7 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      home: new Scaffold(
+    return Scaffold(
           appBar: AppBar(
             centerTitle: true,
             leading: null,
@@ -76,7 +75,7 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
                 style: TextStyle(fontSize: 100, color: Colors.purple),
               )
             ],
-          ))),
+          ))
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:fooducate/trackers/step_tracker.dart';
 import 'package:fooducate/user_data_input.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 //import 'package:firebase_database/firebase_database.dart';//not present yet
+import '../constants.dart';
 import 'signup_screen.dart';
 import 'login_screen.dart';
 import 'start_screen.dart';
@@ -49,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final user = await _auth.currentUser;
       if (!user.emailVerified) {
         await user.sendEmailVerification();
-        print('verification mail sent');
+        print('Verification Mail Sent!');
       }
     } catch (e) {
       print(e);
@@ -88,14 +89,75 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: SafeArea(
           child: Container(
-              child: Column(
-            children: <Widget>[
-              Text('Home Screen'),
-              Image(
-                image: AssetImage('images/start_img.png'),
-              ),
-            ],
-          )),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Expanded(
+                  child: Image(
+                    image: AssetImage('images/start_img.png'),
+                  ),
+                ),
+                //TODO: Card added for displaying bmi and calories
+               Expanded(
+                  child: Container(
+                    height: 200.0,
+                    width: 200.0,
+                    margin: EdgeInsets.all(20.0),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(1.0, 1.0),
+                            blurRadius: 2.0,
+                          )
+                        ]),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "CALORIES: ",
+                              style:
+                                  klabelTextStyle.copyWith(color: Colors.purple),
+                            ),
+                            Text(
+                              //TODO: Update the actual Calories value here
+                              cAppUser.getCalorieIn().toString(),
+                              style:
+                                  klabelTextStyle.copyWith(color: Colors.purple),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 12.0,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "BMI: ",
+                              style:
+                                  klabelTextStyle.copyWith(color: Colors.purple),
+                            ),
+                            Text(
+                              //TODO: update the actual BMI values here
+                              cAppUser.getBMI().toString(),
+                              style:
+                                  klabelTextStyle.copyWith(color: Colors.purple),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: <BottomNavigationBarItem>[
@@ -134,3 +196,17 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+/*
+SafeArea(
+          child: Container(
+              child: Column(
+            children: <Widget>[
+              Text('Home Screen'),
+              Image(
+                image: AssetImage('images/start_img.png'),
+              ),
+            ],
+          )),
+        ),
+*/
