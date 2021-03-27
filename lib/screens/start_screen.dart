@@ -14,66 +14,70 @@ class StartScreen extends StatelessWidget {
   static String id = 'startScreen';
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("FOODUCATE"),
-        centerTitle: true,
-        backgroundColor: Colors.purple,
-      ),
-      body: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 21.0),
-            child: Center(
-              child: Container(
-                width: 500,
-                height: 300,
-                /*decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(50.0)),*/
-                child: Image(
-                  image: AssetImage('images/start_img.png'),
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("FOODUCATE"),
+          centerTitle: true,
+          backgroundColor: Colors.purple,
+        ),
+        body: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 21.0),
+              child: Center(
+                child: Container(
+                  width: 500,
+                  height: 300,
+                  /*decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(50.0)),*/
+                  child: Image(
+                    image: AssetImage('images/start_img.png'),
+                  ),
                 ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 50,
-          ),
-          Container(
-            height: 50,
-            width: 250,
-            decoration: BoxDecoration(
-                color: Colors.purple, borderRadius: BorderRadius.circular(20)),
-            child: TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, LogInScreen.id);
-              },
-              child: Text(
-                'LOG-IN',
-                style: TextStyle(color: Colors.white, fontSize: 25),
+            SizedBox(
+              height: 50,
+            ),
+            Container(
+              height: 50,
+              width: 250,
+              decoration: BoxDecoration(
+                  color: Colors.purple,
+                  borderRadius: BorderRadius.circular(20)),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, LogInScreen.id);
+                },
+                child: Text(
+                  'LOG-IN',
+                  style: TextStyle(color: Colors.white, fontSize: 25),
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 50,
-          ),
-          Container(
-            height: 50,
-            width: 250,
-            decoration: BoxDecoration(
-                color: Colors.purple, borderRadius: BorderRadius.circular(20)),
-            child: TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, SignUpScreen.id);
-              },
-              child: Text(
-                'SIGN-UP',
-                style: TextStyle(color: Colors.white, fontSize: 25),
+            SizedBox(
+              height: 50,
+            ),
+            Container(
+              height: 50,
+              width: 250,
+              decoration: BoxDecoration(
+                  color: Colors.purple,
+                  borderRadius: BorderRadius.circular(20)),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, SignUpScreen.id);
+                },
+                child: Text(
+                  'SIGN-UP',
+                  style: TextStyle(color: Colors.white, fontSize: 25),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

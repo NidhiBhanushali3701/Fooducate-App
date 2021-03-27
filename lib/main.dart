@@ -23,7 +23,7 @@ void main() async {
       visualDensity: VisualDensity.adaptivePlatformDensity,
     ),
     //initialRoute: StartScreen.id,
-    initialRoute: StepTracker.id,
+    initialRoute: StartScreen.id,
     routes: {
       StartScreen.id: (context) {
         return StartScreen();
