@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void updateUserHealth() {
     sBMI = cAppUser.getBMI().toStringAsFixed(1);
-    sCalorie = cAppUser.getCalorieIn().toStringAsFixed(1);
+    sCalorie = cAppUser.getCalorieIn().floor().toString();
   }
 
   @override
