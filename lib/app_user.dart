@@ -11,7 +11,7 @@ enum gender {
 class AppUser {
   String _name, _email, _password;
   double _height, _weight, _bmi, targetWeight, _calorieIn, calorieOut;
-  int _age, _phoneNo;
+  int _age, _phoneNo, _dailyH2O;
   var _gender;
   List<String> MedCond = new List(5);
   List<String> FoodPref = new List(5);
@@ -59,6 +59,10 @@ class AppUser {
     _bmi = bmi;
   }
 
+  void setDailyH2O(int dailyH2O) {
+    _dailyH2O = dailyH2O;
+  }
+
   double getHeight() {
     return _height;
   }
@@ -97,5 +101,9 @@ class AppUser {
 
   double getBMI() {
     return _bmi;
+  }
+
+  int getDailyH2O() {
+    return _dailyH2O;
   }
 }

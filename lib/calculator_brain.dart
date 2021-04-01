@@ -14,6 +14,7 @@ class CalculatorBrain {
   double _bmi;
   double _calories, _caloriesIn, _caloriesOut;
   AppUser cUser;
+  int _dailyH2O;
   CalculatorBrain({this.height, this.weight, this.age, this.cUser});
 
   String calculateBMI() {
@@ -49,4 +50,10 @@ class CalculatorBrain {
     cUser.setCalorieIn(_calories);
     return _calories.toStringAsFixed(0);
   }
+  String calculateDailyH2O(){
+    _dailyH2O = ((cUser.getWeight()*2/3)+cUser.calorieOut*5/2)~/33.814;
+    print(_dailyH2O);
+    return _dailyH2O.toStringAsFixed(0);
+  }
+
 }
