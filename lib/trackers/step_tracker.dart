@@ -1,3 +1,5 @@
+import 'package:fooducate/constants.dart';
+
 import '../tracker.dart';
 import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
@@ -9,10 +11,11 @@ class StepTracker extends StatefulWidget {
   _StepTrackerState createState() => _StepTrackerState();
 }
 
-class _StepTrackerState extends State<StepTracker> with Tracker{
+class _StepTrackerState extends State<StepTracker> with Tracker {
   Stream<StepCount> _stepCountStream;
   Stream<PedestrianStatus> _pedestrianStatusStream;
   String _status = '?', _steps = '0';
+  double stepValue;
 
   @override
   void initState() {
@@ -64,54 +67,88 @@ class _StepTrackerState extends State<StepTracker> with Tracker{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          leading: null,
-          title: const Text('STEP TRACKER'),
-          backgroundColor: Colors.purple,
-        ),
-        body: Center(
+      appBar: AppBar(
+        centerTitle: true,
+        leading: null,
+        title: const Text('STEP TRACKER'),
+        backgroundColor: Colors.purple,
+      ),
+      body: Center(
+        child: Container(
+          height: 300,
+          width: 400,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey,
+                  offset: Offset(1.0, 1.0),
+                  blurRadius: 2.0,
+                )
+              ]),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(
-                'Steps taken:',
-                style: TextStyle(fontSize: 30),
+              //TODO: Determinate CircularProgressIndicator
+              // CircularProgressIndicator(
+              //   value: stepValue,
+              //   valueColor: AlwaysStoppedAnimation<Color>(Colors.purple),
+              //   backgroundColor: Colors.grey,
+              // ),
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(
+                    top: 10.0,
+                  ),
+                  child: Text(
+                    'STEPS TAKEN:',
+                    style: klabelTextStyle.copyWith(color: Colors.purple),
+                  ),
+                ),
               ),
               Expanded(
-                child: Text(
-                  _steps,
-                  style: TextStyle(fontSize: 60),
+                child: Container(
+                  child: Text(
+                    _steps,
+                    style: klabelTextStyle.copyWith(fontSize: 60.0),
+                  ),
                 ),
               ),
               SizedBox(
-                height: 30,
+                height: 10.0,
               ),
-              Text(
-                'Pedestrian status:',
-                style: TextStyle(fontSize: 30),
+              Expanded(
+                child: Text(
+                  'PEDESTRIAN STATUS:',
+                  style: klabelTextStyle.copyWith(color: Colors.purple),
+                ),
               ),
               Expanded(
                 child: Icon(
                   _status == 'walking'
                       ? Icons.directions_walk
                       : _status == 'stopped'
-                      ? Icons.accessibility_new
-                      : Icons.error,color: Colors.red,
-                  size: 100,
+                          ? Icons.accessibility_new
+                          : Icons.error,
+                  color: Colors.purple,
+                  size: 70,
                 ),
               ),
-              Center(
-                child: Text(
-                  _status,
-                  style: _status == 'walking' || _status == 'stopped'
-                      ? TextStyle(fontSize: 30)
-                      : TextStyle(fontSize: 20, color: Colors.red),
+              Expanded(
+                child: Center(
+                  child: Text(
+                    _status,
+                    style: _status == 'walking' || _status == 'stopped'
+                        ? TextStyle(fontSize: 30)
+                        : TextStyle(fontSize: 20, color: Colors.purple),
+                  ),
                 ),
               )
             ],
           ),
         ),
+      ),
     );
   }
 }
