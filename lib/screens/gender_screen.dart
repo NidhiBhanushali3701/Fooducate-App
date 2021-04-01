@@ -51,10 +51,12 @@ class _GenderSelectState extends State<GenderSelect> {
                       print('male');
                       cAppUser.setGender(gender.male);
                       print('male');
+                      Navigator.pushNamed(context, UserData.id,arguments: {'CurrentAppUserData': cAppUser});
                       setState(() {
                         _gender = gender.male;
                         print('male');
                         cAppUser.setGender(gender.male);
+                        Navigator.pushNamed(context, UserData.id,arguments: {'CurrentAppUserData': cAppUser});
                       });
                     },
                     colour: _gender == gender.male
@@ -73,10 +75,12 @@ class _GenderSelectState extends State<GenderSelect> {
                       print('female');
                       cAppUser.setGender(gender.female);
                       print('female');
+                      Navigator.pushNamed(context, UserData.id,arguments: {'CurrentAppUserData': cAppUser});
                       setState(() {
                         _gender = gender.female;
                         print('female');
                         cAppUser.setGender(gender.female);
+                        Navigator.pushNamed(context, UserData.id,arguments: {'CurrentAppUserData': cAppUser});
                       });
                     },
                     colour: _gender == gender.female
@@ -88,17 +92,6 @@ class _GenderSelectState extends State<GenderSelect> {
                     ),
                   ),
                 ),
-                FlatButton(
-                    child: Text('CONTINUE'),
-                    onPressed: () {
-                      if (_gender != null) {
-                        Navigator.pushNamed(context, UserData.id,arguments: {'CurrentAppUserData': cAppUser});
-                      }
-                      else{
-                        print('null');
-                      }
-                      //Navigator.pushNamed(context, HomeScreen.id,arguments: {'CurrentAppUserData': cAppUser});
-                    }),
               ],
             ),
           ),

@@ -134,40 +134,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "CALORIES: ",
-                              style: kLabelTextStyle.copyWith(
-                                  color: Colors.purple),
-                            ),
-                            Text(
-                              //TODO: Update the actual Calories value here
-                              sCalorie,
-                              style: kLabelTextStyle.copyWith(
-                                  color: Colors.purple),
-                            ),
-                          ],
+                        Text(
+                          "CALORIES YOU NEED ",
+                          style: kLabelTextStyle.copyWith(
+                              color: Colors.purple),
                         ),
                         SizedBox(
-                          height: 24.0,
+                          height: 20.0,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "BMI: ",
-                              style: kLabelTextStyle.copyWith(
-                                  color: Colors.purple),
-                            ),
-                            Text(
-                              //TODO: update the actual BMI values here
-                              sBMI,
-                              style: kLabelTextStyle.copyWith(
-                                  color: Colors.purple),
-                            ),
-                          ],
+                        Text(
+                          //TODO: Update the actual Calories value here
+                          sCalorie,
+                          style: kLabelTextStyle.copyWith(
+                              color: Colors.purple),
                         ),
                       ],
                     ),
@@ -191,14 +170,46 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "TOTAL STEPS: ",
+                          "YOUR BMI : ",
                           style: kLabelTextStyle.copyWith(color: Colors.purple),
                         ),
                         SizedBox(
                           height: 20.0,
                         ),
                         Text(
-                          "0 steps",//TODO: updating steps
+                          sBMI, //TODO: BMI
+                          style: kLabelTextStyle.copyWith(color: Colors.purple),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: 200.0,
+                    width: 200.0,
+                    margin: EdgeInsets.all(20.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey,
+                          offset: Offset(1.0, 1.0),
+                          blurRadius: 2.0,
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "STEPS DONE ",
+                          style: kLabelTextStyle.copyWith(color: Colors.purple),
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Text(
+                          "0 STEPS", //TODO: updating steps
                           style: kLabelTextStyle.copyWith(color: Colors.purple),
                         ),
                       ],
