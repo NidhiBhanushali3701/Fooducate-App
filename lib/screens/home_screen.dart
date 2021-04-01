@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fooducate/app_user.dart';
+import 'package:fooducate/screens/gender_screen.dart';
 import 'package:fooducate/trackers/step_tracker.dart';
-import 'package:fooducate/user_data_input.dart';
+import 'file:///C:/Users/Nidhi/Desktop/AndroidStudioProjects/fooducate/lib/screens/user_data_input_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 //import 'package:firebase_database/firebase_database.dart';//not present yet
 import '../constants.dart';
@@ -69,6 +70,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Map arguments = ModalRoute.of(context).settings.arguments as Map;
+    if (arguments != null) {
+      //if string data
+      print(arguments['CurrentAppUserData']);
+      //if you passed object
+      //final cAppUser = arguments['CurrentAppUserData'];
+      cAppUser = arguments['CurrentAppUserData'];
+      print('in home ${cAppUser.getEmail()},${cAppUser.getGender()}');
+      updateUserHealth();
+    }
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
       child: Scaffold(
@@ -98,17 +109,15 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         body: SafeArea(
-          child: Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Expanded(
-                  child: Image(
+          child: SingleChildScrollView(
+            child: Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Image(
                     image: AssetImage('images/start_img.png'),
                   ),
-                ),
-                Expanded(
-                  child: Container(
+                  Container(
                     height: 200.0,
                     width: 200.0,
                     margin: EdgeInsets.all(20.0),
@@ -130,13 +139,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Text(
                               "CALORIES: ",
-                              style: klabelTextStyle.copyWith(
+                              style: kLabelTextStyle.copyWith(
                                   color: Colors.purple),
                             ),
                             Text(
                               //TODO: Update the actual Calories value here
                               sCalorie,
-                              style: klabelTextStyle.copyWith(
+                              style: kLabelTextStyle.copyWith(
                                   color: Colors.purple),
                             ),
                           ],
@@ -149,13 +158,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Text(
                               "BMI: ",
-                              style: klabelTextStyle.copyWith(
+                              style: kLabelTextStyle.copyWith(
                                   color: Colors.purple),
                             ),
                             Text(
                               //TODO: update the actual BMI values here
                               sBMI,
-                              style: klabelTextStyle.copyWith(
+                              style: kLabelTextStyle.copyWith(
                                   color: Colors.purple),
                             ),
                           ],
@@ -163,8 +172,40 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-                )
-              ],
+                  Container(
+                    height: 200.0,
+                    width: 200.0,
+                    margin: EdgeInsets.all(20.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey,
+                          offset: Offset(1.0, 1.0),
+                          blurRadius: 2.0,
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "TOTAL STEPS: ",
+                          style: kLabelTextStyle.copyWith(color: Colors.purple),
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Text(
+                          "0 steps",
+                          style: kLabelTextStyle.copyWith(color: Colors.purple),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -197,10 +238,10 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: IconButton(
                 icon: Icon(Icons.account_circle_rounded, color: Colors.purple),
                 onPressed: () {
-                  Navigator.pushNamed(context, UserData.id,
+                  Navigator.pushNamed(context, GenderSelect.id,
                       arguments: {'CurrentAppUserData': cAppUser});
                   setState(() {
-                    updateUserHealth();
+                    //updateUserHealth();
                   });
                   //Navigator.pushNamed(context, routeName)
                 },

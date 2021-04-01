@@ -1,10 +1,5 @@
 import 'dart:math';
-import 'app_user.dart';
-
-enum gender {
-  female,
-  male,
-}
+import 'package:fooducate/app_user.dart';
 
 class CalculatorBrain {
   final int height;
@@ -15,7 +10,8 @@ class CalculatorBrain {
   double _calories, _caloriesIn, _caloriesOut;
   AppUser cUser;
   int _dailyH2O;
-  CalculatorBrain({this.height, this.weight, this.age, this.cUser});
+  CalculatorBrain(
+      {this.height, this.weight, this.age, this.gender, this.cUser});
 
   String calculateBMI() {
     _bmi = weight / pow(height / 100, 2);
@@ -23,7 +19,7 @@ class CalculatorBrain {
     cUser.setHeight(height.toDouble());
     cUser.setWeight(weight.toDouble());
     cUser.setAge(age);
-    cUser.setGender('female');
+    cUser.setGender(gender);
     return _bmi.toStringAsFixed(1);
   }
 
@@ -34,7 +30,7 @@ class CalculatorBrain {
         10 * cUser.getWeight() + 6.25 * cUser.getHeight() - 5 * cUser.getAge();
     print(basicCal);
     try {
-      if (cUser.getGender() == 'female') {
+      if (cUser.getGender().toString() == 'gender.female') {
         cUser.setCalorieIn(basicCal - 161);
         print('female = ${basicCal - 161}');
       } else {
@@ -52,7 +48,8 @@ class CalculatorBrain {
   String calculateDailyH2O() {
     cUser.workOutTime = 0; //TODO: ask this from user
     _dailyH2O =
-        ((((cUser.getWeight()*2.205 * 2) / 3) + (cUser.workOutTime * 2.5)) ~/ 33.814);
+        ((((cUser.getWeight() * 2.205 * 2) / 3) + (cUser.workOutTime * 2.5)) ~/
+            33.814);
     print(_dailyH2O);
     return _dailyH2O.toStringAsFixed(0);
   }

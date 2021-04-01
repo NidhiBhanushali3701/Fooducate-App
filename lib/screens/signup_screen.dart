@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fooducate/screens/gender_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/services.dart';
 //import 'package:firebase_database/firebase_database.dart';//not present yet
@@ -202,6 +203,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       email: _email, password: _password);
                               //UserCredential user = newUser.user;
                               if (newUser != null) {
+                                //Navigator.pushNamed(context,GenderSelect.id);
                                 Navigator.pushNamed(context, HomeScreen.id);
                               }
                               setState(() {
