@@ -7,6 +7,7 @@ import 'dart:async';
 
 class StepTracker extends StatefulWidget {
   static String id = 'StepTracker';
+
   @override
   _StepTrackerState createState() => _StepTrackerState();
 }
@@ -28,6 +29,10 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
     setState(() {
       _steps = event.steps.toString();
     });
+  }
+
+  double getStepValue() {
+    return stepValue;
   }
 
   void onPedestrianStatusChanged(PedestrianStatus event) {
