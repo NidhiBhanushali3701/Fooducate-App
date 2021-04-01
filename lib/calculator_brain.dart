@@ -51,7 +51,8 @@ class CalculatorBrain {
     return _calories.toStringAsFixed(0);
   }
   String calculateDailyH2O(){
-    _dailyH2O = ((cUser.getWeight()*2/3)+cUser.calorieOut*5/2)~/33.814;
+    cUser.workOutTime = 0;//TODO: ask this from user
+    _dailyH2O = (((cUser.getWeight()*2/3)+cUser.workOutTime*5/2)~/33.814);
     print(_dailyH2O);
     return _dailyH2O.toStringAsFixed(0);
   }

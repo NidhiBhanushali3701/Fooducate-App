@@ -195,9 +195,9 @@ class _UserDataState extends State<UserData> {
             onTap: () {
               cBrain = CalculatorBrain(
                   height: height, age: age, weight: weight, cUser: cAppUser);
-              cBrain.calculateBMI();
-              cBrain.calculateCalories();
-              cBrain.calculateDailyH2O();
+              print(cBrain.calculateBMI());
+              print(cBrain.calculateCalories());
+              print(cBrain.calculateDailyH2O());
               setState(() {
                 //updateUserHealth(); //TODO:onTap update ui
               });

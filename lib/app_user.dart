@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fooducate/calculator_brain.dart';
 import 'dart:async';
 import 'food.dart';
 import 'goal.dart';
-
+import 'calculate_button.dart';
 enum gender {
   female,
   male,
@@ -10,7 +11,7 @@ enum gender {
 
 class AppUser {
   String _name, _email, _password;
-  double _height, _weight, _bmi, targetWeight, _calorieIn, calorieOut;
+  double _height, _weight, _bmi, targetWeight, _calorieIn, calorieOut,workOutTime;
   int _age, _phoneNo, _dailyH2O;
   var _gender;
   List<String> MedCond = new List(5);
@@ -18,6 +19,8 @@ class AppUser {
   List<Food> food = new List(100);
   Goal _goal, _goalPerWeek;
   //Progress progress;
+  //CalculatorBrain cAppUserCalculatorBrain;
+
 
   void setHeight(double h) {
     _height = h;
