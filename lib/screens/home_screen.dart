@@ -198,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 20.0,
                         ),
                         Text(
-                          "0 steps",
+                          "0 steps",//TODO: updating steps
                           style: kLabelTextStyle.copyWith(color: Colors.purple),
                         ),
                       ],
