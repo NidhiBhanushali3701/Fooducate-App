@@ -41,20 +41,19 @@ class CalculatorBrain {
         cUser.setCalorieIn(basicCal + 5);
         print('male = ${basicCal + 5}');
       }
-    }
-    catch(e)
-    {
+    } catch (e) {
       print('Here gender error');
       print(e);
     }
     cUser.setCalorieIn(_calories);
     return _calories.toStringAsFixed(0);
   }
-  String calculateDailyH2O(){
-    cUser.workOutTime = 0;//TODO: ask this from user
-    _dailyH2O = (((cUser.getWeight()*2/3)+cUser.workOutTime*5/2)~/33.814);
+
+  String calculateDailyH2O() {
+    cUser.workOutTime = 0; //TODO: ask this from user
+    _dailyH2O =
+        ((((cUser.getWeight()*2.205 * 2) / 3) + (cUser.workOutTime * 2.5)) ~/ 33.814);
     print(_dailyH2O);
     return _dailyH2O.toStringAsFixed(0);
   }
-
 }

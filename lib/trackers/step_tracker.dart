@@ -90,7 +90,7 @@ class StepTracker extends StatefulWidget {
 class _StepTrackerState extends State<StepTracker> with Tracker{
   Stream<StepCount> _stepCountStream;
   Stream<PedestrianStatus> _pedestrianStatusStream;
-  String _status = '?', _steps = '?';
+  String _status = '?', _steps = '0';
 
   @override
   void initState() {
