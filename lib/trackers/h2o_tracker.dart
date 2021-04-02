@@ -29,6 +29,7 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
   @override
   void initState() {
     super.initState();
+    calculateH2OProgress();
   }
 
   double calculateH2OProgress() {
