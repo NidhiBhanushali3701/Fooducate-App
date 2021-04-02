@@ -32,7 +32,7 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
   }
 
   double calculateH2OProgress() {
-    return h2oProgress = ((userDrankH2O / cAppUser.getDailyH2O())/4);
+    return h2oProgress = ((userDrankH2O / cAppUser.getDailyH2O()) / 4);
   }
 
   Path _buildBoatPath() {
