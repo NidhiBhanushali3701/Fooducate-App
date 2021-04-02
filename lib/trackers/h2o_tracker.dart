@@ -28,6 +28,6 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold();
   }
 }
