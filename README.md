@@ -1,7 +1,7 @@
-# fooducate
+# Fooducate
 
-Fitness App
-
+Fitness Tracker App
+![MarineGEO circle logo](images/logo.png "FOODUCATE Logo")
 ## Getting Started
 
 This project is a starting point for a Flutter application.
