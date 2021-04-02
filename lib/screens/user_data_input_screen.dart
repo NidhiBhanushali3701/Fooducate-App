@@ -123,7 +123,12 @@ class _UserDataState extends State<UserData> {
                                 icon: FontAwesomeIcons.minus,
                                 onPressed: () {
                                   setState(() {
-                                    weight--;
+                                    if (weight > 0) {
+                                      weight--;
+                                    }
+                                    else{
+                                      weight = 0;
+                                    }
                                   });
                                 },
                               ),
@@ -170,7 +175,12 @@ class _UserDataState extends State<UserData> {
                                 icon: FontAwesomeIcons.minus,
                                 onPressed: () {
                                   setState(() {
-                                    age--;
+                                    if (age > 0) {
+                                      age--;
+                                    }
+                                    else{
+                                      age = 0;
+                                    }
                                   });
                                 },
                               ),
@@ -210,7 +220,8 @@ class _UserDataState extends State<UserData> {
                   //updateUserHealth(); //TODO:onTap update ui
                 });
                 //Navigator.of(context).pop();
-                Navigator.pushNamed(context, HomeScreen.id,arguments: {'CurrentAppUserData': cAppUser});
+                Navigator.pushNamed(context, HomeScreen.id,
+                    arguments: {'CurrentAppUserData': cAppUser,'CurrentAppUserCB':cBrain});
               },
               buttonTitle: "CALCULATE",
             ),

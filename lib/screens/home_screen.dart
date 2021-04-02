@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fooducate/app_user.dart';
+import 'package:fooducate/calculator_brain.dart';
 import 'package:fooducate/screens/gender_screen.dart';
 import 'package:fooducate/trackers/h2o_tracker.dart';
 import 'package:fooducate/trackers/step_tracker.dart';
@@ -27,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final _auth = FirebaseAuth.instance;
   bool showSpinner = false;
   AppUser cAppUser = AppUser();
+  CalculatorBrain cBrain = CalculatorBrain();
   String sBMI = ' ', sCalorie = ' ', sSteps = '0', sUserH2O = '0';
 
   @override
@@ -79,9 +81,12 @@ class _HomeScreenState extends State<HomeScreen> {
       //if you passed object
       //final cAppUser = arguments['CurrentAppUserData'];
       cAppUser = arguments['CurrentAppUserData'];
-      print('in home ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
+      cBrain = arguments['CurrentAppUserCB'];
+      print(
+          'in home ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
       updateUserHealth();
-      print('in home ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
+      print(
+          'in home ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
     }
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
@@ -202,7 +207,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: RaisedButton(
                       onPressed: () {
                         Navigator.pushNamed(context, StepTracker.id,
-                            arguments: {'CurrentAppUserData': cAppUser});
+                            arguments: {
+                              'CurrentAppUserData': cAppUser,
+                              'CurrentAppUserCB': cBrain
+                            });
                       },
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -288,8 +296,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: Icon(Icons.directions_walk_rounded,
                     color: Colors.purple), //Icon(Icons.account_circle_rounded)
                 onPressed: () {
-                  Navigator.pushNamed(context, StepTracker.id,
-                      arguments: {'CurrentAppUserData': cAppUser});
+                  Navigator.pushNamed(context, StepTracker.id, arguments: {
+                    'CurrentAppUserData': cAppUser,
+                    'CurrentAppUserCB': cBrain
+                  });
                 },
               ),
             ),
@@ -298,8 +308,10 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: IconButton(
                 icon: Icon(Icons.account_circle_rounded, color: Colors.purple),
                 onPressed: () {
-                  Navigator.pushNamed(context, GenderSelect.id,
-                      arguments: {'CurrentAppUserData': cAppUser});
+                  Navigator.pushNamed(context, GenderSelect.id, arguments: {
+                    'CurrentAppUserData': cAppUser,
+                    'CurrentAppUserCB': cBrain
+                  }); //arguments: {'CurrentAppUserData': cAppUser}
                   setState(() {
                     //updateUserHealth();
                   });
