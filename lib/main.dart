@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fooducate/trackers/h2o_tracker.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'screens/start_screen.dart';
 import 'screens/login_screen.dart';
@@ -42,8 +43,11 @@ void main() async {
       StepTracker.id: (context) {
         return StepTracker();
       },
-      GenderSelect.id :(context){
+      GenderSelect.id: (context) {
         return GenderSelect();
+      },
+      H2OTracker.id: (context) {
+        return H2OTracker();
       }
     },
   ));
