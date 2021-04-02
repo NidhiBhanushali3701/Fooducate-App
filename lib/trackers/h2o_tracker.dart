@@ -21,7 +21,7 @@ class H2OTracker extends StatefulWidget {
 
 class _H2OTrackerState extends State<H2OTracker> with Tracker {
   int userDrankH2O = 0; //user drank H2O
-  double h2oProgress = 0.0;
+  double h2oProgress = -1;
   AppUser cAppUser;
   CalculatorBrain cBrain;
   String h2oMSG = '';
@@ -29,11 +29,10 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
   @override
   void initState() {
     super.initState();
-    calculateH2OProgress();
   }
 
   double calculateH2OProgress() {
-    return h2oProgress = (userDrankH2O / cAppUser.getDailyH2O());
+    return h2oProgress = ((userDrankH2O / cAppUser.getDailyH2O())/4);
   }
 
   Path _buildBoatPath() {
