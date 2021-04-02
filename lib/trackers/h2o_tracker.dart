@@ -53,6 +53,10 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
                       SizedBox(
                         height: 21.0,
                       ),
+                      IconContent(icon: FontAwesomeIcons.glassWhiskey,label: '1 Glass = 250 ml',),
+                      SizedBox(
+                        height: 21.0,
+                      ),
                       Text(
                         userDrankH2O.toString(),
                         style: kNumberTextStyle,
@@ -91,7 +95,13 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
                           )
                         ],
                       ),
-                      Text(h2oMSG),
+                      SizedBox(
+                        height: 30.0,
+                      ),
+                      Text(h2oMSG,style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      )),
                     ],
                   ),
                 ),
