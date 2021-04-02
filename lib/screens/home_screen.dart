@@ -70,6 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
     sBMI = cAppUser.getBMI().toStringAsFixed(1);
     sCalorie = cAppUser.getCalorieIn().floor().toString();
     sSteps = cAppUser.getStepsCount().toString();
+    sUserH2O = cAppUser.getDailyH2Odone().toString();
   }
 
   @override
@@ -266,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 20.0,
                           ),
                           Text(
-                            sUserH2O, //TODO: updating steps
+                            (' ${sUserH2O} glasses'), //TODO: updating steps
                             style:
                                 kLabelTextStyle.copyWith(color: Colors.purple),
                           ),

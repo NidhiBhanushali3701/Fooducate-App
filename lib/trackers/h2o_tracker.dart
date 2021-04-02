@@ -56,6 +56,7 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
       //if you passed object
       //final cAppUser = arguments['CurrentAppUserData'];
       cAppUser = arguments['CurrentAppUserData'];
+      cBrain = arguments['CurrentAppUserCB'];
       print('in BMI calc ${cAppUser.getEmail()},${cAppUser.getGender()}');
       calculateH2OProgress();
     }
@@ -111,6 +112,7 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
                                   h2oMSG = 'Water drank cant be negative';
                                 }
                                 calculateH2OProgress();
+                                cAppUser.setDailyH2Odone(userDrankH2O);
                               });
                             },
                           ),
@@ -125,6 +127,7 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
                                 h2oMSG =
                                     'GOOD H2O is needed for proper body functions!';
                                 calculateH2OProgress();
+                                cAppUser.setDailyH2Odone(userDrankH2O);
                               });
                             },
                           )
@@ -160,6 +163,16 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
                       ),
                     ),
                   ],
+                ),
+                CalculateButton(
+                  onTap: () {
+                    cAppUser.setDailyH2Odone(userDrankH2O);
+                    Navigator.pushNamed(context, HomeScreen.id, arguments: {
+                      'CurrentAppUserData': cAppUser,
+                      'CurrentAppUserCB': cBrain
+                    });
+                  },
+                  buttonTitle: "CONTINUE",
                 ),
               ],
             ),
