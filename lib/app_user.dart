@@ -19,7 +19,7 @@ class AppUser {
       _calorieIn,
       calorieOut,
       workOutTime;
-  int _age, _phoneNo, _dailyH2O;
+  int _age, _phoneNo, _dailyH2O, _stepsCount;
   gender _gender;
   List<String> MedCond = new List(5);
   List<String> FoodPref = new List(5);
@@ -72,6 +72,10 @@ class AppUser {
     _dailyH2O = dailyH2O;
   }
 
+  void setStepsCount(int stepCount) {
+    _stepsCount = stepCount;
+  }
+
   double getHeight() {
     return _height;
   }
@@ -114,5 +118,9 @@ class AppUser {
 
   int getDailyH2O() {
     return _dailyH2O;
+  }
+
+  int getStepsCount() {
+    return _stepsCount;
   }
 }

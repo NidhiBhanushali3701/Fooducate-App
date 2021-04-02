@@ -54,4 +54,10 @@ class CalculatorBrain {
     cUser.setDailyH2O(_dailyH2O);
     return _dailyH2O.toStringAsFixed(0);
   }
+  String calculateStepsCountProgress(){
+    return '';
+  }
+  String calculateH2OTrackProgress(){
+    return '';
+  }
 }

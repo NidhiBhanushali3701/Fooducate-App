@@ -67,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void updateUserHealth() {
     sBMI = cAppUser.getBMI().toStringAsFixed(1);
     sCalorie = cAppUser.getCalorieIn().floor().toString();
+    sSteps = cAppUser.getStepsCount().toString();
   }
 
   @override
@@ -78,8 +79,9 @@ class _HomeScreenState extends State<HomeScreen> {
       //if you passed object
       //final cAppUser = arguments['CurrentAppUserData'];
       cAppUser = arguments['CurrentAppUserData'];
-      print('in home ${cAppUser.getEmail()},${cAppUser.getGender()}');
+      print('in home ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
       updateUserHealth();
+      print('in home ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
     }
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
@@ -197,21 +199,29 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                       ],
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "STEPS DONE ",
-                          style: kLabelTextStyle.copyWith(color: Colors.purple),
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Text(
-                          sSteps, //TODO: updating steps
-                          style: kLabelTextStyle.copyWith(color: Colors.purple),
-                        ),
-                      ],
+                    child: RaisedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, StepTracker.id,
+                            arguments: {'CurrentAppUserData': cAppUser});
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "STEPS DONE ",
+                            style:
+                                kLabelTextStyle.copyWith(color: Colors.purple),
+                          ),
+                          SizedBox(
+                            height: 20.0,
+                          ),
+                          Text(
+                            sSteps, //TODO: updating steps
+                            style:
+                                kLabelTextStyle.copyWith(color: Colors.purple),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Container(
@@ -278,7 +288,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: Icon(Icons.directions_walk_rounded,
                     color: Colors.purple), //Icon(Icons.account_circle_rounded)
                 onPressed: () {
-                  Navigator.pushNamed(context, StepTracker.id);
+                  Navigator.pushNamed(context, StepTracker.id,
+                      arguments: {'CurrentAppUserData': cAppUser});
                 },
               ),
             ),

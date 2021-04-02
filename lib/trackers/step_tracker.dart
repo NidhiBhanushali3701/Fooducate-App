@@ -1,3 +1,8 @@
+import 'package:fooducate/calculator_brain.dart';
+import 'package:fooducate/screens/home_screen.dart';
+import 'package:fooducate/app_user.dart';
+//import '../app_user.dart';
+import '../calculate_button.dart';
 import '../tracker.dart';
 import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
@@ -6,6 +11,8 @@ import 'package:fooducate/constants.dart';
 
 class StepTracker extends StatefulWidget {
   static String id = 'StepTracker';
+  AppUser cAppUser;
+  StepTracker({Key key,@required this.cAppUser}) : super(key: key);
   @override
   _StepTrackerState createState() => _StepTrackerState();
 }
@@ -14,6 +21,8 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
   Stream<StepCount> _stepCountStream;
   Stream<PedestrianStatus> _pedestrianStatusStream;
   String _status = '?', _steps = '0';
+  AppUser cAppUser;
+  CalculatorBrain cBrain;
 
   @override
   void initState() {
@@ -24,6 +33,7 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
   void onStepCount(StepCount event) {
     print(event);
     setState(() {
+      cAppUser.setStepsCount(event.steps);
       _steps = event.steps.toString();
     });
   }
@@ -46,6 +56,7 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
   void onStepCountError(error) {
     print('onStepCountError: $error');
     setState(() {
+      cAppUser.setStepsCount(0);
       _steps = 'Step Count not available';
     });
   }
@@ -64,6 +75,15 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
 
   @override
   Widget build(BuildContext context) {
+    final Map arguments = ModalRoute.of(context).settings.arguments as Map;
+    if (arguments != null) {
+      //if string data
+      print(arguments['CurrentAppUserData']);
+      //if you passed object
+      //final cAppUser = arguments['CurrentAppUserData'];
+      cAppUser = arguments['CurrentAppUserData'];
+      print('in step tracker ${cAppUser.getEmail()},${cAppUser.getStepsCount()}');
+    }
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -71,73 +91,105 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
         title: Text('STEP TRACKER'),
         backgroundColor: Colors.purple,
       ),
-      body: Center(
-        child: Container(
-          height: 300,
-          width: 400,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey,
-                  offset: Offset(1.0, 1.0),
-                  blurRadius: 2.0,
-                )
-              ]),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(
-                    top: 10.0,
+      body: Column(
+        children: <Widget>[
+          Center(
+            child: Container(
+              height: 300,
+              width: 400,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey,
+                      offset: Offset(1.0, 1.0),
+                      blurRadius: 2.0,
+                    )
+                  ]),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(
+                        top: 10.0,
+                      ),
+                      child: Text(
+                        'Steps taken:'.toUpperCase(),
+                        style: kLabelTextStyle.copyWith(color: Colors.purple),
+                      ),
+                    ),
                   ),
-                  child: Text(
-                    'Steps taken:'.toUpperCase(),
-                    style: kLabelTextStyle.copyWith(color: Colors.purple),
+                  SizedBox(
+                    height: 15,
                   ),
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  _steps,
-                  style: kLabelTextStyle.copyWith(fontSize: 30.0),
-                ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Expanded(
-                child: Text(
-                  'Pedestrian status:',
-                  style: kLabelTextStyle.copyWith(color: Colors.purple),
-                ),
-              ),
-              Expanded(
-                child: Icon(
-                  _status == 'walking'
-                      ? Icons.directions_walk
-                      : _status == 'stopped'
-                          ? Icons.accessibility_new
-                          : Icons.error,
-                  color: Colors.purple,
-                  size: 70,
-                ),
-              ),
-              Expanded(
-                child: Center(
-                  child: Text(
-                    _status,
-                    style: _status == 'walking' || _status == 'stopped'
-                        ? TextStyle(fontSize: 30)
-                        : TextStyle(fontSize: 20, color: Colors.purple),
+                  Expanded(
+                    child: Text(
+                      _steps,
+                      style: kLabelTextStyle.copyWith(fontSize: 30.0),
+                    ),
                   ),
-                ),
-              )
-            ],
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Expanded(
+                    child: Text(
+                      'Pedestrian status:',
+                      style: kLabelTextStyle.copyWith(color: Colors.purple),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Expanded(
+                    child: Icon(
+                      _status == 'walking'
+                          ? Icons.directions_walk
+                          : _status == 'stopped'
+                              ? Icons.accessibility_new
+                              : Icons.error,
+                      color: Colors.purple,
+                      size: 70,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        _status,
+                        style: _status == 'walking' || _status == 'stopped'
+                            ? TextStyle(fontSize: 30)
+                            : TextStyle(fontSize: 20, color: Colors.purple),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
-        ),
+          SizedBox(
+            height: 33,
+          ),
+          CalculateButton(
+            onTap: () {
+
+              cBrain = CalculatorBrain(
+                  gender: cAppUser.getGender(),
+                  cUser: cAppUser);
+              cBrain.calculateStepsCountProgress();
+              print('drink ${cBrain.calculateDailyH2O()} L');
+              setState(() {
+                //updateUserHealth(); //TODO:onTap update ui
+              });
+              //Navigator.of(context).pop();
+              Navigator.pushNamed(context, HomeScreen.id,arguments: {'CurrentAppUserData': cAppUser});
+            },
+            buttonTitle: "CONTINUE",
+          ),
+        ],
       ),
     );
   }
