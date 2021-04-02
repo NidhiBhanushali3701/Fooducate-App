@@ -102,11 +102,11 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
               Expanded(
                 child: Text(
                   _steps,
-                  style: kLabelTextStyle.copyWith(fontSize: 60.0),
+                  style: kLabelTextStyle.copyWith(fontSize: 30.0),
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: 30,
               ),
               Expanded(
                 child: Text(

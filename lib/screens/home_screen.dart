@@ -215,6 +215,38 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
+                  Container(
+                    height: 200.0,
+                    width: 200.0,
+                    margin: EdgeInsets.all(20.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey,
+                          offset: Offset(1.0, 1.0),
+                          blurRadius: 2.0,
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "WATER TRACKER ",
+                          style: kLabelTextStyle.copyWith(color: Colors.purple),
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Text(
+                          "0 ml", //TODO: updating steps
+                          style: kLabelTextStyle.copyWith(color: Colors.purple),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),

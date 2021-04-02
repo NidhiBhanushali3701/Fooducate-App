@@ -51,6 +51,7 @@ class CalculatorBrain {
         ((((cUser.getWeight() * 2.205 * 2) / 3) + (cUser.workOutTime * 2.5)) ~/
             33.814);
     print(_dailyH2O);
+    cUser.setDailyH2O(_dailyH2O);
     return _dailyH2O.toStringAsFixed(0);
   }
 }
