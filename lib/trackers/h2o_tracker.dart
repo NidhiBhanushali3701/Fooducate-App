@@ -144,6 +144,9 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
                     ],
                   ),
                 ),
+                SizedBox(
+                  height: 20.0,
+                ),
                 Column(
                   children: [
                     Text(
@@ -163,6 +166,9 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
                       ),
                     ),
                   ],
+                ),
+                SizedBox(
+                  height: 20.0,
                 ),
                 CalculateButton(
                   onTap: () {
