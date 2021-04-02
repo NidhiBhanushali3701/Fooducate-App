@@ -249,7 +249,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     child: RaisedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, H2OTracker.id);
+                        Navigator.pushNamed(context, H2OTracker.id, arguments: {
+                          'CurrentAppUserData': cAppUser,
+                          'CurrentAppUserCB': cBrain
+                        });
                       },
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
