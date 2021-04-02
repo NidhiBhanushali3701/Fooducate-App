@@ -13,7 +13,7 @@ import '../calculator_brain.dart';
 class H2OTracker extends StatefulWidget {
   static String id = 'h2oTrackerScreen';
   AppUser cAppUser;
-  H2OTracker({Key key, @required this.cAppUser}) : super(key: key);
+  H2OTracker({Key key,this.cAppUser}) : super(key: key);
   @override
   _H2OTrackerState createState() => _H2OTrackerState();
 }
@@ -28,6 +28,24 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        leading: null,
+        title: Text('WATER TRACKER'),
+        backgroundColor: Colors.purple,
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            child: Column(
+              children: <Widget>[
+
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

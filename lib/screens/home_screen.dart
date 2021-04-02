@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fooducate/app_user.dart';
 import 'package:fooducate/screens/gender_screen.dart';
+import 'package:fooducate/trackers/h2o_tracker.dart';
 import 'package:fooducate/trackers/step_tracker.dart';
 import 'file:///C:/Users/Nidhi/Desktop/AndroidStudioProjects/fooducate/lib/screens/user_data_input_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -26,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final _auth = FirebaseAuth.instance;
   bool showSpinner = false;
   AppUser cAppUser = AppUser();
-  String sBMI = ' ', sCalorie = ' ';
+  String sBMI = ' ', sCalorie = ' ', sSteps = '0', sUserH2O = '0';
 
   @override
   void initState() {
@@ -136,8 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Text(
                           "CALORIES YOU NEED ",
-                          style: kLabelTextStyle.copyWith(
-                              color: Colors.purple),
+                          style: kLabelTextStyle.copyWith(color: Colors.purple),
                         ),
                         SizedBox(
                           height: 20.0,
@@ -145,8 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text(
                           //TODO: Update the actual Calories value here
                           sCalorie,
-                          style: kLabelTextStyle.copyWith(
-                              color: Colors.purple),
+                          style: kLabelTextStyle.copyWith(color: Colors.purple),
                         ),
                       ],
                     ),
@@ -209,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           height: 20.0,
                         ),
                         Text(
-                          "0 STEPS", //TODO: updating steps
+                          sSteps, //TODO: updating steps
                           style: kLabelTextStyle.copyWith(color: Colors.purple),
                         ),
                       ],
@@ -230,21 +229,28 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                       ],
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "WATER TRACKER ",
-                          style: kLabelTextStyle.copyWith(color: Colors.purple),
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Text(
-                          "0 ml", //TODO: updating steps
-                          style: kLabelTextStyle.copyWith(color: Colors.purple),
-                        ),
-                      ],
+                    child: RaisedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, H2OTracker.id);
+                      },
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "WATER TRACKER ",
+                            style:
+                                kLabelTextStyle.copyWith(color: Colors.purple),
+                          ),
+                          SizedBox(
+                            height: 20.0,
+                          ),
+                          Text(
+                            sUserH2O, //TODO: updating steps
+                            style:
+                                kLabelTextStyle.copyWith(color: Colors.purple),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
