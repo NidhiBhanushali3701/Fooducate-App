@@ -15,6 +15,7 @@ import 'dart:async';
 import 'package:fooducate/app_user.dart';
 import 'trackers/step_tracker.dart';
 import 'package:http/http.dart';
+import 'screens/food_search_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

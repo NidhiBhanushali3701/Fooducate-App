@@ -1,8 +1,5 @@
-import 'package:flutter/material.dart';
-import 'dart:async';
-
-class Food{
-  String name;
-  double quantity,Calorie;
-  var Nutrients = Map();
+class Food {
+  double calories, fat, carbs, protein;
+  String name = '', foodImgURL = '';
+  Food({this.calories, this.fat, this.carbs, this.protein, this.foodImgURL,this.name});
 }
