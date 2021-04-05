@@ -7,7 +7,6 @@ import 'package:fooducate/food.dart';
 import 'package:fooducate/screens/gender_screen.dart';
 import 'package:fooducate/trackers/h2o_tracker.dart';
 import 'package:fooducate/trackers/step_tracker.dart';
-import 'file:///C:/Users/Nidhi/Desktop/AndroidStudioProjects/fooducate/lib/screens/user_data_input_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 //import 'package:firebase_database/firebase_database.dart';//not present yet
 import '../constants.dart';
@@ -311,10 +310,23 @@ class _HomeScreenState extends State<HomeScreen> {
             BottomNavigationBarItem(
               label: 'Food',
               icon: IconButton(
-                icon: Icon(Icons.fastfood,
+                icon: Icon(Icons.restaurant_menu,
                     color: Colors.purple), //Icon(Icons.account_circle_rounded)
                 onPressed: () {
                   Navigator.pushNamed(context, FoodScreen.id, arguments: {
+                    'CurrentAppUserData': cAppUser,
+                    'CurrentAppUserCB': cBrain
+                  });
+                },
+              ),
+            ),
+            BottomNavigationBarItem(
+              label: 'Water Tracker',
+              icon: IconButton(
+                icon: Icon(Icons.wine_bar_sharp,
+                    color: Colors.purple), //Icon(Icons.account_circle_rounded)
+                onPressed: () {
+                  Navigator.pushNamed(context, H2OTracker.id, arguments: {
                     'CurrentAppUserData': cAppUser,
                     'CurrentAppUserCB': cBrain
                   });
