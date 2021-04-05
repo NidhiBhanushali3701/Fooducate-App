@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fooducate/app_user.dart';
 import 'package:fooducate/calculator_brain.dart';
+import 'package:fooducate/food.dart';
 import 'package:fooducate/screens/gender_screen.dart';
 import 'package:fooducate/trackers/h2o_tracker.dart';
 import 'package:fooducate/trackers/step_tracker.dart';
@@ -301,6 +302,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Colors.purple), //Icon(Icons.account_circle_rounded)
                 onPressed: () {
                   Navigator.pushNamed(context, StepTracker.id, arguments: {
+                    'CurrentAppUserData': cAppUser,
+                    'CurrentAppUserCB': cBrain
+                  });
+                },
+              ),
+            ),
+            BottomNavigationBarItem(
+              label: 'Food',
+              icon: IconButton(
+                icon: Icon(Icons.fastfood,
+                    color: Colors.purple), //Icon(Icons.account_circle_rounded)
+                onPressed: () {
+                  Navigator.pushNamed(context, FoodScreen.id, arguments: {
                     'CurrentAppUserData': cAppUser,
                     'CurrentAppUserCB': cBrain
                   });
