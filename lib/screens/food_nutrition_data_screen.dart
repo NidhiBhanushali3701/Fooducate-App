@@ -1,5 +1,8 @@
 import 'package:fooducate/constants.dart';
 import 'package:fooducate/main.dart';
+import 'package:fooducate/screens/gender_screen.dart';
+import 'package:fooducate/trackers/h2o_tracker.dart';
+import 'package:fooducate/trackers/step_tracker.dart';
 import 'food_search_screen.dart';
 import 'home_screen.dart';
 import 'package:flutter/material.dart';
@@ -96,6 +99,66 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
           ],
         ),
       ]),
+      bottomNavigationBar: BottomNavigationBar(
+        elevation: 15,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            label: 'Home',
+            icon: IconButton(
+              icon: Icon(Icons.home_rounded,
+                  color: Colors.purple), //Icon(Icons.account_circle_rounded)
+              onPressed: () {
+                setState(() {
+                  //updateUserHealth();
+                });
+              },
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: 'Steps',
+            icon: IconButton(
+              icon: Icon(Icons.directions_walk_rounded,
+                  color: Colors.purple), //Icon(Icons.account_circle_rounded)
+              onPressed: () {
+                Navigator.pushNamed(context, StepTracker.id);
+              },
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: 'Food',
+            icon: IconButton(
+              icon: Icon(Icons.restaurant_menu,
+                  color: Colors.purple), //Icon(Icons.account_circle_rounded)
+              onPressed: () {
+                Navigator.pushNamed(context, FoodScreen.id);
+              },
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: 'Water Tracker',
+            icon: IconButton(
+              icon: Icon(Icons.wine_bar_sharp,
+                  color: Colors.purple), //Icon(Icons.account_circle_rounded)
+              onPressed: () {
+                Navigator.pushNamed(context, H2OTracker.id);
+              },
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: 'Me',
+            icon: IconButton(
+              icon: Icon(Icons.account_circle_rounded, color: Colors.purple),
+              onPressed: () {
+                Navigator.pushNamed(context, GenderSelect.id); //arguments: {'CurrentAppUserData': cAppUser}
+                setState(() {
+                  //updateUserHealth();
+                });
+                //Navigator.pushNamed(context, routeName)
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
