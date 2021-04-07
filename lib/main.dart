@@ -26,7 +26,7 @@ void main() async {
       visualDensity: VisualDensity.adaptivePlatformDensity,
     ),
     //initialRoute: StartScreen.id,
-    initialRoute: FoodScreen.id,
+    initialRoute: StartScreen.id,
     routes: {
       StartScreen.id: (context) {
         return StartScreen();
