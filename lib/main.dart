@@ -16,6 +16,7 @@ import 'package:fooducate/app_user.dart';
 import 'trackers/step_tracker.dart';
 import 'package:http/http.dart';
 import 'screens/food_search_screen.dart';
+import 'screens/food_nutrition_data_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +26,7 @@ void main() async {
       visualDensity: VisualDensity.adaptivePlatformDensity,
     ),
     //initialRoute: StartScreen.id,
-    initialRoute: StartScreen.id,
+    initialRoute: FoodScreen.id,
     routes: {
       StartScreen.id: (context) {
         return StartScreen();
@@ -53,6 +54,9 @@ void main() async {
       },
       FoodScreen.id: (context) {
         return FoodScreen();
+      },
+      FoodNutritionalDataScreen.id: (context) {
+        return FoodNutritionalDataScreen();
       },
     },
   ));
