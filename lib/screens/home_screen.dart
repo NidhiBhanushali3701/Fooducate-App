@@ -282,6 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(
+          elevation: 15,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               label: 'Home',

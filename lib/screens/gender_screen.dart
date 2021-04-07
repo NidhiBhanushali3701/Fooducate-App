@@ -39,7 +39,8 @@ class _GenderSelectState extends State<GenderSelect> {
       ),
       body: SafeArea(
         child: Container(
-          child: Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(9.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
