@@ -68,7 +68,7 @@ class _UserDataState extends State<UserData> {
                           style: kNumberTextStyle,
                         ),
                         Text(
-                          "cm",
+                          " cm",
                           style: kLabelTextStyle,
                         )
                       ],
@@ -125,8 +125,7 @@ class _UserDataState extends State<UserData> {
                                   setState(() {
                                     if (weight > 0) {
                                       weight--;
-                                    }
-                                    else{
+                                    } else {
                                       weight = 0;
                                     }
                                   });
@@ -177,8 +176,7 @@ class _UserDataState extends State<UserData> {
                                   setState(() {
                                     if (age > 0) {
                                       age--;
-                                    }
-                                    else{
+                                    } else {
                                       age = 0;
                                     }
                                   });
@@ -220,8 +218,10 @@ class _UserDataState extends State<UserData> {
                   //updateUserHealth(); //TODO:onTap update ui
                 });
                 //Navigator.of(context).pop();
-                Navigator.pushNamed(context, HomeScreen.id,
-                    arguments: {'CurrentAppUserData': cAppUser,'CurrentAppUserCB':cBrain});
+                Navigator.pushNamed(context, HomeScreen.id, arguments: {
+                  'CurrentAppUserData': cAppUser,
+                  'CurrentAppUserCB': cBrain
+                });
               },
               buttonTitle: "CALCULATE",
             ),
@@ -231,3 +231,19 @@ class _UserDataState extends State<UserData> {
     );
   }
 }
+/*void updateUserData() {
+    if (cAppUser.getWeight() != null) {
+      weight = cAppUser.getWeight().toInt();
+    }
+    if (cAppUser.getHeight() != null) {
+      height = cAppUser.getHeight().toInt();
+    }
+    if (cAppUser.getAge() != null) {
+      age = cAppUser.getAge().toInt();
+    }
+  }
+
+  void initState() {
+    super.initState();
+    //updateUserData();
+  }*/
