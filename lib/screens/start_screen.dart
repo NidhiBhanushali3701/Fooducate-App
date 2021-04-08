@@ -48,6 +48,7 @@ class _StartScreenState extends State<StartScreen> {
             centerTitle: true,
             backgroundColor: Colors.purple,
           ),
+          backgroundColor: Colors.white,
           body: Column(
             children: <Widget>[
               Padding(
