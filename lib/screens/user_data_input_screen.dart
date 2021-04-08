@@ -137,7 +137,7 @@ class _UserDataState extends State<UserData> {
                                 },
                               ),
                               SizedBox(
-                                width: 10.0,
+                                width: 12,
                               ),
                               RoundIconButton(
                                 icon: FontAwesomeIcons.plus,
@@ -188,7 +188,7 @@ class _UserDataState extends State<UserData> {
                                 },
                               ),
                               SizedBox(
-                                width: 10.0,
+                                width: 12.0,
                               ),
                               RoundIconButton(
                                 icon: FontAwesomeIcons.plus,
