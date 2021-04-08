@@ -162,10 +162,6 @@ class _FoodScreenState extends State<FoodScreen> {
                             height: 10,
                           ),
                         ),
-                        Text(
-                          (calories.toString() + ' kCal'),
-                          style: TextStyle(color: Colors.purple, fontSize: 25),
-                        ),
                       ],
                     ),
                   ),
