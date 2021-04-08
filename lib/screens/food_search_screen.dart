@@ -136,6 +136,7 @@ class _FoodScreenState extends State<FoodScreen> {
                                         arguments: {
                                           'CurrentAppUserData': cAppUser,
                                           'CurrentAppUserCB': cBrain,
+                                          'foodName':name,
                                           'calories': calories.toString(),
                                           'fats': fats.toString(),
                                           'carbs': carbs.toString(),

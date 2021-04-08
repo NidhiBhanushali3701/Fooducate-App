@@ -23,11 +23,23 @@ class AppUser {
   gender _gender;
   List<String> MedCond = new List(5);
   List<String> FoodPref = new List(5);
-  List<Food> food = new List(100);
+  List<Food> _food = List();//List.filled(500,Food(foodImgURL: ' ',carbs: 0,calories: 0,name: ' ',fat: 0,protein: 0,quantity: 1),growable: true);
   Goal _goal, _goalPerWeek;
   //Progress progress;
   //CalculatorBrain cAppUserCalculatorBrain;
+  void addMeals(Food f) {
+    _food.add(f);
+  }
 
+  dynamic getAllMeals() {
+    return _food;
+  }
+  void printAllMeals(){
+    print('I ate \n');
+    for(Food f in _food){
+      print('${f.name},${f.calories}');
+    }
+  }
   void setHeight(double h) {
     _height = h;
   }

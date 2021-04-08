@@ -1,6 +1,8 @@
 import 'package:fooducate/app_user.dart';
+import 'package:fooducate/calculate_button.dart';
 import 'package:fooducate/calculator_brain.dart';
 import 'package:fooducate/constants.dart';
+import 'package:fooducate/food.dart';
 import 'package:fooducate/main.dart';
 import 'package:fooducate/screens/gender_screen.dart';
 import 'package:fooducate/trackers/h2o_tracker.dart';
@@ -8,6 +10,7 @@ import 'package:fooducate/trackers/step_tracker.dart';
 import 'food_search_screen.dart';
 import 'home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:convert/convert.dart';
 
 class FoodNutritionalDataScreen extends StatefulWidget {
   static String id = 'foodNutritionalDataScreen';
@@ -17,7 +20,7 @@ class FoodNutritionalDataScreen extends StatefulWidget {
 }
 
 class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
-  String calories = ' ', fats = ' ', carbs = ' ', protein = ' ';
+  String calories = ' ', fats = ' ', carbs = ' ', protein = ' ', foodName = ' ';
   int currentTabIndex = 2;
   AppUser cAppUser;
   CalculatorBrain cBrain;
@@ -29,6 +32,7 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
       //print(arguments['CurrentAppUserData']);
       //if you passed object
       //final cAppUser = arguments['CurrentAppUserData'];
+      foodName = arguments['foodName'];
       cAppUser = arguments['CurrentAppUserData'];
       cBrain = arguments['CurrentAppUserCB'];
       print(
@@ -48,6 +52,7 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
       if (arguments['protein'] != null) {
         protein = arguments['protein'];
       }
+
       print('in table view $carbs,$calories,$fats,$protein');
     }
     return Scaffold(
@@ -105,6 +110,33 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
             ]),
           ],
         ),
+        SizedBox(
+          height: 111,
+        ),
+        CalculateButton(
+          onTap: () {
+            Food f = Food(
+                calories: double.parse(calories),
+                fat: double.parse(fats),
+                name: foodName,
+                carbs: double.parse(carbs),
+                protein: double.parse(protein),
+                quantity: 1,
+                foodImgURL: ' ');
+            cAppUser.addMeals(f);
+            print(cAppUser.getAllMeals());
+            cAppUser.printAllMeals();
+            setState(() {
+              //updateUserHealth(); //TODO:onTap update ui
+            });
+            //Navigator.of(context).pop();
+            Navigator.pushReplacementNamed(context, HomeScreen.id, arguments: {
+              'CurrentAppUserData': cAppUser,
+              'CurrentAppUserCB': cBrain
+            });
+          },
+          buttonTitle: "ADD TO MEALS",
+        )
       ]),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.purple,
