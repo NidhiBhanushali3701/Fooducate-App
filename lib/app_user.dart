@@ -35,7 +35,7 @@ class AppUser {
     return _food;
   }
   void printAllMeals(){
-    print('I ate \n');
+    print('I had\n');
     for(Food f in _food){
       print('${f.name},${f.calories}');
     }
