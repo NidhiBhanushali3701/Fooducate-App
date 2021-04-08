@@ -39,7 +39,7 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
     return h2oProgress = ((userDrankH2O / cAppUser.getDailyH2O()) / 4);
   }
 
-  Path _buildBoatPath() {
+  Path _buildRectPath() {
     return Path()
       ..moveTo(0, 200)
       ..lineTo(0, 90)
@@ -167,7 +167,7 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
                         valueColor: AlwaysStoppedAnimation(Colors.cyan),
                         backgroundColor: Color(0xFFF3E5F5),
                         direction: Axis.vertical,
-                        shapePath: _buildBoatPath(),
+                        shapePath: _buildRectPath(),
                       ),
                     ),
                   ],
