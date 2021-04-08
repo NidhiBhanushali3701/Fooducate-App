@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   AppUser cAppUser = AppUser();
   CalculatorBrain cBrain = CalculatorBrain();
   String sBMI = ' ', sCalorie = ' ', sSteps = '0', sUserH2O = '0';
-
+  int currentTab = 0;
   @override
   void initState() {
     super.initState();
@@ -106,7 +106,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     showSpinner = true;
                   });
                   await _auth.signOut();
-                  Navigator.pushNamed(context, StartScreen.id);
+                  //clearSession();
+                  //Navigator.pop(context,true);
+                  Navigator.pushReplacementNamed(context, StartScreen.id);
                   //Navigator.pop(context);
                   //Navigator.pop(context);
                   setState(() {
@@ -285,7 +287,13 @@ class _HomeScreenState extends State<HomeScreen> {
           selectedItemColor: Colors.purple,
           unselectedItemColor: Colors.purple.shade100,
           elevation: 15,
-          currentIndex: 0,
+          currentIndex: currentTab,
+          onTap: (int index) {
+            setState(() {
+              currentTab = index;
+              //currentPage = pages[index];
+            });
+          },
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               activeIcon: Icon(Icons.home_rounded),
