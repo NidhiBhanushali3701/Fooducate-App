@@ -52,7 +52,7 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
   void onPedestrianStatusError(error) {
     print('onPedestrianStatusError: $error');
     setState(() {
-      _status = 'Pedestrian Status not available';
+      _status = 'Pedestrian Status Unavailable';
     });
     print(_status);
   }
@@ -61,7 +61,7 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
     print('onStepCountError: $error');
     setState(() {
       cAppUser.setStepsCount(0);
-      _steps = 'Step Count not available';
+      _steps = 'Step Count not Unavailable';
     });
   }
 
