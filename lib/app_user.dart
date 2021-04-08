@@ -31,15 +31,21 @@ class AppUser {
     _food.add(f);
   }
 
+  int getAllFoodLength() {
+    return _food.length;
+  }
+
   dynamic getAllMeals() {
     return _food;
   }
-  void printAllMeals(){
+
+  void printAllMeals() {
     print('I had\n');
-    for(Food f in _food){
+    for (Food f in _food) {
       print('${f.name},${f.calories}');
     }
   }
+
   void setHeight(double h) {
     _height = h;
   }

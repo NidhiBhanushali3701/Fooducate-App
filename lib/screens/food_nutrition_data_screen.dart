@@ -5,6 +5,7 @@ import 'package:fooducate/constants.dart';
 import 'package:fooducate/food.dart';
 import 'package:fooducate/main.dart';
 import 'package:fooducate/screens/gender_screen.dart';
+import 'package:fooducate/trackers/calorie_tracker.dart';
 import 'package:fooducate/trackers/h2o_tracker.dart';
 import 'package:fooducate/trackers/step_tracker.dart';
 import 'food_search_screen.dart';
@@ -111,7 +112,7 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
           ],
         ),
         SizedBox(
-          height: 100,
+          height: 111,
         ),
         CalculateButton(
           onTap: () {
@@ -130,10 +131,14 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
               //updateUserHealth(); //TODO:onTap update ui
             });
             //Navigator.of(context).pop();
-            Navigator.pushReplacementNamed(context, HomeScreen.id, arguments: {
+            Navigator.pushReplacementNamed(context, CalorieTracker.id, arguments: {
               'CurrentAppUserData': cAppUser,
               'CurrentAppUserCB': cBrain
             });
+            /*Navigator.pushReplacementNamed(context, HomeScreen.id, arguments: {
+              'CurrentAppUserData': cAppUser,
+              'CurrentAppUserCB': cBrain
+            });*/
           },
           buttonTitle: "ADD TO MEALS",
         )

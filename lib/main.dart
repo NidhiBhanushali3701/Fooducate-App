@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:fooducate/food.dart';
+import 'package:fooducate/trackers/calorie_tracker.dart';
 import 'package:fooducate/trackers/h2o_tracker.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'screens/start_screen.dart';
@@ -58,6 +59,9 @@ void main() async {
       FoodNutritionalDataScreen.id: (context) {
         return FoodNutritionalDataScreen();
       },
+      CalorieTracker.id:(context){
+        return CalorieTracker();
+      }
     },
   ));
 }
