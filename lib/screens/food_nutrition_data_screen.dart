@@ -75,7 +75,7 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
         DataTable(
           columns: [
             DataColumn(
-                label: Text('Sr. no',
+                label: Text('No',
                     style:
                         TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
             DataColumn(
@@ -111,7 +111,7 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
           ],
         ),
         SizedBox(
-          height: 111,
+          height: 100,
         ),
         CalculateButton(
           onTap: () {
