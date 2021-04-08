@@ -213,9 +213,7 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
             icon: IconButton(
               icon: Icon(Icons.home_outlined), //Icon(Icons.account_circle_rounded)
               onPressed: () {
-                setState(() {
-                  //updateUserHealth();
-                });
+                Navigator.pushReplacementNamed(context, HomeScreen.id);
               },
             ),
           ),

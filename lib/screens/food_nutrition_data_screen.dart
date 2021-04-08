@@ -1,3 +1,5 @@
+import 'package:fooducate/app_user.dart';
+import 'package:fooducate/calculator_brain.dart';
 import 'package:fooducate/constants.dart';
 import 'package:fooducate/main.dart';
 import 'package:fooducate/screens/gender_screen.dart';
@@ -17,6 +19,8 @@ class FoodNutritionalDataScreen extends StatefulWidget {
 class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
   String calories = ' ', fats = ' ', carbs = ' ', protein = ' ';
   int currentTabIndex = 2;
+  AppUser cAppUser;
+  CalculatorBrain cBrain;
   @override
   Widget build(BuildContext context) {
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;
@@ -25,11 +29,13 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
       //print(arguments['CurrentAppUserData']);
       //if you passed object
       //final cAppUser = arguments['CurrentAppUserData'];
-      //cAppUser = arguments['CurrentAppUserData'];
-      //cBrain = arguments['CurrentAppUserCB'];
-      //print('in home ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
+      cAppUser = arguments['CurrentAppUserData'];
+      cBrain = arguments['CurrentAppUserCB'];
+      print(
+          'in home ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
       //updateUserHealth();
-      //print('in home ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
+      print(
+          'in home ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
       if (arguments['calories'] != null) {
         calories = arguments['calories'];
       }
@@ -118,9 +124,7 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
               icon:
                   Icon(Icons.home_rounded), //Icon(Icons.account_circle_rounded)
               onPressed: () {
-                setState(() {
-                  //updateUserHealth();
-                });
+                Navigator.pushReplacementNamed(context, HomeScreen.id);
               },
             ),
           ),
@@ -130,7 +134,11 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
               icon: Icon(Icons
                   .directions_walk_rounded), //Icon(Icons.account_circle_rounded)
               onPressed: () {
-                Navigator.pushNamed(context, StepTracker.id);
+                Navigator.pushReplacementNamed(context, StepTracker.id,
+                    arguments: {
+                      'CurrentAppUserData': cAppUser,
+                      'CurrentAppUserCB': cBrain
+                    });
               },
             ),
           ),
@@ -140,7 +148,11 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
               icon: Icon(
                   Icons.restaurant_menu), //Icon(Icons.account_circle_rounded)
               onPressed: () {
-                Navigator.pushNamed(context, FoodScreen.id);
+                Navigator.pushReplacementNamed(context, FoodScreen.id,
+                    arguments: {
+                      'CurrentAppUserData': cAppUser,
+                      'CurrentAppUserCB': cBrain
+                    });
               },
             ),
           ),
@@ -150,7 +162,11 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
               icon: Icon(
                   Icons.wine_bar_sharp), //Icon(Icons.account_circle_rounded)
               onPressed: () {
-                Navigator.pushNamed(context, H2OTracker.id);
+                Navigator.pushReplacementNamed(context, H2OTracker.id,
+                    arguments: {
+                      'CurrentAppUserData': cAppUser,
+                      'CurrentAppUserCB': cBrain
+                    });
               },
             ),
           ),
@@ -159,10 +175,10 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
             icon: IconButton(
               icon: Icon(Icons.account_circle_rounded),
               onPressed: () {
-                Navigator.pushNamed(
-                    context,
-                    GenderSelect
-                        .id); //arguments: {'CurrentAppUserData': cAppUser}
+                Navigator.pushNamed(context, GenderSelect.id, arguments: {
+                  'CurrentAppUserData': cAppUser,
+                  'CurrentAppUserCB': cBrain
+                }); //arguments: {'CurrentAppUserData': cAppUser}
                 setState(() {
                   //updateUserHealth();
                 });

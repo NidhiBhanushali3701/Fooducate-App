@@ -6,6 +6,7 @@ import 'package:fooducate/calculator_brain.dart';
 import 'package:fooducate/constants.dart';
 import 'package:fooducate/screens/food_nutrition_data_screen.dart';
 import 'package:fooducate/screens/gender_screen.dart';
+import 'package:fooducate/screens/home_screen.dart';
 import 'package:fooducate/trackers/h2o_tracker.dart';
 import 'package:fooducate/trackers/step_tracker.dart';
 import 'package:http/http.dart';
@@ -14,10 +15,8 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class FoodScreen extends StatefulWidget {
   static String id = 'foodScreen';
-  /*
   AppUser cAppUser;
   FoodScreen({Key key, @required this.cAppUser}) : super(key: key);
-  */
   @override
   _FoodScreenState createState() => _FoodScreenState();
 }
@@ -38,7 +37,6 @@ class _FoodScreenState extends State<FoodScreen> {
 
   @override
   Widget build(BuildContext context) {
-    /*
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;
     if (arguments != null) {
       //if string data
@@ -49,7 +47,6 @@ class _FoodScreenState extends State<FoodScreen> {
       cBrain = arguments['CurrentAppUserCB'];
       print('in home ${cAppUser.getEmail()}');
     }
-     */
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
       child: Scaffold(
@@ -197,9 +194,7 @@ class _FoodScreenState extends State<FoodScreen> {
                   Icons.home_outlined,
                 ), //Icon(Icons.account_circle_rounded)
                 onPressed: () {
-                  setState(() {
-                    //updateUserHealth();
-                  });
+                  Navigator.pushReplacementNamed(context, HomeScreen.id);
                 },
               ),
             ),

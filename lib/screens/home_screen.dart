@@ -108,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   await _auth.signOut();
                   //clearSession();
                   //Navigator.pop(context,true);
-                  Navigator.pushReplacementNamed(context, StartScreen.id);
+                  Navigator.popUntil(context, ModalRoute.withName(StartScreen.id));
                   //Navigator.pop(context);
                   //Navigator.pop(context);
                   setState(() {
