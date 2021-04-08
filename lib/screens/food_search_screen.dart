@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fooducate/api_services.dart';
 import 'package:fooducate/app_user.dart';
 import 'package:fooducate/calculator_brain.dart';
+import 'package:fooducate/constants.dart';
 import 'package:fooducate/screens/food_nutrition_data_screen.dart';
 import 'package:fooducate/screens/gender_screen.dart';
 import 'package:fooducate/trackers/h2o_tracker.dart';
@@ -175,13 +176,18 @@ class _FoodScreenState extends State<FoodScreen> {
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(
+          selectedItemColor: Colors.purple,
+          unselectedItemColor: Colors.purple.shade100,
           elevation: 15,
+          currentIndex: 2,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
+              activeIcon: Icon(Icons.home_rounded),
               label: 'Home',
               icon: IconButton(
-                icon: Icon(Icons.home_rounded,
-                    color: Colors.purple), //Icon(Icons.account_circle_rounded)
+                icon: Icon(
+                  Icons.home_outlined,
+                ), //Icon(Icons.account_circle_rounded)
                 onPressed: () {
                   setState(() {
                     //updateUserHealth();
@@ -192,8 +198,9 @@ class _FoodScreenState extends State<FoodScreen> {
             BottomNavigationBarItem(
               label: 'Steps',
               icon: IconButton(
-                icon: Icon(Icons.directions_walk_rounded,
-                    color: Colors.purple), //Icon(Icons.account_circle_rounded)
+                icon: Icon(
+                  Icons.directions_walk_rounded,
+                ), //Icon(Icons.account_circle_rounded)
                 onPressed: () {
                   Navigator.pushNamed(context, StepTracker.id, arguments: {
                     'CurrentAppUserData': cAppUser,
@@ -205,8 +212,9 @@ class _FoodScreenState extends State<FoodScreen> {
             BottomNavigationBarItem(
               label: 'Food',
               icon: IconButton(
-                icon: Icon(Icons.restaurant_menu,
-                    color: Colors.purple), //Icon(Icons.account_circle_rounded)
+                icon: Icon(
+                  Icons.restaurant_menu,
+                ), //Icon(Icons.account_circle_rounded)
                 onPressed: () {
                   Navigator.pushNamed(context, FoodScreen.id, arguments: {
                     'CurrentAppUserData': cAppUser,
@@ -218,8 +226,9 @@ class _FoodScreenState extends State<FoodScreen> {
             BottomNavigationBarItem(
               label: 'Water Tracker',
               icon: IconButton(
-                icon: Icon(Icons.wine_bar_sharp,
-                    color: Colors.purple), //Icon(Icons.account_circle_rounded)
+                icon: Icon(
+                  Icons.wine_bar_sharp,
+                ), //Icon(Icons.account_circle_rounded)
                 onPressed: () {
                   Navigator.pushNamed(context, H2OTracker.id, arguments: {
                     'CurrentAppUserData': cAppUser,
@@ -229,9 +238,12 @@ class _FoodScreenState extends State<FoodScreen> {
               ),
             ),
             BottomNavigationBarItem(
+              activeIcon: Icon(Icons.account_circle_rounded),
               label: 'Me',
               icon: IconButton(
-                icon: Icon(Icons.account_circle_rounded, color: Colors.purple),
+                icon: Icon(
+                  Icons.account_circle_outlined,
+                ),
                 onPressed: () {
                   Navigator.pushNamed(context, GenderSelect.id, arguments: {
                     'CurrentAppUserData': cAppUser,

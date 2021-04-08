@@ -40,13 +40,14 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
 
   Path _buildBoatPath() {
     return Path()
-      ..moveTo(15, 120)
-      ..lineTo(0, 85)
-      ..lineTo(50, 85)
-      ..lineTo(60, 80)
-      ..lineTo(60, 85)
-      ..lineTo(120, 85)
-      ..lineTo(105, 120) //and back to the origin, could not be necessary #1
+      ..moveTo(0, 200)
+      ..lineTo(0, 90)
+      ..lineTo(50, 90)
+      ..lineTo(60, 90)
+      ..lineTo(60, 90)
+      ..lineTo(120, 90)
+      ..lineTo(200, 90)
+      ..lineTo(200, 200) //and back to the origin, could not be necessary #1
       ..close();
   }
 
@@ -189,13 +190,18 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.purple,
+        unselectedItemColor: Colors.purple.shade100,
         elevation: 15,
+        currentIndex: 3,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
+            activeIcon: Icon(Icons.home_rounded),
             label: 'Home',
             icon: IconButton(
-              icon: Icon(Icons.home_rounded,
-                  color: Colors.purple), //Icon(Icons.account_circle_rounded)
+              icon: Icon(
+                Icons.home_outlined,
+              ), //Icon(Icons.account_circle_rounded)
               onPressed: () {
                 setState(() {
                   //updateUserHealth();
@@ -206,8 +212,9 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
           BottomNavigationBarItem(
             label: 'Steps',
             icon: IconButton(
-              icon: Icon(Icons.directions_walk_rounded,
-                  color: Colors.purple), //Icon(Icons.account_circle_rounded)
+              icon: Icon(
+                Icons.directions_walk_rounded,
+              ), //Icon(Icons.account_circle_rounded)
               onPressed: () {
                 Navigator.pushNamed(context, StepTracker.id, arguments: {
                   'CurrentAppUserData': cAppUser,
@@ -219,8 +226,9 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
           BottomNavigationBarItem(
             label: 'Food',
             icon: IconButton(
-              icon: Icon(Icons.restaurant_menu,
-                  color: Colors.purple), //Icon(Icons.account_circle_rounded)
+              icon: Icon(
+                Icons.restaurant_menu,
+              ), //Icon(Icons.account_circle_rounded)
               onPressed: () {
                 Navigator.pushNamed(context, FoodScreen.id, arguments: {
                   'CurrentAppUserData': cAppUser,
@@ -232,8 +240,9 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
           BottomNavigationBarItem(
             label: 'Water Tracker',
             icon: IconButton(
-              icon: Icon(Icons.wine_bar_sharp,
-                  color: Colors.purple), //Icon(Icons.account_circle_rounded)
+              icon: Icon(
+                Icons.wine_bar_sharp,
+              ), //Icon(Icons.account_circle_rounded)
               onPressed: () {
                 Navigator.pushNamed(context, H2OTracker.id, arguments: {
                   'CurrentAppUserData': cAppUser,
@@ -243,9 +252,12 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
             ),
           ),
           BottomNavigationBarItem(
+            activeIcon: Icon(Icons.account_circle_rounded),
             label: 'Me',
             icon: IconButton(
-              icon: Icon(Icons.account_circle_rounded, color: Colors.purple),
+              icon: Icon(
+                Icons.account_circle_outlined,
+              ),
               onPressed: () {
                 Navigator.pushNamed(context, GenderSelect.id, arguments: {
                   'CurrentAppUserData': cAppUser,

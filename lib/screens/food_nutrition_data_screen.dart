@@ -100,13 +100,16 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
         ),
       ]),
       bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.purple,
+        unselectedItemColor: Colors.purple.shade100,
         elevation: 15,
+        currentIndex: 2,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             label: 'Home',
             icon: IconButton(
-              icon: Icon(Icons.home_rounded,
-                  color: Colors.purple), //Icon(Icons.account_circle_rounded)
+              icon:
+                  Icon(Icons.home_rounded), //Icon(Icons.account_circle_rounded)
               onPressed: () {
                 setState(() {
                   //updateUserHealth();
@@ -117,8 +120,8 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
           BottomNavigationBarItem(
             label: 'Steps',
             icon: IconButton(
-              icon: Icon(Icons.directions_walk_rounded,
-                  color: Colors.purple), //Icon(Icons.account_circle_rounded)
+              icon: Icon(Icons
+                  .directions_walk_rounded), //Icon(Icons.account_circle_rounded)
               onPressed: () {
                 Navigator.pushNamed(context, StepTracker.id);
               },
@@ -127,8 +130,8 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
           BottomNavigationBarItem(
             label: 'Food',
             icon: IconButton(
-              icon: Icon(Icons.restaurant_menu,
-                  color: Colors.purple), //Icon(Icons.account_circle_rounded)
+              icon: Icon(
+                  Icons.restaurant_menu), //Icon(Icons.account_circle_rounded)
               onPressed: () {
                 Navigator.pushNamed(context, FoodScreen.id);
               },
@@ -137,8 +140,8 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
           BottomNavigationBarItem(
             label: 'Water Tracker',
             icon: IconButton(
-              icon: Icon(Icons.wine_bar_sharp,
-                  color: Colors.purple), //Icon(Icons.account_circle_rounded)
+              icon: Icon(
+                  Icons.wine_bar_sharp), //Icon(Icons.account_circle_rounded)
               onPressed: () {
                 Navigator.pushNamed(context, H2OTracker.id);
               },
@@ -147,9 +150,12 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
           BottomNavigationBarItem(
             label: 'Me',
             icon: IconButton(
-              icon: Icon(Icons.account_circle_rounded, color: Colors.purple),
+              icon: Icon(Icons.account_circle_rounded),
               onPressed: () {
-                Navigator.pushNamed(context, GenderSelect.id); //arguments: {'CurrentAppUserData': cAppUser}
+                Navigator.pushNamed(
+                    context,
+                    GenderSelect
+                        .id); //arguments: {'CurrentAppUserData': cAppUser}
                 setState(() {
                   //updateUserHealth();
                 });

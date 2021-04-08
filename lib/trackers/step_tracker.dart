@@ -195,13 +195,16 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.purple,
+        unselectedItemColor: Colors.purple.shade100,
         elevation: 15,
+        currentIndex: 1,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
+            activeIcon: Icon(Icons.home_rounded),
             label: 'Home',
             icon: IconButton(
-              icon: Icon(Icons.home_rounded,
-                  color: Colors.purple), //Icon(Icons.account_circle_rounded)
+              icon: Icon(Icons.home_outlined), //Icon(Icons.account_circle_rounded)
               onPressed: () {
                 setState(() {
                   //updateUserHealth();
@@ -212,8 +215,7 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
           BottomNavigationBarItem(
             label: 'Steps',
             icon: IconButton(
-              icon: Icon(Icons.directions_walk_rounded,
-                  color: Colors.purple), //Icon(Icons.account_circle_rounded)
+              icon: Icon(Icons.directions_walk_rounded), //Icon(Icons.account_circle_rounded)
               onPressed: () {
                 Navigator.pushNamed(context, StepTracker.id, arguments: {
                   'CurrentAppUserData': cAppUser,
@@ -225,8 +227,7 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
           BottomNavigationBarItem(
             label: 'Food',
             icon: IconButton(
-              icon: Icon(Icons.restaurant_menu,
-                  color: Colors.purple), //Icon(Icons.account_circle_rounded)
+              icon: Icon(Icons.restaurant_menu), //Icon(Icons.account_circle_rounded)
               onPressed: () {
                 Navigator.pushNamed(context, FoodScreen.id, arguments: {
                   'CurrentAppUserData': cAppUser,
@@ -238,8 +239,7 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
           BottomNavigationBarItem(
             label: 'Water Tracker',
             icon: IconButton(
-              icon: Icon(Icons.wine_bar_sharp,
-                  color: Colors.purple), //Icon(Icons.account_circle_rounded)
+              icon: Icon(Icons.wine_bar_sharp), //Icon(Icons.account_circle_rounded)
               onPressed: () {
                 Navigator.pushNamed(context, H2OTracker.id, arguments: {
                   'CurrentAppUserData': cAppUser,
@@ -249,9 +249,10 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
             ),
           ),
           BottomNavigationBarItem(
+            activeIcon: Icon(Icons.account_circle_rounded),
             label: 'Me',
             icon: IconButton(
-              icon: Icon(Icons.account_circle_rounded, color: Colors.purple),
+              icon: Icon(Icons.account_circle_outlined),
               onPressed: () {
                 Navigator.pushNamed(context, GenderSelect.id, arguments: {
                   'CurrentAppUserData': cAppUser,
