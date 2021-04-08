@@ -15,7 +15,7 @@ import 'package:fooducate/constants.dart';
 class StepTracker extends StatefulWidget {
   static String id = 'StepTracker';
   AppUser cAppUser;
-  StepTracker({Key key,@required this.cAppUser}) : super(key: key);
+  StepTracker({Key key, @required this.cAppUser}) : super(key: key);
   @override
   _StepTrackerState createState() => _StepTrackerState();
 }
@@ -86,7 +86,8 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
       //if you passed object
       //final cAppUser = arguments['CurrentAppUserData'];
       cAppUser = arguments['CurrentAppUserData'];
-      print('in step tracker ${cAppUser.getEmail()},${cAppUser.getStepsCount()}');
+      print(
+          'in step tracker ${cAppUser.getEmail()},${cAppUser.getStepsCount()}');
     }
     return Scaffold(
       appBar: AppBar(
@@ -97,9 +98,12 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
       ),
       body: Column(
         children: <Widget>[
+          SizedBox(
+            height: 15,
+          ),
           Center(
             child: Container(
-              height: 300,
+              height: 150,
               width: 400,
               decoration: BoxDecoration(
                   color: Colors.white,
@@ -121,12 +125,13 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
                       ),
                       child: Text(
                         'Steps taken:'.toUpperCase(),
-                        style: kLabelTextStyle.copyWith(color: Colors.purple),
+                        style: kLabelTextStyle.copyWith(
+                            color: Colors.purple, fontSize: 30),
                       ),
                     ),
                   ),
                   SizedBox(
-                    height: 15,
+                    height: 10,
                   ),
                   Expanded(
                     child: Text(
@@ -135,8 +140,32 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
                     ),
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 5,
                   ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 30,
+          ),
+          Center(
+            child: Container(
+              height: 216,
+              width: 400,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey,
+                      offset: Offset(1.0, 1.0),
+                      blurRadius: 2.0,
+                    )
+                  ]),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
                   Expanded(
                     child: Text(
                       'Pedestrian status:',
@@ -154,7 +183,7 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
                               ? Icons.accessibility_new
                               : Icons.error,
                       color: Colors.purple,
-                      size: 70,
+                      size: 60,
                     ),
                   ),
                   SizedBox(
@@ -175,21 +204,20 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
             ),
           ),
           SizedBox(
-            height: 33,
+            height: 21,
           ),
           CalculateButton(
             onTap: () {
-
               cBrain = CalculatorBrain(
-                  gender: cAppUser.getGender(),
-                  cUser: cAppUser);
+                  gender: cAppUser.getGender(), cUser: cAppUser);
               cBrain.calculateStepsCountProgress();
               print('drink ${cBrain.calculateDailyH2O()} L');
               setState(() {
                 //updateUserHealth(); //TODO:onTap update ui
               });
               //Navigator.of(context).pop();
-              Navigator.pushNamed(context, HomeScreen.id,arguments: {'CurrentAppUserData': cAppUser});
+              Navigator.pushNamed(context, HomeScreen.id,
+                  arguments: {'CurrentAppUserData': cAppUser});
             },
             buttonTitle: "CONTINUE",
           ),
@@ -211,7 +239,8 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
             activeIcon: Icon(Icons.home_rounded),
             label: 'Home',
             icon: IconButton(
-              icon: Icon(Icons.home_outlined), //Icon(Icons.account_circle_rounded)
+              icon: Icon(
+                  Icons.home_outlined), //Icon(Icons.account_circle_rounded)
               onPressed: () {
                 Navigator.pushReplacementNamed(context, HomeScreen.id);
               },
@@ -220,7 +249,8 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
           BottomNavigationBarItem(
             label: 'Steps',
             icon: IconButton(
-              icon: Icon(Icons.directions_walk_rounded), //Icon(Icons.account_circle_rounded)
+              icon: Icon(Icons
+                  .directions_walk_rounded), //Icon(Icons.account_circle_rounded)
               onPressed: () {
                 Navigator.pushNamed(context, StepTracker.id, arguments: {
                   'CurrentAppUserData': cAppUser,
@@ -232,7 +262,8 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
           BottomNavigationBarItem(
             label: 'Food',
             icon: IconButton(
-              icon: Icon(Icons.restaurant_menu), //Icon(Icons.account_circle_rounded)
+              icon: Icon(
+                  Icons.restaurant_menu), //Icon(Icons.account_circle_rounded)
               onPressed: () {
                 Navigator.pushNamed(context, FoodScreen.id, arguments: {
                   'CurrentAppUserData': cAppUser,
@@ -244,7 +275,8 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
           BottomNavigationBarItem(
             label: 'Water Tracker',
             icon: IconButton(
-              icon: Icon(Icons.wine_bar_sharp), //Icon(Icons.account_circle_rounded)
+              icon: Icon(
+                  Icons.wine_bar_sharp), //Icon(Icons.account_circle_rounded)
               onPressed: () {
                 Navigator.pushNamed(context, H2OTracker.id, arguments: {
                   'CurrentAppUserData': cAppUser,

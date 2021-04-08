@@ -6,6 +6,10 @@ import 'package:fooducate/constants.dart';
 import 'package:fooducate/icon_content.dart';
 import 'package:fooducate/reusable_card.dart';
 import 'package:fooducate/round_icon_button.dart';
+import 'package:fooducate/screens/food_search_screen.dart';
+import 'package:fooducate/screens/gender_screen.dart';
+import 'package:fooducate/trackers/h2o_tracker.dart';
+import 'package:fooducate/trackers/step_tracker.dart';
 import 'home_screen.dart';
 import '../calculator_brain.dart';
 
@@ -228,6 +232,93 @@ class _UserDataState extends State<UserData> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Colors.purple,
+        unselectedItemColor: Colors.purple.shade100,
+        elevation: 15,
+        currentIndex: currentTabIndex,
+        onTap: (int index) {
+          setState(() {
+            currentTabIndex = index;
+            //currentPage = pages[index];
+          });
+        },
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            activeIcon: Icon(Icons.home_rounded),
+            label: 'Home',
+            icon: IconButton(
+              icon: Icon(
+                Icons.home_outlined,
+              ), //Icon(Icons.account_circle_rounded)
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, HomeScreen.id);
+              },
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: 'Steps',
+            icon: IconButton(
+              icon: Icon(
+                Icons.directions_walk_rounded,
+              ), //Icon(Icons.account_circle_rounded)
+              onPressed: () {
+                Navigator.pushNamed(context, StepTracker.id, arguments: {
+                  'CurrentAppUserData': cAppUser,
+                  'CurrentAppUserCB': cBrain
+                });
+              },
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: 'Food',
+            icon: IconButton(
+              icon: Icon(
+                Icons.restaurant_menu,
+              ), //Icon(Icons.account_circle_rounded)
+              onPressed: () {
+                Navigator.pushNamed(context, FoodScreen.id, arguments: {
+                  'CurrentAppUserData': cAppUser,
+                  'CurrentAppUserCB': cBrain
+                });
+              },
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: 'Water Tracker',
+            icon: IconButton(
+              icon: Icon(
+                Icons.wine_bar_sharp,
+              ), //Icon(Icons.account_circle_rounded)
+              onPressed: () {
+                Navigator.pushNamed(context, H2OTracker.id, arguments: {
+                  'CurrentAppUserData': cAppUser,
+                  'CurrentAppUserCB': cBrain
+                });
+              },
+            ),
+          ),
+          BottomNavigationBarItem(
+            activeIcon: Icon(Icons.account_circle_rounded),
+            label: 'Me',
+            icon: IconButton(
+              icon: Icon(
+                Icons.account_circle_outlined,
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, GenderSelect.id, arguments: {
+                  'CurrentAppUserData': cAppUser,
+                  'CurrentAppUserCB': cBrain
+                }); //arguments: {'CurrentAppUserData': cAppUser}
+                setState(() {
+                  //updateUserHealth();
+                });
+                //Navigator.pushNamed(context, routeName)
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
