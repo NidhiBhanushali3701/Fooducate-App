@@ -26,6 +26,7 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
   String _status = '?', _steps = '0';
   AppUser cAppUser;
   CalculatorBrain cBrain;
+  int currentTabIndex = 1;
 
   @override
   void initState() {
@@ -198,7 +199,13 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
         selectedItemColor: Colors.purple,
         unselectedItemColor: Colors.purple.shade100,
         elevation: 15,
-        currentIndex: 1,
+        currentIndex: currentTabIndex,
+        onTap: (int index) {
+          setState(() {
+            currentTabIndex = index;
+            //currentPage = pages[index];
+          });
+        },
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             activeIcon: Icon(Icons.home_rounded),

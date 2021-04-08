@@ -16,6 +16,7 @@ class FoodNutritionalDataScreen extends StatefulWidget {
 
 class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
   String calories = ' ', fats = ' ', carbs = ' ', protein = ' ';
+  int currentTabIndex = 2;
   @override
   Widget build(BuildContext context) {
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;
@@ -103,7 +104,13 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
         selectedItemColor: Colors.purple,
         unselectedItemColor: Colors.purple.shade100,
         elevation: 15,
-        currentIndex: 2,
+        currentIndex: currentTabIndex,
+        onTap: (int index) {
+          setState(() {
+            currentTabIndex = index;
+            //currentPage = pages[index];
+          });
+        },
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             label: 'Home',

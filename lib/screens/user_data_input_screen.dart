@@ -24,6 +24,7 @@ class _UserDataState extends State<UserData> {
   var gender;
   AppUser cAppUser;
   CalculatorBrain cBrain;
+  int currentTabIndex = 4;
   @override
   Widget build(BuildContext context) {
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;

@@ -28,6 +28,7 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
   AppUser cAppUser;
   CalculatorBrain cBrain;
   String h2oMSG = '';
+  int currentTabIndex = 3;
 
   @override
   void initState() {
@@ -193,7 +194,13 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
         selectedItemColor: Colors.purple,
         unselectedItemColor: Colors.purple.shade100,
         elevation: 15,
-        currentIndex: 3,
+        currentIndex: currentTabIndex,
+        onTap: (int index) {
+          setState(() {
+            currentTabIndex = index;
+            //currentPage = pages[index];
+          });
+        },
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             activeIcon: Icon(Icons.home_rounded),

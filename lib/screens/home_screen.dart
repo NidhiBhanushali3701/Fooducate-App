@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   AppUser cAppUser = AppUser();
   CalculatorBrain cBrain = CalculatorBrain();
   String sBMI = ' ', sCalorie = ' ', sSteps = '0', sUserH2O = '0';
-  int currentTab = 0;
+  int currentTabIndex = 0;
   @override
   void initState() {
     super.initState();
@@ -287,10 +287,10 @@ class _HomeScreenState extends State<HomeScreen> {
           selectedItemColor: Colors.purple,
           unselectedItemColor: Colors.purple.shade100,
           elevation: 15,
-          currentIndex: currentTab,
+          currentIndex: currentTabIndex,
           onTap: (int index) {
             setState(() {
-              currentTab = index;
+              currentTabIndex = index;
               //currentPage = pages[index];
             });
           },

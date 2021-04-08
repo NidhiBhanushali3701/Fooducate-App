@@ -29,6 +29,8 @@ class _FoodScreenState extends State<FoodScreen> {
   bool showSpinner = false;
   AppUser cAppUser;
   CalculatorBrain cBrain;
+
+  int currentTabIndex = 2;
   @override
   void initState() {
     super.initState();
@@ -179,7 +181,13 @@ class _FoodScreenState extends State<FoodScreen> {
           selectedItemColor: Colors.purple,
           unselectedItemColor: Colors.purple.shade100,
           elevation: 15,
-          currentIndex: 2,
+          currentIndex: currentTabIndex,
+          onTap: (int index) {
+            setState(() {
+              currentTabIndex = index;
+              //currentPage = pages[index];
+            });
+          },
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               activeIcon: Icon(Icons.home_rounded),
