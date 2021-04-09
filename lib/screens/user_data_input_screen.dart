@@ -223,7 +223,7 @@ class _UserDataState extends State<UserData> {
                   //updateUserHealth(); //TODO:onTap update ui
                 });
                 //Navigator.of(context).pop();
-                Navigator.pushNamed(context, HomeScreen.id, arguments: {
+                Navigator.pushReplacementNamed(context, HomeScreen.id, arguments: {
                   'CurrentAppUserData': cAppUser,
                   'CurrentAppUserCB': cBrain
                 });
@@ -264,7 +264,7 @@ class _UserDataState extends State<UserData> {
                 Icons.directions_walk_rounded,
               ), //Icon(Icons.account_circle_rounded)
               onPressed: () {
-                Navigator.pushNamed(context, StepTracker.id, arguments: {
+                Navigator.pushReplacementNamed(context, StepTracker.id, arguments: {
                   'CurrentAppUserData': cAppUser,
                   'CurrentAppUserCB': cBrain
                 });
@@ -278,7 +278,7 @@ class _UserDataState extends State<UserData> {
                 Icons.restaurant_menu,
               ), //Icon(Icons.account_circle_rounded)
               onPressed: () {
-                Navigator.pushNamed(context, FoodScreen.id, arguments: {
+                Navigator.pushReplacementNamed(context, FoodScreen.id, arguments: {
                   'CurrentAppUserData': cAppUser,
                   'CurrentAppUserCB': cBrain
                 });
@@ -292,7 +292,7 @@ class _UserDataState extends State<UserData> {
                 Icons.wine_bar_sharp,
               ), //Icon(Icons.account_circle_rounded)
               onPressed: () {
-                Navigator.pushNamed(context, H2OTracker.id, arguments: {
+                Navigator.pushReplacementNamed(context, H2OTracker.id, arguments: {
                   'CurrentAppUserData': cAppUser,
                   'CurrentAppUserCB': cBrain
                 });
@@ -307,7 +307,7 @@ class _UserDataState extends State<UserData> {
                 Icons.account_circle_outlined,
               ),
               onPressed: () {
-                Navigator.pushNamed(context, GenderSelect.id, arguments: {
+                Navigator.pushReplacementNamed(context, GenderSelect.id, arguments: {
                   'CurrentAppUserData': cAppUser,
                   'CurrentAppUserCB': cBrain
                 }); //arguments: {'CurrentAppUserData': cAppUser}

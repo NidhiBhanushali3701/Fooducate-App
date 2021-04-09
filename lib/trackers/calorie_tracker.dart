@@ -1,4 +1,6 @@
 import 'package:fooducate/app_user.dart';
+import 'package:fooducate/calculate_button.dart';
+import 'package:fooducate/screens/home_screen.dart';
 import '../calculator_brain.dart';
 import '../constants.dart';
 import '../tracker.dart';
@@ -36,78 +38,167 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple,
-        title: Text('TRACK CALORIES'),
+        title: const Text('TRACK CALORIES'),
         centerTitle: true,
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 27,
+      body: Column(
+        children: [
+          SizedBox(
+            height: 10,
+          ),
+          Center(
+              child: Text(
+            'Your Meals',
+            style: kLabelTextStyle.copyWith(color: Colors.purple),
+          )),
+          SizedBox(
+            height: 5,
+          ),
+          Expanded(
+            child: ListView(
+              children: <Widget>[
+                DataTable(columns: [
+                  DataColumn(
+                      label: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: Text('Items',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.w500)),
+                        ),
+                      )),
+                  DataColumn(
+                      label: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: Text('Amount',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.w500)),
+                        ),
+                      )),
+                  DataColumn(
+                      label: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: Text('Calories',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.w500)),
+                        ),
+                      )),
+                ], rows: []),
+              ],
             ),
-            Center(
-                child: Text(
-              'Your Meals',
-              style: kLabelTextStyle.copyWith(color: Colors.purple),
-            )),
-            Container(
-              child: Expanded(
-                child: ListView(
-                  children: <Widget>[
-                    DataTable(columns: [
-                      DataColumn(
-                          label: Text('Food Name',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold))),
-                      DataColumn(
-                          label: Text('Amount',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold))),
-                      DataColumn(
-                          label: Text('Calories',
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold))),
-                    ], rows: []),
-                  ],
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          Expanded(
+            flex: 12,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(15,8,8,8.0),
+              child: Center(
+                child: Container(
+                  child: ListView.builder(
+                      itemCount: cAppUser.getAllFoodLength(),
+                      itemBuilder: (BuildContext ctxt, int index) {
+                        return Row(
+                          children: [
+                            Expanded(
+                              child: ListTile(
+                                  title: Text(
+                                cAppUser.getAllMeals()[index].name,
+                                style: TextStyle(fontSize: 20),
+                              )),
+                            ),
+                            SizedBox(
+                              width: 30,
+                            ),
+                            Expanded(
+                              child: ListTile(
+                                  title: Text(
+                                cAppUser.getAllMeals()[index].quantity.toString(),
+                                    style: TextStyle(fontSize: 20),
+                              )),
+                            ),
+                            SizedBox(
+                              width: 30,
+                            ),
+                            Expanded(
+                              child: ListTile(
+                                  title: Text(
+                                cAppUser.getAllMeals()[index].calories.toString(),
+                                    style: TextStyle(fontSize: 20),
+                              )),
+                            ),
+                          ],
+                        ); //Text(cAppUser.getAllMeals()[index].name);
+                      }),
                 ),
-                flex: 1,
               ),
             ),
-            Expanded(
-              flex: 18,
-                child: ListView.builder(
-                    itemCount: cAppUser.getAllFoodLength(),
-                    itemBuilder: (BuildContext ctxt, int index) {
-                      return DataTable(columns: [
-                        DataColumn(
-                            label: Text(
-                          '',style: TextStyle(fontSize: 1),
-                        )),
-                        DataColumn(
-                            label: Text(
-                              '',style: TextStyle(fontSize: 1),
-                        )),
-                        DataColumn(
-                            label: Text(
-                              '',style: TextStyle(fontSize: 1),
-                        )),
-                      ], rows: [
-                        DataRow(cells: [
-                          DataCell(Text(cAppUser.getAllMeals()[index].name)),
-                          DataCell(Text(cAppUser
-                              .getAllMeals()[index]
-                              .calories
-                              .toString())),
-                          DataCell(Text(cAppUser
-                              .getAllMeals()[index]
-                              .quantity
-                              .toString())),
-                        ]),
-                      ]); //Text(cAppUser.getAllMeals()[index].name);
-                    })),
-          ],
-        ),
+          ),
+          CalculateButton(
+            onTap: () {
+              Navigator.pushReplacementNamed(context, HomeScreen.id, arguments: {
+                'CurrentAppUserData': cAppUser,
+                'CurrentAppUserCB': cBrain
+              });
+              /*Navigator.pushReplacementNamed(context, HomeScreen.id, arguments: {
+              'CurrentAppUserData': cAppUser,
+              'CurrentAppUserCB': cBrain
+            });*/
+            },
+            buttonTitle: "GO BACK",
+          ),
+        ],
       ),
     );
   }
 }
+/*
+
+ListView(
+              children: <Widget>[
+                ListTile(
+                  title: Center(
+                      child: Text(
+                    'Your Meals',
+                    style: kLabelTextStyle.copyWith(color: Colors.purple),
+                  )),
+                ),
+                DataTable(columns: [
+                  DataColumn(
+                      label: Text('Food Name',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold))),
+                  DataColumn(
+                      label: Text('Amount',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold))),
+                  DataColumn(
+                      label: Text('Calories',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold))),
+                ], rows: []),
+              ],
+            ),
+
+*/
+/*
+Row(
+                children: [
+                  Expanded(
+                      child: ListTile(
+                          title: Text(cAppUser.getAllMeals()[index].name))),
+                  ListTile(
+                    title: Text(
+                        cAppUser.getAllMeals()[index].calories.toString()),
+                  ),
+                  ListTile(
+                      title: Text(cAppUser
+                          .getAllMeals()[index]
+                          .quantity
+                          .toString()))
+                ],
+              );
+*/

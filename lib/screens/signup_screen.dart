@@ -204,7 +204,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               //UserCredential user = newUser.user;
                               if (newUser != null) {
                                 //Navigator.pushNamed(context,GenderSelect.id);
-                                Navigator.pushNamed(context, HomeScreen.id);
+                                Navigator.pushReplacementNamed(context, HomeScreen.id);
                               }
                               setState(() {
                                 showSpinner = false;

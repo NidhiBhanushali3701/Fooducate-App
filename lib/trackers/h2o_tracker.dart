@@ -178,7 +178,7 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
                 CalculateButton(
                   onTap: () {
                     cAppUser.setDailyH2Odone(userDrankH2O);
-                    Navigator.pushNamed(context, HomeScreen.id, arguments: {
+                    Navigator.pushReplacementNamed(context, HomeScreen.id, arguments: {
                       'CurrentAppUserData': cAppUser,
                       'CurrentAppUserCB': cBrain
                     });
@@ -223,7 +223,7 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
                 Icons.directions_walk_rounded,
               ), //Icon(Icons.account_circle_rounded)
               onPressed: () {
-                Navigator.pushNamed(context, StepTracker.id, arguments: {
+                Navigator.pushReplacementNamed(context, StepTracker.id, arguments: {
                   'CurrentAppUserData': cAppUser,
                   'CurrentAppUserCB': cBrain
                 });
@@ -237,7 +237,7 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
                 Icons.restaurant_menu,
               ), //Icon(Icons.account_circle_rounded)
               onPressed: () {
-                Navigator.pushNamed(context, FoodScreen.id, arguments: {
+                Navigator.pushReplacementNamed(context, FoodScreen.id, arguments: {
                   'CurrentAppUserData': cAppUser,
                   'CurrentAppUserCB': cBrain
                 });
@@ -251,7 +251,7 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
                 Icons.wine_bar_sharp,
               ), //Icon(Icons.account_circle_rounded)
               onPressed: () {
-                Navigator.pushNamed(context, H2OTracker.id, arguments: {
+                Navigator.pushReplacementNamed(context, H2OTracker.id, arguments: {
                   'CurrentAppUserData': cAppUser,
                   'CurrentAppUserCB': cBrain
                 });
@@ -266,7 +266,7 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
                 Icons.account_circle_outlined,
               ),
               onPressed: () {
-                Navigator.pushNamed(context, GenderSelect.id, arguments: {
+                Navigator.pushReplacementNamed(context, GenderSelect.id, arguments: {
                   'CurrentAppUserData': cAppUser,
                   'CurrentAppUserCB': cBrain
                 }); //arguments: {'CurrentAppUserData': cAppUser}

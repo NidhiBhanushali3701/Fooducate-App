@@ -202,7 +202,7 @@ class _FoodScreenState extends State<FoodScreen> {
                   Icons.directions_walk_rounded,
                 ), //Icon(Icons.account_circle_rounded)
                 onPressed: () {
-                  Navigator.pushNamed(context, StepTracker.id, arguments: {
+                  Navigator.pushReplacementNamed(context, StepTracker.id, arguments: {
                     'CurrentAppUserData': cAppUser,
                     'CurrentAppUserCB': cBrain
                   });
@@ -216,7 +216,7 @@ class _FoodScreenState extends State<FoodScreen> {
                   Icons.restaurant_menu,
                 ), //Icon(Icons.account_circle_rounded)
                 onPressed: () {
-                  Navigator.pushNamed(context, FoodScreen.id, arguments: {
+                  Navigator.pushReplacementNamed(context, FoodScreen.id, arguments: {
                     'CurrentAppUserData': cAppUser,
                     'CurrentAppUserCB': cBrain
                   });
@@ -230,7 +230,7 @@ class _FoodScreenState extends State<FoodScreen> {
                   Icons.wine_bar_sharp,
                 ), //Icon(Icons.account_circle_rounded)
                 onPressed: () {
-                  Navigator.pushNamed(context, H2OTracker.id, arguments: {
+                  Navigator.pushReplacementNamed(context, H2OTracker.id, arguments: {
                     'CurrentAppUserData': cAppUser,
                     'CurrentAppUserCB': cBrain
                   });
@@ -245,7 +245,7 @@ class _FoodScreenState extends State<FoodScreen> {
                   Icons.account_circle_outlined,
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, GenderSelect.id, arguments: {
+                  Navigator.pushReplacementNamed(context, GenderSelect.id, arguments: {
                     'CurrentAppUserData': cAppUser,
                     'CurrentAppUserCB': cBrain
                   }); //arguments: {'CurrentAppUserData': cAppUser}

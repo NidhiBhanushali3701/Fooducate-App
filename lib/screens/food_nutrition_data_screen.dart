@@ -212,7 +212,7 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
             icon: IconButton(
               icon: Icon(Icons.account_circle_rounded),
               onPressed: () {
-                Navigator.pushNamed(context, GenderSelect.id, arguments: {
+                Navigator.pushReplacementNamed(context, GenderSelect.id, arguments: {
                   'CurrentAppUserData': cAppUser,
                   'CurrentAppUserCB': cBrain
                 }); //arguments: {'CurrentAppUserData': cAppUser}

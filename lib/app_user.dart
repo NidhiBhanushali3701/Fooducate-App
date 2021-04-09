@@ -30,6 +30,9 @@ class AppUser {
   void addMeals(Food f) {
     _food.add(f);
   }
+  void removeMeals(Food f){
+    _food.remove(f);
+  }
 
   int getAllFoodLength() {
     return _food.length;
