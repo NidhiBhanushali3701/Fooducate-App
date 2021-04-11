@@ -35,7 +35,10 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
     super.initState();
   }
 
-  double calculateH2OProgress() {
+  double calculateH2OProgress(cAppUser) {
+    if(cAppUser.getDailyH2Odone()!=null){
+      return h2oProgress = ((cAppUser.getDailyH2Odone() / cAppUser.getDailyH2O()) / 4);
+    }
     return h2oProgress = ((userDrankH2O / cAppUser.getDailyH2O()) / 4);
   }
 
@@ -62,8 +65,8 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
       //final cAppUser = arguments['CurrentAppUserData'];
       cAppUser = arguments['CurrentAppUserData'];
       cBrain = arguments['CurrentAppUserCB'];
-      print('in BMI calc ${cAppUser.getEmail()},${cAppUser.getGender()}');
-      calculateH2OProgress();
+      print('in h20 calc ${cAppUser.getEmail()},${cAppUser.getGender()}');
+      calculateH2OProgress(cAppUser);
     }
     return Scaffold(
       appBar: AppBar(
@@ -116,7 +119,7 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
                                   userDrankH2O = 0;
                                   h2oMSG = 'Water drank cant be negative';
                                 }
-                                calculateH2OProgress();
+                                calculateH2OProgress(cAppUser);
                                 cAppUser.setDailyH2Odone(userDrankH2O);
                               });
                             },
@@ -131,7 +134,7 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
                                 userDrankH2O++;
                                 h2oMSG =
                                     'GOOD H2O is needed for proper body functions!';
-                                calculateH2OProgress();
+                                calculateH2OProgress(cAppUser);
                                 cAppUser.setDailyH2Odone(userDrankH2O);
                               });
                             },

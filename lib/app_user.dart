@@ -20,7 +20,7 @@ class AppUser {
       calorieOut,
       workOutTime;
   int _age, _phoneNo, _dailyH2O, _stepsCount, _dailyH2Odone;
-  gender _gender;
+  var _gender;
   List<String> MedCond = new List(5);
   List<String> FoodPref = new List(5);
   List<Food> _food = List();
@@ -151,5 +151,10 @@ class AppUser {
 
   int getStepsCount() {
     return _stepsCount;
+  }
+
+  void setAppUser()
+  {
+
   }
 }

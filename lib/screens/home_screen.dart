@@ -9,6 +9,7 @@ import 'package:fooducate/trackers/h2o_tracker.dart';
 import 'package:fooducate/trackers/step_tracker.dart';
 import 'food_search_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:firebase_database/firebase_database.dart';//not present yet
 import '../constants.dart';
 import 'signup_screen.dart';
@@ -27,19 +28,24 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _auth = FirebaseAuth.instance;
+  final _fireBaseStore = FirebaseFirestore.instance;
   bool showSpinner = false;
   AppUser cAppUser = AppUser();
   CalculatorBrain cBrain = CalculatorBrain();
   String sBMI = ' ', sCalorie = ' ', sSteps = '0', sUserH2O = '0';
   int currentTabIndex = 0;
+  String cAppUserEmail = '';
   @override
   void initState() {
     super.initState();
     getCurrentUser();
     verifyUserEmail();
+    getUserDataFromFireBaseStore();
+    /*
     if (sBMI == null || sCalorie == null) {
-      updateUserHealth();
+      updateUserHealth(cAppUser);
     }
+    */
   }
 
   void getCurrentUser() async {
@@ -48,7 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
       if (user != null) {
         //currentUser = user;
         cAppUser.setEmail(user.email);
+        //cAppUser.setPassword();
         print(user.email);
+        cAppUserEmail = user.email;
       }
     } catch (e) {
       print(e);
@@ -67,11 +75,66 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void updateUserHealth() {
-    sBMI = cAppUser.getBMI().toStringAsFixed(1);
-    sCalorie = cAppUser.getCalorieIn().floor().toString();
-    sSteps = cAppUser.getStepsCount().toString();
-    sUserH2O = cAppUser.getDailyH2Odone().toString();
+  void updateUserHealth(var cAppUserData) {
+    sBMI = cAppUserData['bmi'].toStringAsFixed(1);
+    sCalorie = cAppUserData['caloriesIn'].floor().toString();
+    sSteps = cAppUserData['stepCount'].toString();
+    sUserH2O = cAppUserData['dailyH2Odone'].toInt().toString();
+  }
+
+  void addUserDataToFireBaseStore() {
+    _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).set({
+      'email': cAppUser.getEmail(),
+      'password': cAppUser.getPassword(),
+      'bmi': cAppUser.getBMI(),
+      'height': cAppUser.getHeight(),
+      'weight': cAppUser.getWeight(),
+      'age': cAppUser.getAge(),
+      'caloriesIn': cAppUser.getCalorieIn(),
+      'dailyH2O': cAppUser.getDailyH2O(),
+      'dailyH2Odone': cAppUser.getDailyH2Odone() / 4,
+      'gender': cAppUser.getGender().toString(),
+      'name': cAppUser.getName(),
+      'phoneNo': cAppUser.getPhoneNo(),
+      'stepCount': cAppUser.getStepsCount(),
+    });
+  }
+
+  void updateUserDataToFireBaseStore(
+      FirebaseFirestore _fireBaseStore, AppUser cAppUser) {
+    _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).update({});
+  }
+
+  void getUserDataFromFireBaseStore() async {
+    var appUsers = await _fireBaseStore.collection('clients').get();
+    for (var appUser in appUsers.docs) {
+      var appUserData = appUser.data();
+      print(appUserData);
+      if (cAppUserEmail == appUserData['email']) {
+        print(appUserData);
+        cAppUser.setEmail(appUserData['email']);
+        cAppUser.setDailyH2Odone(appUserData['dailyH2Odone'].toInt());
+        cAppUser.setWeight(appUserData['weight']);
+        cAppUser.setHeight(appUserData['height']);
+        cAppUser.setAge(appUserData['age']);
+        cAppUser.setGender(appUserData['gender']);
+        cAppUser.setDailyH2O(appUserData['dailyH2O']);
+        cAppUser.setStepsCount(appUserData['stepCount']);
+        cAppUser.setCalorieIn(appUserData['caloriesIn']);
+        cAppUser.setBMI(appUserData['bmi']);
+        updateUserHealth(appUserData);
+      }
+    }
+  }
+
+  dynamic getStreamUserDataFromFireBaseStore(
+      FirebaseFirestore _fireBaseStore, AppUser cAppUser) async {
+    await for (var appUsers
+        in _fireBaseStore.collection('clients').snapshots()) {
+      for (var appUser in appUsers.docs) {
+        print(appUser.data());
+      }
+    }
   }
 
   @override
@@ -86,9 +149,10 @@ class _HomeScreenState extends State<HomeScreen> {
       cBrain = arguments['CurrentAppUserCB'];
       print(
           'in home ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
-      updateUserHealth();
+      //updateUserHealth(cAppUser);
       print(
           'in home ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
+      //updateUserHealth(cAppUser);
     }
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
@@ -108,7 +172,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   await _auth.signOut();
                   //clearSession();
                   //Navigator.pop(context,true);
-                  Navigator.popUntil(context, ModalRoute.withName(StartScreen.id));
+                  Navigator.popUntil(
+                      context, ModalRoute.withName(StartScreen.id));
                   //Navigator.pop(context);
                   //Navigator.pop(context);
                   setState(() {
@@ -291,6 +356,8 @@ class _HomeScreenState extends State<HomeScreen> {
           onTap: (int index) {
             setState(() {
               currentTabIndex = index;
+              addUserDataToFireBaseStore();
+              getUserDataFromFireBaseStore();
               //currentPage = pages[index];
             });
           },
@@ -376,3 +443,61 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+/*
+
+void addUserDataToFireBaseStore(
+    FirebaseFirestore _fireBaseStore, AppUser cAppUser) {
+  _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).set({
+    'email': cAppUser.getEmail(),
+    'password': cAppUser.getPassword(),
+    'bmi': cAppUser.getBMI(),
+    'height': cAppUser.getHeight(),
+    'weight': cAppUser.getWeight(),
+    'age': cAppUser.getAge(),
+    'caloriesIn': cAppUser.getCalorieIn(),
+    'dailyH2O': cAppUser.getDailyH2O(),
+    'dailyH2Odone': cAppUser.getDailyH2Odone()/4,
+    'gender': cAppUser.getGender().toString(),
+    'name': cAppUser.getName(),
+    'phoneNo': cAppUser.getPhoneNo(),
+    'stepCount': cAppUser.getStepsCount(),
+  });
+}
+
+void updateUserDataToFireBaseStore(
+    FirebaseFirestore _fireBaseStore, AppUser cAppUser) {
+  _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).update({});
+}
+
+void getUserDataFromFireBaseStore(FirebaseFirestore _fireBaseStore,
+    AppUser cAppUser, String cAppUserEmail) async {
+  var appUsers = await _fireBaseStore.collection('clients').get();
+  for (var appUser in appUsers.docs) {
+    var appUserData = appUser.data();
+    print(appUserData);
+    if (cAppUserEmail == appUserData['email']) {
+      print(appUserData);
+      cAppUser.setEmail(appUserData['email']);
+      cAppUser.setDailyH2Odone(appUserData['dailyH2Odone'].toInt());
+      cAppUser.setWeight(appUserData['weight']);
+      cAppUser.setHeight(appUserData['height']);
+      cAppUser.setAge(appUserData['age']);
+      cAppUser.setGender(appUserData['gender']);
+      cAppUser.setDailyH2O(appUserData['dailyH2O']);
+      cAppUser.setStepsCount(appUserData['stepCount']);
+      cAppUser.setCalorieIn(appUserData['caloriesIn']);
+    }
+  }
+}
+
+dynamic getStreamUserDataFromFireBaseStore(
+    FirebaseFirestore _fireBaseStore, AppUser cAppUser) async {
+  await for (var appUsers in _fireBaseStore.collection('clients').snapshots()) {
+    for (var appUser in appUsers.docs) {
+      print(appUser.data());
+    }
+  }
+}
+
+*/

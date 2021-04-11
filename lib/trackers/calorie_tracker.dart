@@ -40,6 +40,25 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
         backgroundColor: Colors.purple,
         title: const Text('TRACK CALORIES'),
         centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.ios_share, color: Colors.white),
+              onPressed: () async {
+                
+                /*setState(() {
+                  showSpinner = true;
+                });
+                //await _auth.signOut();
+                //clearSession();
+                //Navigator.pop(context,true);
+                //Navigator.popUntil(context, ModalRoute.withName(StartScreen.id));
+                //Navigator.pop(context);
+                //Navigator.pop(context);
+                setState(() {
+                  showSpinner = false;
+                });*/
+              }),
+        ],
       ),
       body: Column(
         children: [

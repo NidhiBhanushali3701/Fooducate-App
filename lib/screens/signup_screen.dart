@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fooducate/app_user.dart';
 import 'package:fooducate/screens/gender_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:firebase_database/firebase_database.dart';//not present yet
 import 'login_screen.dart';
 import '../main.dart';
@@ -204,13 +206,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               //UserCredential user = newUser.user;
                               if (newUser != null) {
                                 //Navigator.pushNamed(context,GenderSelect.id);
-                                Navigator.pushReplacementNamed(context, GenderSelect.id);
+                                Navigator.pushReplacementNamed(context, GenderSelect.id,arguments: {'CurrentAppUserData': AppUser()});
                               }
                               setState(() {
                                 showSpinner = false;
                               });
                             } catch (e) {
                               print(e);
+                              setState(() {
+                                print('do some thing');
+                                showSpinner = false;
+                              });
                             }
                           },
                           child: Text(
