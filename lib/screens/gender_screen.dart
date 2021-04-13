@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fooducate/app_user.dart';
+import 'package:fooducate/food.dart';
 import 'package:fooducate/reusable_card.dart';
 import 'package:fooducate/constants.dart';
 import 'package:fooducate/icon_content.dart';
@@ -90,6 +91,8 @@ class _GenderSelectState extends State<GenderSelect> {
           updateUserDataInFireBaseStore('bmi', 0);
           updateUserDataInFireBaseStore('dailyH2Odone',0);
           updateUserDataInFireBaseStore('stepCount',0);
+          updateUserDataInFireBaseStore('food', List<Map>());
+          //updateUserDataInFireBaseStore('food', {'calories':0,'name':'food','quantity':0});
         }
       } catch (e) {
         print('not new user $e');

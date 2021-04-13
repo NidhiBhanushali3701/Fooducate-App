@@ -30,8 +30,43 @@ class AppUser {
   void addMeals(Food f) {
     _food.add(f);
   }
-  void removeMeals(Food f){
+  void setFood(List<Food> f){
+    _food = f;
+  }
+
+  void removeMeals(Food f) {
     _food.remove(f);
+  }
+
+  List<Map<dynamic,dynamic>> getAllFood() {
+    List<Map<dynamic,dynamic>> foodList = List<Map>();
+    for (var f in _food) {
+      foodList.add({
+        'name': f.name,
+        'calories': f.calories,
+        'quantity': f.quantity,
+        'protein': f.protein,
+        'fat': f.fat,
+        'carbs': f.carbs,
+        'foodImgURL': f.foodImgURL
+      });
+    }
+    return foodList;
+  }
+
+  List<Food> foodMapToFoodObjectArray(List<Map<dynamic,dynamic>> fm) {
+    List<Food> foodOA = List();
+    for (var f_m in fm) {
+      foodOA.add(Food(
+          calories: f_m['calories'],
+          fat: f_m['fat'],
+          carbs: f_m['carbs'],
+          protein: f_m['protein'],
+          name: f_m['name'],
+          quantity: f_m['quantity'],
+          foodImgURL: f_m['foodImgURL']));
+    }
+    return foodOA;
   }
 
   int getAllFoodLength() {
@@ -153,8 +188,5 @@ class AppUser {
     return _stepsCount;
   }
 
-  void setAppUser()
-  {
-
-  }
+  void setAppUser() {}
 }

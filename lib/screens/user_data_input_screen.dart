@@ -64,8 +64,8 @@ class _UserDataState extends State<UserData> {
       print(appUserData);
       if (cAppUserEmail == appUserData['email']) {
         print('init state $appUserData');
-        weight = appUserData['weight'];
-        height = appUserData['height'];
+        weight = appUserData['weight'].toInt();
+        height = appUserData['height'].toInt();
         age = appUserData['age'];
         gender = appUserData['gender'];
       }
