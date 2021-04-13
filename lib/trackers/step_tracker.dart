@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fooducate/calculator_brain.dart';
 import 'package:fooducate/screens/food_search_screen.dart';
 import 'package:fooducate/screens/gender_screen.dart';
@@ -27,18 +28,75 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
   AppUser cAppUser;
   CalculatorBrain cBrain;
   int currentTabIndex = 1;
-
+  String cAppUserEmail = '';
+  int doneStepsCount = 0;
+  final _fireBaseStore = FirebaseFirestore.instance;
   @override
   void initState() {
     super.initState();
     initPlatformState();
   }
 
+  void addUserDataToFireBaseStore() {
+    _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).set({
+      'email': cAppUser.getEmail(),
+      'password': cAppUser.getPassword(),
+      'bmi': cAppUser.getBMI(),
+      'height': cAppUser.getHeight(),
+      'weight': cAppUser.getWeight(),
+      'age': cAppUser.getAge(),
+      'caloriesIn': cAppUser.getCalorieIn(),
+      'dailyH2O': cAppUser.getDailyH2O(),
+      'dailyH2Odone': cAppUser.getDailyH2Odone() / 4,
+      'gender': cAppUser.getGender().toString(),
+      'name': cAppUser.getName(),
+      'phoneNo': cAppUser.getPhoneNo(),
+      'stepCount': cAppUser.getStepsCount(),
+    });
+  }
+
+  void updateUserDataToFireBaseStore() {
+    _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).update({
+      'stepCount': cAppUser.getStepsCount(),
+    });
+  }
+
+  void getUserDataFromFireBaseStore() async {
+    var appUsers = await _fireBaseStore.collection('clients').get();
+    for (var appUser in appUsers.docs) {
+      var appUserData = appUser.data();
+      print(appUserData);
+      if (cAppUserEmail == appUserData['email']) {
+        print(appUserData);
+        cAppUser.setEmail(appUserData['email']);
+        cAppUser.setDailyH2Odone(appUserData['dailyH2Odone'].toInt());
+        cAppUser.setWeight(appUserData['weight']);
+        cAppUser.setHeight(appUserData['height']);
+        cAppUser.setAge(appUserData['age']);
+        cAppUser.setGender(appUserData['gender']);
+        cAppUser.setDailyH2O(appUserData['dailyH2O']);
+        cAppUser.setStepsCount(appUserData['stepCount']);
+        cAppUser.setCalorieIn(appUserData['caloriesIn']);
+        cAppUser.setBMI(appUserData['bmi']);
+      }
+    }
+  }
+
+  dynamic getStreamUserDataFromFireBaseStore(
+      FirebaseFirestore _fireBaseStore, AppUser cAppUser) async {
+    await for (var appUsers
+        in _fireBaseStore.collection('clients').snapshots()) {
+      for (var appUser in appUsers.docs) {
+        print(appUser.data());
+      }
+    }
+  }
+
   void onStepCount(StepCount event) {
     print(event);
     setState(() {
-      cAppUser.setStepsCount(event.steps);
-      _steps = event.steps.toString();
+      cAppUser.setStepsCount(event.steps + doneStepsCount);
+      _steps = (event.steps + doneStepsCount).toString();
     });
   }
 
@@ -88,6 +146,7 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
       cAppUser = arguments['CurrentAppUserData'];
       print(
           'in step tracker ${cAppUser.getEmail()},${cAppUser.getStepsCount()}');
+      cAppUserEmail = cAppUser.getEmail();
     }
     return Scaffold(
       appBar: AppBar(
@@ -96,133 +155,165 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
         title: Text('STEP TRACKER'),
         backgroundColor: Colors.purple,
       ),
-      body: Column(
-        children: <Widget>[
-          SizedBox(
-            height: 15,
-          ),
-          Center(
-            child: Container(
-              height: 150,
-              width: 400,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(1.0, 1.0),
-                      blurRadius: 2.0,
-                    )
-                  ]),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(
-                        top: 10.0,
-                      ),
-                      child: Text(
-                        'Steps taken:'.toUpperCase(),
-                        style: kLabelTextStyle.copyWith(
-                            color: Colors.purple, fontSize: 30),
-                      ),
+      // ignore: missing_return
+      body: FutureBuilder(
+          future: _fireBaseStore.collection('clients').get(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              // If we got an error
+              if (snapshot.hasData) {
+                for (var appUsers in snapshot.data.docs) {
+                  if (appUsers['email'] == cAppUserEmail) {
+                    doneStepsCount = appUsers['stepCount'];
+                    print(appUsers['stepCount']);
+                    break;
+                  }
+                }
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    '${snapshot.error} occured',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                );
+              }
+            } else {
+              return CircularProgressIndicator(
+                backgroundColor: kInactiveCardColour,
+              );
+            }
+            return Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 15,
+                ),
+                Center(
+                  child: Container(
+                    height: 150,
+                    width: 400,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(1.0, 1.0),
+                            blurRadius: 2.0,
+                          )
+                        ]),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.only(
+                              top: 10.0,
+                            ),
+                            child: Text(
+                              'Steps taken:'.toUpperCase(),
+                              style: kLabelTextStyle.copyWith(
+                                  color: Colors.purple, fontSize: 30),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Expanded(
+                          child: Text(
+                            _steps,
+                            style: kLabelTextStyle.copyWith(fontSize: 30.0),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Expanded(
-                    child: Text(
-                      _steps,
-                      style: kLabelTextStyle.copyWith(fontSize: 30.0),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Center(
+                  child: Container(
+                    height: 216,
+                    width: 400,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey,
+                            offset: Offset(1.0, 1.0),
+                            blurRadius: 2.0,
+                          )
+                        ]),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Expanded(
+                          child: Text(
+                            'Pedestrian status:',
+                            style:
+                                kLabelTextStyle.copyWith(color: Colors.purple),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Expanded(
+                          child: Icon(
+                            _status == 'walking'
+                                ? Icons.directions_walk
+                                : _status == 'stopped'
+                                    ? Icons.accessibility_new
+                                    : Icons.error,
+                            color: Colors.purple,
+                            size: 60,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              _status,
+                              style:
+                                  _status == 'walking' || _status == 'stopped'
+                                      ? TextStyle(fontSize: 30)
+                                      : TextStyle(
+                                          fontSize: 20, color: Colors.purple),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          Center(
-            child: Container(
-              height: 216,
-              width: 400,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(1.0, 1.0),
-                      blurRadius: 2.0,
-                    )
-                  ]),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      'Pedestrian status:',
-                      style: kLabelTextStyle.copyWith(color: Colors.purple),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Expanded(
-                    child: Icon(
-                      _status == 'walking'
-                          ? Icons.directions_walk
-                          : _status == 'stopped'
-                              ? Icons.accessibility_new
-                              : Icons.error,
-                      color: Colors.purple,
-                      size: 60,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        _status,
-                        style: _status == 'walking' || _status == 'stopped'
-                            ? TextStyle(fontSize: 30)
-                            : TextStyle(fontSize: 20, color: Colors.purple),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 21,
-          ),
-          CalculateButton(
-            onTap: () {
-              cBrain = CalculatorBrain(
-                  gender: cAppUser.getGender(), cUser: cAppUser);
-              cBrain.calculateStepsCountProgress();
-              print('drink ${cBrain.calculateDailyH2O()} L');
-              setState(() {
-                //updateUserHealth(); //TODO:onTap update ui
-              });
-              //Navigator.of(context).pop();
-              Navigator.pushReplacementNamed(context, HomeScreen.id,
-                  arguments: {'CurrentAppUserData': cAppUser});
-            },
-            buttonTitle: "CONTINUE",
-          ),
-        ],
-      ),
+                ),
+                SizedBox(
+                  height: 21,
+                ),
+                CalculateButton(
+                  onTap: () {
+                    cBrain = CalculatorBrain(
+                        gender: cAppUser.getGender(), cUser: cAppUser);
+                    cBrain.calculateStepsCountProgress();
+                    print('drink ${cBrain.calculateDailyH2O()} L');
+                    updateUserDataToFireBaseStore();
+                    setState(() {
+                      //updateUserHealth(); //TODO:onTap update ui
+                    });
+                    //Navigator.of(context).pop();
+                    Navigator.pushReplacementNamed(context, HomeScreen.id,
+                        arguments: {'CurrentAppUserData': cAppUser});
+                  },
+                  buttonTitle: "CONTINUE",
+                ),
+              ],
+            );
+          }),
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Colors.purple,
         unselectedItemColor: Colors.purple.shade100,
@@ -252,10 +343,11 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
               icon: Icon(Icons
                   .directions_walk_rounded), //Icon(Icons.account_circle_rounded)
               onPressed: () {
-                Navigator.pushReplacementNamed(context, StepTracker.id, arguments: {
-                  'CurrentAppUserData': cAppUser,
-                  'CurrentAppUserCB': cBrain
-                });
+                Navigator.pushReplacementNamed(context, StepTracker.id,
+                    arguments: {
+                      'CurrentAppUserData': cAppUser,
+                      'CurrentAppUserCB': cBrain
+                    });
               },
             ),
           ),
@@ -265,10 +357,11 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
               icon: Icon(
                   Icons.restaurant_menu), //Icon(Icons.account_circle_rounded)
               onPressed: () {
-                Navigator.pushReplacementNamed(context, FoodScreen.id, arguments: {
-                  'CurrentAppUserData': cAppUser,
-                  'CurrentAppUserCB': cBrain
-                });
+                Navigator.pushReplacementNamed(context, FoodScreen.id,
+                    arguments: {
+                      'CurrentAppUserData': cAppUser,
+                      'CurrentAppUserCB': cBrain
+                    });
               },
             ),
           ),
@@ -278,10 +371,11 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
               icon: Icon(
                   Icons.wine_bar_sharp), //Icon(Icons.account_circle_rounded)
               onPressed: () {
-                Navigator.pushReplacementNamed(context, H2OTracker.id, arguments: {
-                  'CurrentAppUserData': cAppUser,
-                  'CurrentAppUserCB': cBrain
-                });
+                Navigator.pushReplacementNamed(context, H2OTracker.id,
+                    arguments: {
+                      'CurrentAppUserData': cAppUser,
+                      'CurrentAppUserCB': cBrain
+                    });
               },
             ),
           ),
@@ -291,10 +385,11 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
             icon: IconButton(
               icon: Icon(Icons.account_circle_outlined),
               onPressed: () {
-                Navigator.pushReplacementNamed(context, GenderSelect.id, arguments: {
-                  'CurrentAppUserData': cAppUser,
-                  'CurrentAppUserCB': cBrain
-                }); //arguments: {'CurrentAppUserData': cAppUser}
+                Navigator.pushReplacementNamed(context, GenderSelect.id,
+                    arguments: {
+                      'CurrentAppUserData': cAppUser,
+                      'CurrentAppUserCB': cBrain
+                    }); //arguments: {'CurrentAppUserData': cAppUser}
                 setState(() {
                   //updateUserHealth();
                 });
