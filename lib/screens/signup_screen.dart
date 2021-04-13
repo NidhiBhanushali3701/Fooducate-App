@@ -206,7 +206,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               //UserCredential user = newUser.user;
                               if (newUser != null) {
                                 //Navigator.pushNamed(context,GenderSelect.id);
-                                Navigator.pushReplacementNamed(context, GenderSelect.id,arguments: {'CurrentAppUserData': AppUser()});
+                                Navigator.pushReplacementNamed(context, GenderSelect.id,arguments: {'email':_email,'newAppUser':true,'CurrentAppUserData': AppUser()});
                               }
                               setState(() {
                                 showSpinner = false;

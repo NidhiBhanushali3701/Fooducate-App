@@ -39,6 +39,24 @@ class _UserDataState extends State<UserData> {
         .update({updateField: updatedValue});
   }
 
+  void addUserDataToFireBaseStore() {
+    _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).set({
+      'email': cAppUser.getEmail(),
+      'password': cAppUser.getPassword(),
+      'bmi': cAppUser.getBMI(),
+      'height': cAppUser.getHeight(),
+      'weight': cAppUser.getWeight(),
+      'age': cAppUser.getAge(),
+      'caloriesIn': cAppUser.getCalorieIn(),
+      'dailyH2O': cAppUser.getDailyH2O(),
+      'dailyH2Odone': cAppUser.getDailyH2Odone(),
+      'gender': cAppUser.getGender().toString(),
+      'name': cAppUser.getName(),
+      'phoneNo': cAppUser.getPhoneNo(),
+      'stepCount': cAppUser.getStepsCount(),
+    });
+  }
+
   void getUserDataFromFireBaseStore() async {
     var appUsers = await _fireBaseStore.collection('clients').get();
     for (var appUser in appUsers.docs) {
@@ -81,10 +99,17 @@ class _UserDataState extends State<UserData> {
             if (snapshot.hasData) {
               for (appUsers in snapshot.data.docs) {
                 if (appUsers['email'] == cAppUserEmail) {
-                  print(appUsers['bmi']);
-                  height = appUsers['height'].toInt();
-                  weight = appUsers['weight'].toInt();
-                  age = appUsers['age'];
+                  try {
+                    print(appUsers['bmi']);
+                    height = appUsers['height'].toInt();
+                    weight = appUsers['weight'].toInt();
+                    age = appUsers['age'];
+                  } catch (e) {
+                    height = 155;
+                    weight = 60;
+                    age = 20;
+                    print(e);
+                  }
                   break;
                 }
               }
@@ -144,16 +169,16 @@ class _UserDataState extends State<UserData> {
                             height: 12.0,
                           ),
                           Slider(
-                            value: height.toDouble(),
+                            value:
+                                height.toDouble(),
                             min: 120.0,
                             max: 220.0,
                             activeColor: Colors.purple,
                             inactiveColor: Colors.grey,
                             onChanged: (double newValue) {
                               setState(() {
-                                updateUserDataInFireBaseStore(
-                                    'height', newValue.round());
                                 height = newValue.round();
+                                updateUserDataInFireBaseStore('height', height);
                               });
                             },
                           )
@@ -193,13 +218,13 @@ class _UserDataState extends State<UserData> {
                                       onPressed: () {
                                         setState(() {
                                           if (weight > 0) {
-                                            updateUserDataInFireBaseStore(
-                                                'weight', weight - 1);
                                             weight--;
-                                          } else {
                                             updateUserDataInFireBaseStore(
-                                                'weight', 0);
-                                            ;
+                                                'weight', weight);
+                                          } else {
+                                            weight = 0;
+                                            updateUserDataInFireBaseStore(
+                                                'weight', weight);
                                           }
                                         });
                                       },
@@ -211,9 +236,9 @@ class _UserDataState extends State<UserData> {
                                       icon: FontAwesomeIcons.plus,
                                       onPressed: () {
                                         setState(() {
-                                          updateUserDataInFireBaseStore(
-                                              'weight', weight + 1);
                                           weight++;
+                                          updateUserDataInFireBaseStore(
+                                              'weight', weight);
                                         });
                                       },
                                     )
@@ -250,12 +275,13 @@ class _UserDataState extends State<UserData> {
                                       onPressed: () {
                                         setState(() {
                                           if (age > 0) {
-                                            updateUserDataInFireBaseStore(
-                                                'age', age - 1);
                                             age--;
-                                          } else {
                                             updateUserDataInFireBaseStore(
-                                                'age', 0);
+                                                'age', age);
+                                          } else {
+                                            age = 0;
+                                            updateUserDataInFireBaseStore(
+                                                'age', age);
                                           }
                                         });
                                       },
@@ -267,9 +293,9 @@ class _UserDataState extends State<UserData> {
                                       icon: FontAwesomeIcons.plus,
                                       onPressed: () {
                                         setState(() {
-                                          updateUserDataInFireBaseStore(
-                                              'age', age + 1);
                                           age++;
+                                          updateUserDataInFireBaseStore(
+                                              'age', age);
                                         });
                                       },
                                     )
@@ -293,9 +319,15 @@ class _UserDataState extends State<UserData> {
                       cBrain.calculateBMI();
                       cBrain.calculateDailyH2O();
                       cBrain.calculateCalories();
-                      cAppUser.setDailyH2O(int.parse(cBrain.calculateDailyH2O())*4);
+                      cAppUser
+                          .setDailyH2O(int.parse(cBrain.calculateDailyH2O()));
                       print('drink ${cBrain.calculateDailyH2O()} L');
-                      updateUserDataInFireBaseStore('dailyH2O', int.parse(cBrain.calculateDailyH2O())*4);
+                      updateUserDataInFireBaseStore(
+                          'dailyH2O', int.parse(cBrain.calculateDailyH2O()));
+                      updateUserDataInFireBaseStore(
+                          'bmi', cAppUser.getBMI());
+                      updateUserDataInFireBaseStore(
+                          'caloriesIn',cAppUser.getCalorieIn());
                       setState(() {
                         //updateUserHealth(); //TODO:onTap update ui
                       });

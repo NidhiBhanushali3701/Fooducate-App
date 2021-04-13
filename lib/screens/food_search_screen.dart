@@ -50,34 +50,33 @@ class _FoodScreenState extends State<FoodScreen> {
       cBrain = arguments['CurrentAppUserCB'];
       print('in home ${cAppUser.getEmail()}');
     }
-    return FutureBuilder(
-        future: _fireBaseStore.collection('clients').get(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            // If we got an error
-            if (snapshot.hasData) {
-              for (var appUsers in snapshot.data.docs) {
-                if (appUsers['email'] == cAppUserEmail) {
-                  print(appUsers['food']);
-                  break;
+    return ModalProgressHUD(
+      inAsyncCall: showSpinner,
+      child: FutureBuilder(
+          future: _fireBaseStore.collection('clients').get(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              showSpinner = false;
+              // If we got an error
+              if (snapshot.hasData) {
+                for (var appUsers in snapshot.data.docs) {
+                  if (appUsers['email'] == cAppUserEmail) {
+                    print(appUsers['food']);
+                    break;
+                  }
                 }
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    '${snapshot.error} occured',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                );
               }
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text(
-                  '${snapshot.error} occured',
-                  style: TextStyle(fontSize: 18),
-                ),
-              );
+            } else {
+              showSpinner = true;
             }
-          } else {
-            return CircularProgressIndicator(
-              backgroundColor: kInactiveCardColour,
-            );
-          }
-          return ModalProgressHUD(
-            inAsyncCall: showSpinner,
-            child: Scaffold(
+            return Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
                 centerTitle: true,
@@ -294,9 +293,9 @@ class _FoodScreenState extends State<FoodScreen> {
                   ),
                 ],
               ),
-            ),
-          );
-        });
+            );
+          }),
+    );
   }
 }
 /*
