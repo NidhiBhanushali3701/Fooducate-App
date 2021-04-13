@@ -293,7 +293,9 @@ class _UserDataState extends State<UserData> {
                       cBrain.calculateBMI();
                       cBrain.calculateDailyH2O();
                       cBrain.calculateCalories();
+                      cAppUser.setDailyH2O(int.parse(cBrain.calculateDailyH2O())*4);
                       print('drink ${cBrain.calculateDailyH2O()} L');
+                      updateUserDataInFireBaseStore('dailyH2O', int.parse(cBrain.calculateDailyH2O())*4);
                       setState(() {
                         //updateUserHealth(); //TODO:onTap update ui
                       });

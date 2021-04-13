@@ -79,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
     sBMI = cAppUserData['bmi'].toStringAsFixed(1);
     sCalorie = cAppUserData['caloriesIn'].floor().toString();
     sSteps = cAppUserData['stepCount'].toString();
-    sUserH2O = (cAppUserData['dailyH2Odone'].toInt() * 4).toString();
+    sUserH2O = (cAppUserData['dailyH2Odone'].toInt()).toString();
   }
 
   void addUserDataToFireBaseStore() {
@@ -92,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
       'age': cAppUser.getAge(),
       'caloriesIn': cAppUser.getCalorieIn(),
       'dailyH2O': cAppUser.getDailyH2O(),
-      'dailyH2Odone': cAppUser.getDailyH2Odone() / 4,
+      'dailyH2Odone': cAppUser.getDailyH2Odone(),
       'gender': cAppUser.getGender().toString(),
       'name': cAppUser.getName(),
       'phoneNo': cAppUser.getPhoneNo(),
@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
         print(appUserData);
         cAppUser.setEmail(appUserData['email']);
         cAppUser.setDailyH2Odone(appUserData['dailyH2Odone'].toInt());
-        cAppUser.setWeight(appUserData['weight']);
+        cAppUser.setWeight(appUserData['weight'].toDouble);
         cAppUser.setHeight(appUserData['height']);
         cAppUser.setAge(appUserData['age']);
         cAppUser.setGender(appUserData['gender']);

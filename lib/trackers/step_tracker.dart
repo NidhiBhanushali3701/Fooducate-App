@@ -29,7 +29,7 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
   CalculatorBrain cBrain;
   int currentTabIndex = 1;
   String cAppUserEmail = '';
-  int doneStepsCount = 0;
+  int doneStepsCount = 0,totDoneStepsCount = 0;
   final _fireBaseStore = FirebaseFirestore.instance;
   @override
   void initState() {
@@ -96,8 +96,9 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
   void onStepCount(StepCount event) {
     print(event);
     setState(() {
-      cAppUser.setStepsCount(event.steps + doneStepsCount);
-      _steps = (event.steps + doneStepsCount).toString();
+      updateUserDataInFireBaseStore('stepCount', event.steps);
+      _steps = doneStepsCount.toString();
+      //_steps = event.steps.toString();
     });
   }
 
@@ -166,7 +167,8 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
                 for (var appUsers in snapshot.data.docs) {
                   if (appUsers['email'] == cAppUserEmail) {
                     doneStepsCount = appUsers['stepCount'];
-                    print(appUsers['stepCount']);
+                    cAppUser.setStepsCount(doneStepsCount);
+                    print(cAppUser.getStepsCount());
                     break;
                   }
                 }
@@ -222,7 +224,7 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
                         ),
                         Expanded(
                           child: Text(
-                            _steps,
+                            _steps!='0'?_steps:doneStepsCount.toString(),
                             style: kLabelTextStyle.copyWith(fontSize: 30.0),
                           ),
                         ),

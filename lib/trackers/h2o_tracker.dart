@@ -50,7 +50,7 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
       'age': cAppUser.getAge(),
       'caloriesIn': cAppUser.getCalorieIn(),
       'dailyH2O': cAppUser.getDailyH2O(),
-      'dailyH2Odone': cAppUser.getDailyH2Odone() / 4,
+      'dailyH2Odone': cAppUser.getDailyH2Odone(),
       'gender': cAppUser.getGender().toString(),
       'name': cAppUser.getName(),
       'phoneNo': cAppUser.getPhoneNo(),
@@ -75,6 +75,7 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
         cAppUser.setStepsCount(appUserData['stepCount']);
         cAppUser.setCalorieIn(appUserData['caloriesIn']);
         cAppUser.setBMI(appUserData['bmi']);
+        break;
       }
     }
   }
@@ -89,12 +90,19 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
     }
   }
 
-  double calculateH2OProgress(cAppUser) {
-    if (cAppUser.getDailyH2Odone() != null) {
-      return h2oProgress =
-          ((cAppUser.getDailyH2Odone() / cAppUser.getDailyH2O()) / 4);
+  double calculateH2OProgress() {
+    try {
+      if (cAppUser.getDailyH2Odone() != null || cAppUser != null) {
+        getUserDataFromFireBaseStore();
+        return h2oProgress =
+            ((cAppUser.getDailyH2Odone() / cAppUser.getDailyH2O())/4);
+        //return h2oProgress = (tUserDrankH2O / (tUserH2ONeed));
+      }
+      return h2oProgress = ((userDrankH2O / cAppUser.getDailyH2O())/4);
+    } catch (e) {
+      print('error in h2o tracker \t $e');
+      return 0.0;
     }
-    return h2oProgress = ((userDrankH2O / cAppUser.getDailyH2O()) / 4);
   }
 
   Path _buildRectPath() {
@@ -124,10 +132,12 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
       print(arguments['CurrentAppUserData']);
       //if you passed object
       //final cAppUser = arguments['CurrentAppUserData'];
+      calculateH2OProgress();
       cAppUser = arguments['CurrentAppUserData'];
       cBrain = arguments['CurrentAppUserCB'];
-      print('in h20 calc ${cAppUser.getEmail()},${cAppUser.getGender()}');
-      calculateH2OProgress(cAppUser);
+      print(
+          'in h20 calc ${cAppUser.getEmail()},${cAppUser.getDailyH2Odone()},${cAppUser.getDailyH2O()}');
+      calculateH2OProgress();
       cAppUserEmail = cAppUser.getEmail();
     }
     return Scaffold(
@@ -145,9 +155,8 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
               if (snapshot.hasData) {
                 for (var appUsers in snapshot.data.docs) {
                   if (appUsers['email'] == cAppUserEmail) {
-                    print('$userDrankH2O**${appUsers['dailyH2Odone']}');
-                    userDrankH2O = (appUsers['dailyH2Odone']*4).toInt();
-                    print(appUsers['dailyH2Odone']);
+                    print('$userDrankH2O*-*${appUsers['dailyH2Odone']}');
+                    userDrankH2O = (appUsers['dailyH2Odone']).toInt();
                     break;
                   }
                 }
@@ -204,16 +213,15 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
                                       if (userDrankH2O > 0) {
                                         userDrankH2O--;
                                         updateUserDataInFireBaseStore(
-                                            'dailyH2Odone',
-                                            userDrankH2O  / 4);
+                                            'dailyH2Odone', userDrankH2O);
                                         h2oMSG = ' ';
                                       } else {
                                         userDrankH2O = 0;
                                         updateUserDataInFireBaseStore(
-                                            'dailyH2Odone', 0 / 4);
+                                            'dailyH2Odone', 0);
                                         h2oMSG = 'Water drank cant be negative';
                                       }
-                                      calculateH2OProgress(cAppUser);
+                                      calculateH2OProgress();
                                       cAppUser.setDailyH2Odone(userDrankH2O);
                                     });
                                   },
@@ -226,11 +234,11 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
                                   onPressed: () {
                                     setState(() {
                                       updateUserDataInFireBaseStore(
-                                          'dailyH2Odone', (userDrankH2O + 1) / 4);
+                                          'dailyH2Odone', (userDrankH2O + 1));
                                       userDrankH2O++;
                                       h2oMSG =
                                           'GOOD H2O is needed for proper body functions!';
-                                      calculateH2OProgress(cAppUser);
+                                      calculateH2OProgress();
                                       cAppUser.setDailyH2Odone(userDrankH2O);
                                     });
                                   },
@@ -279,7 +287,7 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
                           updateUserDataInFireBaseStore(
                               'dailyH2O', cAppUser.getDailyH2O());
                           updateUserDataInFireBaseStore(
-                              'dailyH2Odone', cAppUser.getDailyH2Odone() / 4);
+                              'dailyH2Odone', cAppUser.getDailyH2Odone());
                           cAppUser.setDailyH2Odone(userDrankH2O);
                           Navigator.pushReplacementNamed(context, HomeScreen.id,
                               arguments: {
