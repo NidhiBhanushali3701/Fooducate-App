@@ -181,12 +181,6 @@ class _HomeScreenState extends State<HomeScreen> {
               }
             } else {
               showSpinner = true;
-              return Center(
-                child: Container(
-                  height: 20,
-                  width: 20,
-                ),
-              );
             }
             return Scaffold(
               backgroundColor: Colors.white,

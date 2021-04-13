@@ -30,6 +30,25 @@ class _GenderSelectState extends State<GenderSelect> {
         .update({updateField: updatedValue});
   }
 
+  void addUserDataToFireBaseStore() {
+    print('here new data base${cAppUser.getEmail()}');
+    _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).set({
+      'email': cAppUser.getEmail(),
+      'password': cAppUser.getPassword(),
+      'bmi': cAppUser.getBMI(),
+      'height': cAppUser.getHeight(),
+      'weight': cAppUser.getWeight(),
+      'age': cAppUser.getAge(),
+      'caloriesIn': cAppUser.getCalorieIn(),
+      'dailyH2O': cAppUser.getDailyH2O(),
+      'dailyH2Odone': cAppUser.getDailyH2Odone(),
+      'gender': cAppUser.getGender().toString(),
+      'name': cAppUser.getName(),
+      'phoneNo': cAppUser.getPhoneNo(),
+      'stepCount': cAppUser.getStepsCount(),
+    });
+  }
+
   void getUserDataFromFireBaseStore() async {
     var appUsers = await _fireBaseStore.collection('clients').get();
     for (var appUser in appUsers.docs) {
@@ -59,6 +78,22 @@ class _GenderSelectState extends State<GenderSelect> {
       cAppUser = arguments['CurrentAppUserData'];
       print('in BMI calc ${cAppUser.getEmail()},${cAppUser.getGender()}');
       cAppUserEmail = cAppUser.getEmail();
+
+      try {
+        if (arguments['newAppUser'] == true) {
+          cAppUser.setEmail(arguments['email']);
+          addUserDataToFireBaseStore();
+          updateUserDataInFireBaseStore('height', 155);
+          updateUserDataInFireBaseStore('weight', 65);
+          updateUserDataInFireBaseStore('age', 20);
+          updateUserDataInFireBaseStore('caloriesIn', 0);
+          updateUserDataInFireBaseStore('bmi', 0);
+          updateUserDataInFireBaseStore('dailyH2Odone',0);
+          updateUserDataInFireBaseStore('stepCount',0);
+        }
+      } catch (e) {
+        print('not new user $e');
+      }
     }
     return Scaffold(
       appBar: AppBar(

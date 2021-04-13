@@ -9,6 +9,7 @@ import 'package:fooducate/screens/gender_screen.dart';
 import 'package:fooducate/trackers/calorie_tracker.dart';
 import 'package:fooducate/trackers/h2o_tracker.dart';
 import 'package:fooducate/trackers/step_tracker.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'food_search_screen.dart';
 import 'home_screen.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
   CalculatorBrain cBrain;
   final _fireBaseStore = FirebaseFirestore.instance;
   String cAppUserEmail;
+  bool showSpinner = false;
 
   @override
   Widget build(BuildContext context) {
@@ -60,203 +62,205 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
 
       print('in table view $carbs,$calories,$fats,$protein');
     }
-    return FutureBuilder(
-        future: _fireBaseStore.collection('clients').get(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            // If we got an error
-            if (snapshot.hasData) {
-              for (var appUsers in snapshot.data.docs) {
-                if (appUsers['email'] == cAppUserEmail) {
-                  print(appUsers['food']);
-                  break;
+    return ModalProgressHUD(
+      inAsyncCall: showSpinner,
+      child: FutureBuilder(
+          future: _fireBaseStore.collection('clients').get(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              // If we got an error
+              showSpinner = false;
+              if (snapshot.hasData) {
+                for (var appUsers in snapshot.data.docs) {
+                  if (appUsers['email'] == cAppUserEmail) {
+                    print(appUsers['food']);
+                    break;
+                  }
                 }
-              }
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text(
-                  '${snapshot.error} occured',
-                  style: TextStyle(fontSize: 18),
-                ),
-              );
-            }
-          } else {
-            return CircularProgressIndicator(
-              backgroundColor: kInactiveCardColour,
-            );
-          }
-          return Scaffold(
-            backgroundColor: Colors.white,
-            appBar: AppBar(
-              centerTitle: true,
-              leading: null,
-              title: Text('FOOD NUTRITION DATA'),
-              backgroundColor: Colors.purple,
-            ),
-            body: ListView(children: <Widget>[
-              SizedBox(
-                height: 27,
-              ),
-              Center(
+              } else if (snapshot.hasError) {
+                return Center(
                   child: Text(
-                'Nutrition Chart',
-                style: kLabelTextStyle.copyWith(color: Colors.purple),
-              )),
-              DataTable(
-                columns: [
-                  DataColumn(
-                      label: Text('No',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold))),
-                  DataColumn(
-                      label: Text('Name',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold))),
-                  DataColumn(
-                      label: Text('Amount',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold))),
-                ],
-                rows: [
-                  DataRow(cells: [
-                    DataCell(Text('1')),
-                    DataCell(Text('Calories')),
-                    DataCell(Text(calories)),
-                  ]),
-                  DataRow(cells: [
-                    DataCell(Text('2')),
-                    DataCell(Text('Carbs')),
-                    DataCell(Text(carbs)),
-                  ]),
-                  DataRow(cells: [
-                    DataCell(Text('3')),
-                    DataCell(Text('Fats')),
-                    DataCell(Text(fats)),
-                  ]),
-                  DataRow(cells: [
-                    DataCell(Text('4')),
-                    DataCell(Text('Protein')),
-                    DataCell(Text(protein)),
-                  ]),
-                ],
+                    '${snapshot.error} occured',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                );
+              }
+            } else {
+              showSpinner = true;
+            }
+            return Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                centerTitle: true,
+                leading: null,
+                title: Text('FOOD NUTRITION DATA'),
+                backgroundColor: Colors.purple,
               ),
-              SizedBox(
-                height: 111,
-              ),
-              CalculateButton(
-                onTap: () {
-                  Food f = Food(
-                      calories: double.parse(calories),
-                      fat: double.parse(fats),
-                      name: foodName,
-                      carbs: double.parse(carbs),
-                      protein: double.parse(protein),
-                      quantity: 1,
-                      foodImgURL: ' ');
-                  cAppUser.addMeals(f);
-                  print(cAppUser.getAllMeals());
-                  cAppUser.printAllMeals();
+              body: ListView(children: <Widget>[
+                SizedBox(
+                  height: 27,
+                ),
+                Center(
+                    child: Text(
+                  'Nutrition Chart',
+                  style: kLabelTextStyle.copyWith(color: Colors.purple),
+                )),
+                DataTable(
+                  columns: [
+                    DataColumn(
+                        label: Text('No',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold))),
+                    DataColumn(
+                        label: Text('Name',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold))),
+                    DataColumn(
+                        label: Text('Amount',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold))),
+                  ],
+                  rows: [
+                    DataRow(cells: [
+                      DataCell(Text('1')),
+                      DataCell(Text('Calories')),
+                      DataCell(Text(calories)),
+                    ]),
+                    DataRow(cells: [
+                      DataCell(Text('2')),
+                      DataCell(Text('Carbs')),
+                      DataCell(Text(carbs)),
+                    ]),
+                    DataRow(cells: [
+                      DataCell(Text('3')),
+                      DataCell(Text('Fats')),
+                      DataCell(Text(fats)),
+                    ]),
+                    DataRow(cells: [
+                      DataCell(Text('4')),
+                      DataCell(Text('Protein')),
+                      DataCell(Text(protein)),
+                    ]),
+                  ],
+                ),
+                SizedBox(
+                  height: 111,
+                ),
+                CalculateButton(
+                  onTap: () {
+                    Food f = Food(
+                        calories: double.parse(calories),
+                        fat: double.parse(fats),
+                        name: foodName,
+                        carbs: double.parse(carbs),
+                        protein: double.parse(protein),
+                        quantity: 1,
+                        foodImgURL: ' ');
+                    cAppUser.addMeals(f);
+                    print(cAppUser.getAllMeals());
+                    cAppUser.printAllMeals();
+                    setState(() {
+                      //updateUserHealth(); //TODO:onTap update ui
+                    });
+                    //Navigator.of(context).pop();
+                    Navigator.pushReplacementNamed(context, CalorieTracker.id,
+                        arguments: {
+                          'CurrentAppUserData': cAppUser,
+                          'CurrentAppUserCB': cBrain
+                        });
+                    /*Navigator.pushReplacementNamed(context, HomeScreen.id, arguments: {
+                    'CurrentAppUserData': cAppUser,
+                    'CurrentAppUserCB': cBrain
+                  });*/
+                  },
+                  buttonTitle: "ADD TO MEALS",
+                )
+              ]),
+              bottomNavigationBar: BottomNavigationBar(
+                selectedItemColor: Colors.purple,
+                unselectedItemColor: Colors.purple.shade100,
+                elevation: 15,
+                currentIndex: currentTabIndex,
+                onTap: (int index) {
                   setState(() {
-                    //updateUserHealth(); //TODO:onTap update ui
+                    currentTabIndex = index;
+                    //currentPage = pages[index];
                   });
-                  //Navigator.of(context).pop();
-                  Navigator.pushReplacementNamed(context, CalorieTracker.id,
-                      arguments: {
-                        'CurrentAppUserData': cAppUser,
-                        'CurrentAppUserCB': cBrain
-                      });
-                  /*Navigator.pushReplacementNamed(context, HomeScreen.id, arguments: {
-                  'CurrentAppUserData': cAppUser,
-                  'CurrentAppUserCB': cBrain
-                });*/
                 },
-                buttonTitle: "ADD TO MEALS",
-              )
-            ]),
-            bottomNavigationBar: BottomNavigationBar(
-              selectedItemColor: Colors.purple,
-              unselectedItemColor: Colors.purple.shade100,
-              elevation: 15,
-              currentIndex: currentTabIndex,
-              onTap: (int index) {
-                setState(() {
-                  currentTabIndex = index;
-                  //currentPage = pages[index];
-                });
-              },
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  label: 'Home',
-                  icon: IconButton(
-                    icon: Icon(Icons
-                        .home_rounded), //Icon(Icons.account_circle_rounded)
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, HomeScreen.id);
-                    },
+                items: <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    label: 'Home',
+                    icon: IconButton(
+                      icon: Icon(Icons
+                          .home_rounded), //Icon(Icons.account_circle_rounded)
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, HomeScreen.id);
+                      },
+                    ),
                   ),
-                ),
-                BottomNavigationBarItem(
-                  label: 'Steps',
-                  icon: IconButton(
-                    icon: Icon(Icons
-                        .directions_walk_rounded), //Icon(Icons.account_circle_rounded)
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, StepTracker.id,
-                          arguments: {
-                            'CurrentAppUserData': cAppUser,
-                            'CurrentAppUserCB': cBrain
-                          });
-                    },
+                  BottomNavigationBarItem(
+                    label: 'Steps',
+                    icon: IconButton(
+                      icon: Icon(Icons
+                          .directions_walk_rounded), //Icon(Icons.account_circle_rounded)
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, StepTracker.id,
+                            arguments: {
+                              'CurrentAppUserData': cAppUser,
+                              'CurrentAppUserCB': cBrain
+                            });
+                      },
+                    ),
                   ),
-                ),
-                BottomNavigationBarItem(
-                  label: 'Food',
-                  icon: IconButton(
-                    icon: Icon(Icons
-                        .restaurant_menu), //Icon(Icons.account_circle_rounded)
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, FoodScreen.id,
-                          arguments: {
-                            'CurrentAppUserData': cAppUser,
-                            'CurrentAppUserCB': cBrain
-                          });
-                    },
+                  BottomNavigationBarItem(
+                    label: 'Food',
+                    icon: IconButton(
+                      icon: Icon(Icons
+                          .restaurant_menu), //Icon(Icons.account_circle_rounded)
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, FoodScreen.id,
+                            arguments: {
+                              'CurrentAppUserData': cAppUser,
+                              'CurrentAppUserCB': cBrain
+                            });
+                      },
+                    ),
                   ),
-                ),
-                BottomNavigationBarItem(
-                  label: 'Water Tracker',
-                  icon: IconButton(
-                    icon: Icon(Icons
-                        .wine_bar_sharp), //Icon(Icons.account_circle_rounded)
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, H2OTracker.id,
-                          arguments: {
-                            'CurrentAppUserData': cAppUser,
-                            'CurrentAppUserCB': cBrain
-                          });
-                    },
+                  BottomNavigationBarItem(
+                    label: 'Water Tracker',
+                    icon: IconButton(
+                      icon: Icon(Icons
+                          .wine_bar_sharp), //Icon(Icons.account_circle_rounded)
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, H2OTracker.id,
+                            arguments: {
+                              'CurrentAppUserData': cAppUser,
+                              'CurrentAppUserCB': cBrain
+                            });
+                      },
+                    ),
                   ),
-                ),
-                BottomNavigationBarItem(
-                  label: 'Me',
-                  icon: IconButton(
-                    icon: Icon(Icons.account_circle_rounded),
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, GenderSelect.id,
-                          arguments: {
-                            'CurrentAppUserData': cAppUser,
-                            'CurrentAppUserCB': cBrain
-                          }); //arguments: {'CurrentAppUserData': cAppUser}
-                      setState(() {
-                        //updateUserHealth();
-                      });
-                      //Navigator.pushNamed(context, routeName)
-                    },
+                  BottomNavigationBarItem(
+                    label: 'Me',
+                    icon: IconButton(
+                      icon: Icon(Icons.account_circle_rounded),
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, GenderSelect.id,
+                            arguments: {
+                              'CurrentAppUserData': cAppUser,
+                              'CurrentAppUserCB': cBrain
+                            }); //arguments: {'CurrentAppUserData': cAppUser}
+                        setState(() {
+                          //updateUserHealth();
+                        });
+                        //Navigator.pushNamed(context, routeName)
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),
-          );
-        });
+                ],
+              ),
+            );
+          }),
+    );
   }
 }
