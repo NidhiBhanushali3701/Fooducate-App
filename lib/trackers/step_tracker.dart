@@ -55,10 +55,11 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
     });
   }
 
-  void updateUserDataToFireBaseStore() {
-    _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).update({
-      'stepCount': cAppUser.getStepsCount(),
-    });
+  void updateUserDataInFireBaseStore(String updateField, var updatedValue) {
+    _fireBaseStore
+        .collection('clients')
+        .doc(cAppUserEmail)
+        .update({updateField: updatedValue});
   }
 
   void getUserDataFromFireBaseStore() async {
@@ -301,7 +302,7 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
                         gender: cAppUser.getGender(), cUser: cAppUser);
                     cBrain.calculateStepsCountProgress();
                     print('drink ${cBrain.calculateDailyH2O()} L');
-                    updateUserDataToFireBaseStore();
+                    updateUserDataInFireBaseStore('stepCount', cAppUser.getStepsCount());
                     setState(() {
                       //updateUserHealth(); //TODO:onTap update ui
                     });
