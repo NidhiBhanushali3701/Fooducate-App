@@ -79,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
     sBMI = cAppUserData['bmi'].toStringAsFixed(1);
     sCalorie = cAppUserData['caloriesIn'].floor().toString();
     sSteps = cAppUserData['stepCount'].toString();
-    sUserH2O = cAppUserData['dailyH2Odone'].toInt().toString();
+    sUserH2O = (cAppUserData['dailyH2Odone'].toInt() * 4).toString();
   }
 
   void addUserDataToFireBaseStore() {
@@ -100,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void updateUserDataToFireBaseStore(
+  void updateUserDataInFireBaseStore(
       FirebaseFirestore _fireBaseStore, AppUser cAppUser) {
     _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).update({});
   }
@@ -152,128 +152,273 @@ class _HomeScreenState extends State<HomeScreen> {
       //updateUserHealth(cAppUser);
       print(
           'in home ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
+      cAppUserEmail = cAppUser.getEmail();
       //updateUserHealth(cAppUser);
     }
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.purple,
-          centerTitle: true,
-          leading: null,
-          actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.logout, color: Colors.white),
-                onPressed: () async {
-                  setState(() {
-                    showSpinner = true;
-                  });
-                  await _auth.signOut();
-                  //clearSession();
-                  //Navigator.pop(context,true);
-                  Navigator.popUntil(
-                      context, ModalRoute.withName(StartScreen.id));
-                  //Navigator.pop(context);
-                  //Navigator.pop(context);
-                  setState(() {
-                    showSpinner = false;
-                  });
-                }),
-          ],
-          title: Text(
-            'FOODUCATE HOME',
-          ),
-        ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Image(
-                    image: AssetImage('images/start_img.png'),
+      child: FutureBuilder(
+          future: _fireBaseStore.collection('clients').get(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              showSpinner = false;
+              // If we got an error
+              if (snapshot.hasData) {
+                for (var appUsers in snapshot.data.docs) {
+                  if (appUsers['email'] == cAppUserEmail) {
+                    updateUserHealth(appUsers);
+                    print(appUsers['stepCount']);
+                    break;
+                  }
+                }
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    '${snapshot.error} occured',
+                    style: TextStyle(fontSize: 18),
                   ),
-                  Container(
-                    height: 200.0,
-                    width: 200.0,
-                    margin: EdgeInsets.all(20.0),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(1.0, 1.0),
-                            blurRadius: 2.0,
-                          )
-                        ]),
+                );
+              }
+            } else {
+              showSpinner = true;
+              return Center(
+                child: Container(
+                  height: 20,
+                  width: 20,
+                ),
+              );
+            }
+            return Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                backgroundColor: Colors.purple,
+                centerTitle: true,
+                leading: null,
+                actions: <Widget>[
+                  IconButton(
+                      icon: Icon(Icons.logout, color: Colors.white),
+                      onPressed: () async {
+                        setState(() {
+                          showSpinner = true;
+                        });
+                        await _auth.signOut();
+                        //clearSession();
+                        //Navigator.pop(context,true);
+                        Navigator.popUntil(
+                            context, ModalRoute.withName(StartScreen.id));
+                        //Navigator.pop(context);
+                        //Navigator.pop(context);
+                        setState(() {
+                          showSpinner = false;
+                        });
+                      }),
+                ],
+                title: Text(
+                  'FOODUCATE HOME',
+                ),
+              ),
+              body: SafeArea(
+                child: SingleChildScrollView(
+                  child: Container(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "CALORIES YOU NEED ",
-                          style: kLabelTextStyle.copyWith(color: Colors.purple),
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Image(
+                          image: AssetImage('images/start_img.png'),
                         ),
-                        SizedBox(
-                          height: 20.0,
+                        Container(
+                          height: 200.0,
+                          width: 200.0,
+                          margin: EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey,
+                                  offset: Offset(1.0, 1.0),
+                                  blurRadius: 2.0,
+                                )
+                              ]),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "CALORIES YOU NEED ",
+                                style: kLabelTextStyle.copyWith(
+                                    color: Colors.purple),
+                              ),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              Text(
+                                //TODO: Update the actual Calories value here
+                                sCalorie,
+                                style: kLabelTextStyle.copyWith(
+                                    color: Colors.purple),
+                              ),
+                            ],
+                          ),
                         ),
-                        Text(
-                          //TODO: Update the actual Calories value here
-                          sCalorie,
-                          style: kLabelTextStyle.copyWith(color: Colors.purple),
+                        Container(
+                          height: 200.0,
+                          width: 200.0,
+                          margin: EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(1.0, 1.0),
+                                blurRadius: 2.0,
+                              )
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "YOUR BMI : ",
+                                style: kLabelTextStyle.copyWith(
+                                    color: Colors.purple),
+                              ),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              Text(
+                                sBMI, //TODO: BMI
+                                style: kLabelTextStyle.copyWith(
+                                    color: Colors.purple),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: 200.0,
+                          width: 200.0,
+                          margin: EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(1.0, 1.0),
+                                blurRadius: 2.0,
+                              )
+                            ],
+                          ),
+                          child: RaisedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, StepTracker.id,
+                                  arguments: {
+                                    'CurrentAppUserData': cAppUser,
+                                    'CurrentAppUserCB': cBrain
+                                  });
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "STEPS DONE ",
+                                  style: kLabelTextStyle.copyWith(
+                                      color: Colors.purple),
+                                ),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                Text(
+                                  sSteps, //TODO: updating steps
+                                  style: kLabelTextStyle.copyWith(
+                                      color: Colors.purple),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 200.0,
+                          width: 200.0,
+                          margin: EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(1.0, 1.0),
+                                blurRadius: 2.0,
+                              )
+                            ],
+                          ),
+                          child: RaisedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, H2OTracker.id,
+                                  arguments: {
+                                    'CurrentAppUserData': cAppUser,
+                                    'CurrentAppUserCB': cBrain
+                                  });
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "WATER TRACKER ",
+                                  style: kLabelTextStyle.copyWith(
+                                      color: Colors.purple),
+                                ),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                Text(
+                                  (' ${sUserH2O} glasses'), //TODO: updating steps
+                                  style: kLabelTextStyle.copyWith(
+                                      color: Colors.purple),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  Container(
-                    height: 200.0,
-                    width: 200.0,
-                    margin: EdgeInsets.all(20.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(1.0, 1.0),
-                          blurRadius: 2.0,
-                        )
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "YOUR BMI : ",
-                          style: kLabelTextStyle.copyWith(color: Colors.purple),
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Text(
-                          sBMI, //TODO: BMI
-                          style: kLabelTextStyle.copyWith(color: Colors.purple),
-                        ),
-                      ],
+                ),
+              ),
+              bottomNavigationBar: BottomNavigationBar(
+                selectedItemColor: Colors.purple,
+                unselectedItemColor: Colors.purple.shade100,
+                elevation: 15,
+                currentIndex: currentTabIndex,
+                onTap: (int index) {
+                  setState(() {
+                    currentTabIndex = index;
+                    addUserDataToFireBaseStore();
+                    getUserDataFromFireBaseStore();
+                    //currentPage = pages[index];
+                  });
+                },
+                items: <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    activeIcon: Icon(Icons.home_rounded),
+                    label: 'Home',
+                    icon: IconButton(
+                      icon: Icon(
+                        Icons.home_outlined,
+                      ), //Icon(Icons.account_circle_rounded)
+                      onPressed: () {
+                        setState(() {
+                          //updateUserHealth();
+                        });
+                      },
                     ),
                   ),
-                  Container(
-                    height: 200.0,
-                    width: 200.0,
-                    margin: EdgeInsets.all(20.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(1.0, 1.0),
-                          blurRadius: 2.0,
-                        )
-                      ],
-                    ),
-                    child: RaisedButton(
+                  BottomNavigationBarItem(
+                    label: 'Steps',
+                    icon: IconButton(
+                      icon: Icon(
+                        Icons.directions_walk_rounded,
+                      ), //Icon(Icons.account_circle_rounded)
                       onPressed: () {
                         Navigator.pushNamed(context, StepTracker.id,
                             arguments: {
@@ -281,165 +426,60 @@ class _HomeScreenState extends State<HomeScreen> {
                               'CurrentAppUserCB': cBrain
                             });
                       },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "STEPS DONE ",
-                            style:
-                                kLabelTextStyle.copyWith(color: Colors.purple),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          Text(
-                            sSteps, //TODO: updating steps
-                            style:
-                                kLabelTextStyle.copyWith(color: Colors.purple),
-                          ),
-                        ],
-                      ),
                     ),
                   ),
-                  Container(
-                    height: 200.0,
-                    width: 200.0,
-                    margin: EdgeInsets.all(20.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(1.0, 1.0),
-                          blurRadius: 2.0,
-                        )
-                      ],
+                  BottomNavigationBarItem(
+                    label: 'Food',
+                    icon: IconButton(
+                      icon: Icon(
+                        Icons.restaurant_menu,
+                      ), //Icon(Icons.account_circle_rounded)
+                      onPressed: () {
+                        Navigator.pushNamed(context, FoodScreen.id, arguments: {
+                          'CurrentAppUserData': cAppUser,
+                          'CurrentAppUserCB': cBrain
+                        });
+                      },
                     ),
-                    child: RaisedButton(
+                  ),
+                  BottomNavigationBarItem(
+                    label: 'Water Tracker',
+                    icon: IconButton(
+                      icon: Icon(
+                        Icons.wine_bar_sharp,
+                      ), //Icon(Icons.account_circle_rounded)
                       onPressed: () {
                         Navigator.pushNamed(context, H2OTracker.id, arguments: {
                           'CurrentAppUserData': cAppUser,
                           'CurrentAppUserCB': cBrain
                         });
                       },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "WATER TRACKER ",
-                            style:
-                                kLabelTextStyle.copyWith(color: Colors.purple),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          Text(
-                            (' ${sUserH2O} glasses'), //TODO: updating steps
-                            style:
-                                kLabelTextStyle.copyWith(color: Colors.purple),
-                          ),
-                        ],
+                    ),
+                  ),
+                  BottomNavigationBarItem(
+                    activeIcon: Icon(Icons.account_circle_rounded),
+                    label: 'Me',
+                    icon: IconButton(
+                      icon: Icon(
+                        Icons.account_circle_outlined,
                       ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, GenderSelect.id,
+                            arguments: {
+                              'CurrentAppUserData': cAppUser,
+                              'CurrentAppUserCB': cBrain
+                            }); //arguments: {'CurrentAppUserData': cAppUser}
+                        setState(() {
+                          //updateUserHealth();
+                        });
+                        //Navigator.pushNamed(context, routeName)
+                      },
                     ),
                   ),
                 ],
               ),
-            ),
-          ),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: Colors.purple,
-          unselectedItemColor: Colors.purple.shade100,
-          elevation: 15,
-          currentIndex: currentTabIndex,
-          onTap: (int index) {
-            setState(() {
-              currentTabIndex = index;
-              addUserDataToFireBaseStore();
-              getUserDataFromFireBaseStore();
-              //currentPage = pages[index];
-            });
-          },
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              activeIcon: Icon(Icons.home_rounded),
-              label: 'Home',
-              icon: IconButton(
-                icon: Icon(
-                  Icons.home_outlined,
-                ), //Icon(Icons.account_circle_rounded)
-                onPressed: () {
-                  setState(() {
-                    //updateUserHealth();
-                  });
-                },
-              ),
-            ),
-            BottomNavigationBarItem(
-              label: 'Steps',
-              icon: IconButton(
-                icon: Icon(
-                  Icons.directions_walk_rounded,
-                ), //Icon(Icons.account_circle_rounded)
-                onPressed: () {
-                  Navigator.pushNamed(context, StepTracker.id, arguments: {
-                    'CurrentAppUserData': cAppUser,
-                    'CurrentAppUserCB': cBrain
-                  });
-                },
-              ),
-            ),
-            BottomNavigationBarItem(
-              label: 'Food',
-              icon: IconButton(
-                icon: Icon(
-                  Icons.restaurant_menu,
-                ), //Icon(Icons.account_circle_rounded)
-                onPressed: () {
-                  Navigator.pushNamed(context, FoodScreen.id, arguments: {
-                    'CurrentAppUserData': cAppUser,
-                    'CurrentAppUserCB': cBrain
-                  });
-                },
-              ),
-            ),
-            BottomNavigationBarItem(
-              label: 'Water Tracker',
-              icon: IconButton(
-                icon: Icon(
-                  Icons.wine_bar_sharp,
-                ), //Icon(Icons.account_circle_rounded)
-                onPressed: () {
-                  Navigator.pushNamed(context, H2OTracker.id, arguments: {
-                    'CurrentAppUserData': cAppUser,
-                    'CurrentAppUserCB': cBrain
-                  });
-                },
-              ),
-            ),
-            BottomNavigationBarItem(
-              activeIcon: Icon(Icons.account_circle_rounded),
-              label: 'Me',
-              icon: IconButton(
-                icon: Icon(
-                  Icons.account_circle_outlined,
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, GenderSelect.id, arguments: {
-                    'CurrentAppUserData': cAppUser,
-                    'CurrentAppUserCB': cBrain
-                  }); //arguments: {'CurrentAppUserData': cAppUser}
-                  setState(() {
-                    //updateUserHealth();
-                  });
-                  //Navigator.pushNamed(context, routeName)
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+            );
+          }),
     );
   }
 }

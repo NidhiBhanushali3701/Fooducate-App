@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fooducate/api_services.dart';
@@ -28,8 +29,10 @@ class _FoodScreenState extends State<FoodScreen> {
   bool showSpinner = false;
   AppUser cAppUser;
   CalculatorBrain cBrain;
-
   int currentTabIndex = 2;
+  final _fireBaseStore = FirebaseFirestore.instance;
+  String cAppUserEmail;
+
   @override
   void initState() {
     super.initState();
@@ -47,219 +50,253 @@ class _FoodScreenState extends State<FoodScreen> {
       cBrain = arguments['CurrentAppUserCB'];
       print('in home ${cAppUser.getEmail()}');
     }
-    return ModalProgressHUD(
-      inAsyncCall: showSpinner,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          centerTitle: true,
-          leading: null,
-          title: Text('FOOD SEARCH'),
-          backgroundColor: Colors.purple,
-        ),
-        body: SafeArea(
-          child: Container(
-            child: ListView(children: [
-              Column(
-                children: [
-                  Form(
-                    child: Column(
+    return FutureBuilder(
+        future: _fireBaseStore.collection('clients').get(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            // If we got an error
+            if (snapshot.hasData) {
+              for (var appUsers in snapshot.data.docs) {
+                if (appUsers['email'] == cAppUserEmail) {
+                  print(appUsers['food']);
+                  break;
+                }
+              }
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  '${snapshot.error} occured',
+                  style: TextStyle(fontSize: 18),
+                ),
+              );
+            }
+          } else {
+            return CircularProgressIndicator(
+              backgroundColor: kInactiveCardColour,
+            );
+          }
+          return ModalProgressHUD(
+            inAsyncCall: showSpinner,
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                centerTitle: true,
+                leading: null,
+                title: Text('FOOD SEARCH'),
+                backgroundColor: Colors.purple,
+              ),
+              body: SafeArea(
+                child: Container(
+                  child: ListView(children: [
+                    Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Food Nutritional Data',
-                            style:
-                                TextStyle(color: Colors.purple, fontSize: 25),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Padding(
-                          //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
-                          padding: EdgeInsets.symmetric(horizontal: 15),
-                          child: TextField(
-                            textAlign: TextAlign.center,
-                            keyboardType: TextInputType.emailAddress,
-                            // ignore: missing_return
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.purple),
+                        Form(
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  'Food Nutritional Data',
+                                  style: TextStyle(
+                                      color: Colors.purple, fontSize: 25),
                                 ),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.purple)),
-                                labelText: 'Food Item name',
-                                labelStyle: TextStyle(color: Colors.purple),
-                                hintText: 'Enter valid food as pizza'),
-                            onChanged: (value) => name = value,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            height: 30,
-                          ),
-                        ),
-                        Padding(
-                          //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
-                          padding: EdgeInsets.all(12),
-                          child: Container(
-                            height: 48,
-                            width: 237,
-                            decoration: BoxDecoration(
-                                color: Colors.purple,
-                                borderRadius: BorderRadius.circular(20)),
-                            child: TextButton(
-                              onPressed: () async {
-                                /*if (_formKey.currentState.validate()) {
-                                            registerToFireBase();
-                                          }*/ //commented on 6.11pm 17-3-21
-                                setState(() {
-                                  showSpinner = true;
-                                });
-                                try {
-                                  Nutrients = await apiServices(foodItem: name)
-                                      .getData();
-                                  print('In search screen \n$Nutrients');
-                                  setState(() {
-                                    showSpinner = false;
-                                    calories = Nutrients['calories']['value'];
-                                    fats = Nutrients['fat']['value'];
-                                    carbs = Nutrients['carbs']['value'];
-                                    print(calories);
-                                    print(fats);
-                                    print(carbs);
-                                    Navigator.pushNamed(
-                                        context, FoodNutritionalDataScreen.id,
-                                        arguments: {
-                                          'CurrentAppUserData': cAppUser,
-                                          'CurrentAppUserCB': cBrain,
-                                          'foodName':name,
-                                          'calories': calories.toString(),
-                                          'fats': fats.toString(),
-                                          'carbs': carbs.toString(),
-                                          'protein': Nutrients['protein']
-                                                  ['value']
-                                              .toString(),
-                                        });
-                                  });
-                                } catch (e) {
-                                  print(e);
-                                }
-                              },
-                              child: Text(
-                                'SEARCH',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 25),
                               ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            height: 10,
+                              SizedBox(
+                                height: 30,
+                              ),
+                              Padding(
+                                //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
+                                padding: EdgeInsets.symmetric(horizontal: 15),
+                                child: TextField(
+                                  textAlign: TextAlign.center,
+                                  keyboardType: TextInputType.emailAddress,
+                                  // ignore: missing_return
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.purple),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.purple)),
+                                      labelText: 'Food Item name',
+                                      labelStyle:
+                                          TextStyle(color: Colors.purple),
+                                      hintText: 'Enter valid food as pizza'),
+                                  onChanged: (value) => name = value,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(
+                                  height: 30,
+                                ),
+                              ),
+                              Padding(
+                                //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
+                                padding: EdgeInsets.all(12),
+                                child: Container(
+                                  height: 48,
+                                  width: 237,
+                                  decoration: BoxDecoration(
+                                      color: Colors.purple,
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: TextButton(
+                                    onPressed: () async {
+                                      /*if (_formKey.currentState.validate()) {
+                                                registerToFireBase();
+                                              }*/ //commented on 6.11pm 17-3-21
+                                      setState(() {
+                                        showSpinner = true;
+                                      });
+                                      try {
+                                        Nutrients =
+                                            await apiServices(foodItem: name)
+                                                .getData();
+                                        print('In search screen \n$Nutrients');
+                                        setState(() {
+                                          showSpinner = false;
+                                          calories =
+                                              Nutrients['calories']['value'];
+                                          fats = Nutrients['fat']['value'];
+                                          carbs = Nutrients['carbs']['value'];
+                                          print(calories);
+                                          print(fats);
+                                          print(carbs);
+                                          Navigator.pushNamed(context,
+                                              FoodNutritionalDataScreen.id,
+                                              arguments: {
+                                                'CurrentAppUserData': cAppUser,
+                                                'CurrentAppUserCB': cBrain,
+                                                'foodName': name,
+                                                'calories': calories.toString(),
+                                                'fats': fats.toString(),
+                                                'carbs': carbs.toString(),
+                                                'protein': Nutrients['protein']
+                                                        ['value']
+                                                    .toString(),
+                                              });
+                                        });
+                                      } catch (e) {
+                                        print(e);
+                                      }
+                                    },
+                                    child: Text(
+                                      'SEARCH',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 25),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(
+                                  height: 10,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
+                  ]),
+                ),
+              ),
+              bottomNavigationBar: BottomNavigationBar(
+                selectedItemColor: Colors.purple,
+                unselectedItemColor: Colors.purple.shade100,
+                elevation: 15,
+                currentIndex: currentTabIndex,
+                onTap: (int index) {
+                  setState(() {
+                    currentTabIndex = index;
+                    //currentPage = pages[index];
+                  });
+                },
+                items: <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    activeIcon: Icon(Icons.home_rounded),
+                    label: 'Home',
+                    icon: IconButton(
+                      icon: Icon(
+                        Icons.home_outlined,
+                      ), //Icon(Icons.account_circle_rounded)
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, HomeScreen.id);
+                      },
+                    ),
+                  ),
+                  BottomNavigationBarItem(
+                    label: 'Steps',
+                    icon: IconButton(
+                      icon: Icon(
+                        Icons.directions_walk_rounded,
+                      ), //Icon(Icons.account_circle_rounded)
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, StepTracker.id,
+                            arguments: {
+                              'CurrentAppUserData': cAppUser,
+                              'CurrentAppUserCB': cBrain
+                            });
+                      },
+                    ),
+                  ),
+                  BottomNavigationBarItem(
+                    label: 'Food',
+                    icon: IconButton(
+                      icon: Icon(
+                        Icons.restaurant_menu,
+                      ), //Icon(Icons.account_circle_rounded)
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, FoodScreen.id,
+                            arguments: {
+                              'CurrentAppUserData': cAppUser,
+                              'CurrentAppUserCB': cBrain
+                            });
+                      },
+                    ),
+                  ),
+                  BottomNavigationBarItem(
+                    label: 'Water Tracker',
+                    icon: IconButton(
+                      icon: Icon(
+                        Icons.wine_bar_sharp,
+                      ), //Icon(Icons.account_circle_rounded)
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, H2OTracker.id,
+                            arguments: {
+                              'CurrentAppUserData': cAppUser,
+                              'CurrentAppUserCB': cBrain
+                            });
+                      },
+                    ),
+                  ),
+                  BottomNavigationBarItem(
+                    activeIcon: Icon(Icons.account_circle_rounded),
+                    label: 'Me',
+                    icon: IconButton(
+                      icon: Icon(
+                        Icons.account_circle_outlined,
+                      ),
+                      onPressed: () {
+                        Navigator.pushReplacementNamed(context, GenderSelect.id,
+                            arguments: {
+                              'CurrentAppUserData': cAppUser,
+                              'CurrentAppUserCB': cBrain
+                            }); //arguments: {'CurrentAppUserData': cAppUser}
+                        setState(() {
+                          //updateUserHealth();
+                        });
+                        //Navigator.pushNamed(context, routeName)
+                      },
+                    ),
                   ),
                 ],
               ),
-            ]),
-          ),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: Colors.purple,
-          unselectedItemColor: Colors.purple.shade100,
-          elevation: 15,
-          currentIndex: currentTabIndex,
-          onTap: (int index) {
-            setState(() {
-              currentTabIndex = index;
-              //currentPage = pages[index];
-            });
-          },
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              activeIcon: Icon(Icons.home_rounded),
-              label: 'Home',
-              icon: IconButton(
-                icon: Icon(
-                  Icons.home_outlined,
-                ), //Icon(Icons.account_circle_rounded)
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, HomeScreen.id);
-                },
-              ),
             ),
-            BottomNavigationBarItem(
-              label: 'Steps',
-              icon: IconButton(
-                icon: Icon(
-                  Icons.directions_walk_rounded,
-                ), //Icon(Icons.account_circle_rounded)
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, StepTracker.id, arguments: {
-                    'CurrentAppUserData': cAppUser,
-                    'CurrentAppUserCB': cBrain
-                  });
-                },
-              ),
-            ),
-            BottomNavigationBarItem(
-              label: 'Food',
-              icon: IconButton(
-                icon: Icon(
-                  Icons.restaurant_menu,
-                ), //Icon(Icons.account_circle_rounded)
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, FoodScreen.id, arguments: {
-                    'CurrentAppUserData': cAppUser,
-                    'CurrentAppUserCB': cBrain
-                  });
-                },
-              ),
-            ),
-            BottomNavigationBarItem(
-              label: 'Water Tracker',
-              icon: IconButton(
-                icon: Icon(
-                  Icons.wine_bar_sharp,
-                ), //Icon(Icons.account_circle_rounded)
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, H2OTracker.id, arguments: {
-                    'CurrentAppUserData': cAppUser,
-                    'CurrentAppUserCB': cBrain
-                  });
-                },
-              ),
-            ),
-            BottomNavigationBarItem(
-              activeIcon: Icon(Icons.account_circle_rounded),
-              label: 'Me',
-              icon: IconButton(
-                icon: Icon(
-                  Icons.account_circle_outlined,
-                ),
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, GenderSelect.id, arguments: {
-                    'CurrentAppUserData': cAppUser,
-                    'CurrentAppUserCB': cBrain
-                  }); //arguments: {'CurrentAppUserData': cAppUser}
-                  setState(() {
-                    //updateUserHealth();
-                  });
-                  //Navigator.pushNamed(context, routeName)
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+          );
+        });
   }
 }
 /*
