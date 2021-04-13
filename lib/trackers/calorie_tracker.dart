@@ -24,7 +24,7 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
   final _fireBaseStore = FirebaseFirestore.instance;
   String cAppUserEmail;
   bool showSpinner = false;
-
+  List<Map<dynamic,dynamic>> fm = List<Map<dynamic,dynamic>>();
   @override
   Widget build(BuildContext context) {
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;
@@ -53,7 +53,13 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
               if (snapshot.hasData) {
                 for (var appUsers in snapshot.data.docs) {
                   if (appUsers['email'] == cAppUserEmail) {
-                    print(appUsers['food']);
+                    try{
+                    fm = (appUsers['food']);
+                    cAppUser.setFood(
+                        cAppUser.foodMapToFoodObjectArray(fm));}
+                        catch(e){
+                      print(e);
+                        }
                     break;
                   }
                 }
@@ -115,7 +121,8 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
                             child: Center(
                               child: Text('Items',
                                   style: TextStyle(
-                                      fontSize: 20, fontWeight: FontWeight.w500)),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500)),
                             ),
                           )),
                           DataColumn(
@@ -124,7 +131,8 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
                             child: Center(
                               child: Text('Amount',
                                   style: TextStyle(
-                                      fontSize: 20, fontWeight: FontWeight.w500)),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500)),
                             ),
                           )),
                           DataColumn(
@@ -133,7 +141,8 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
                             child: Center(
                               child: Text('Calories',
                                   style: TextStyle(
-                                      fontSize: 20, fontWeight: FontWeight.w500)),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500)),
                             ),
                           )),
                         ], rows: []),

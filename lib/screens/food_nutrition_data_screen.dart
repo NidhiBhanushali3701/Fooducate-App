@@ -30,6 +30,13 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
   final _fireBaseStore = FirebaseFirestore.instance;
   String cAppUserEmail;
   bool showSpinner = false;
+  void foodUserDataFireBaseStore() {
+    List<Food> food = cAppUser.getAllMeals();
+    _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).update({
+      'food': FieldValue.arrayUnion(
+          cAppUser.getAllFood())
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +81,7 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
                 for (var appUsers in snapshot.data.docs) {
                   if (appUsers['email'] == cAppUserEmail) {
                     print(appUsers['food']);
+
                     break;
                   }
                 }
@@ -158,6 +166,7 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
                         foodImgURL: ' ');
                     cAppUser.addMeals(f);
                     print(cAppUser.getAllMeals());
+                    foodUserDataFireBaseStore();
                     cAppUser.printAllMeals();
                     setState(() {
                       //updateUserHealth(); //TODO:onTap update ui
