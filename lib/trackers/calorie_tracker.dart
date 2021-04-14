@@ -5,6 +5,7 @@ import 'package:fooducate/screens/home_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import '../calculator_brain.dart';
 import '../constants.dart';
+import '../food.dart';
 import '../tracker.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
@@ -24,7 +25,23 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
   final _fireBaseStore = FirebaseFirestore.instance;
   String cAppUserEmail;
   bool showSpinner = false;
-  List<Map<dynamic,dynamic>> fm = List<Map<dynamic,dynamic>>();
+  List<Map<dynamic, dynamic>> fm = List<Map<dynamic, dynamic>>();
+  dynamic getCurrentUserFood() async {
+    var appUsers = await _fireBaseStore.collection('clients').get();
+    for (var appUser in appUsers.docs) {
+      var appUserData = appUser.data();
+      //print(appUserData);
+      if (cAppUserEmail == appUserData['email']) {
+        //print(appUserData);
+        //print(cAppUser.getAllMeals()[1].name);
+        cAppUser.removeAllFood();
+        for (var f in cAppUser.foodMapToFoodObjectArray(appUserData['food']))
+          cAppUser.addMeals(f);
+        print(cAppUser.getAllMeals());
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;
@@ -36,33 +53,57 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
       cAppUser = arguments['CurrentAppUserData'];
       cBrain = arguments['CurrentAppUserCB'];
       print(
-          'in home ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
+          'in food cal ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
       //updateUserHealth();
       print(
-          'in home ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
+          'in food cal ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
       cAppUserEmail = cAppUser.getEmail();
+      cAppUser.removeAllFood();
+      getCurrentUserFood();
+      print(cAppUser.getAllMeals());
     }
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
-      child: FutureBuilder(
-          future: _fireBaseStore.collection('clients').get(),
+      child: StreamBuilder(
+          stream: _fireBaseStore
+              .collection('clients')
+              .doc(cAppUserEmail)
+              .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               // If we got an error
               showSpinner = false;
               if (snapshot.hasData) {
+                //for (var appUserS in snapshot.data.docs) {
                 for (var appUsers in snapshot.data.docs) {
-                  if (appUsers['email'] == cAppUserEmail) {
-                    try{
-                    fm = (appUsers['food']);
-                    cAppUser.setFood(
-                        cAppUser.foodMapToFoodObjectArray(fm));}
-                        catch(e){
-                      print(e);
-                        }
+                  print(appUsers);
+                  if (appUsers.data['email'] == cAppUserEmail) {
+                    //try {
+                    /*print('on line 60');
+                        cAppUser.removeAllFood();
+                        for (var fOM in appUsers['food']) {
+                          print(appUsers['food']);
+                          print('${fOM['calories']} in ${fOM['name']}');
+                          cAppUser.addMeals(Food(
+                              calories: fOM['calories'],
+                              fat: fOM['fat'],
+                              carbs: fOM['carbs'],
+                              protein: fOM['protein'],
+                              name: fOM['name'],
+                              quantity: fOM['quantity'],
+                              foodImgURL: fOM['foodImgURL']));
+                        }/ */
+                    //print(appUsers['food']);
+                    cAppUser.setFood(cAppUser
+                        .foodMapToFoodObjectArray(appUsers.data['food']));
+                    print(cAppUser.getAllMeals());
+                    //} catch (e) {
+                    //print('we are here $e');
+                    //}
                     break;
                   }
                 }
+                //}
               } else if (snapshot.hasError) {
                 return Center(
                   child: Text(
@@ -83,6 +124,8 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
                   IconButton(
                       icon: Icon(Icons.ios_share, color: Colors.white),
                       onPressed: () async {
+                        setState(() {});
+                        showSpinner = false;
                         /*setState(() {
                         showSpinner = true;
                       });

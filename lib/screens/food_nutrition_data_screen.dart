@@ -32,10 +32,10 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
   bool showSpinner = false;
   void foodUserDataFireBaseStore() {
     List<Food> food = cAppUser.getAllMeals();
-    _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).update({
-      'food': FieldValue.arrayUnion(
-          cAppUser.getAllFood())
-    });
+    _fireBaseStore
+        .collection('clients')
+        .doc(cAppUser.getEmail())
+        .update({'food': FieldValue.arrayUnion(cAppUser.getAllFood())});
   }
 
   @override
@@ -50,10 +50,10 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
       cAppUser = arguments['CurrentAppUserData'];
       cBrain = arguments['CurrentAppUserCB'];
       print(
-          'in home ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
+          'in food nd ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
       //updateUserHealth();
       print(
-          'in home ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
+          'in food nd ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
       if (arguments['calories'] != null) {
         calories = arguments['calories'];
       }
@@ -71,7 +71,57 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
     }
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
-      child: FutureBuilder(
+      child: StreamBuilder(
+          stream: _fireBaseStore
+              .collection('clients')
+              .doc(cAppUserEmail)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              // If we got an error
+              showSpinner = false;
+              if (snapshot.hasData) {
+                //for (var appUserS in snapshot.data.docs) {
+                for (var appUsers in snapshot.data.docs) {
+                  print(appUsers);
+                  if (appUsers.data['email'] == cAppUserEmail) {
+                    //try {
+                    /*print('hello on line 60');
+                        cAppUser.removeAllFood();
+                        for (var fOM in appUsers['food']) {
+                          print(appUsers['food']);
+                          print('${fOM['calories']} in ${fOM['name']}');
+                          cAppUser.addMeals(Food(
+                              calories: fOM['calories'],
+                              fat: fOM['fat'],
+                              carbs: fOM['carbs'],
+                              protein: fOM['protein'],
+                              name: fOM['name'],
+                              quantity: fOM['quantity'],
+                              foodImgURL: fOM['foodImgURL']));
+                        }/ */
+                    //print(appUsers['food']);
+                    cAppUser.setFood(cAppUser.foodMapToFoodObjectArray(appUsers.data['food']));//Todo: works
+                    //print(cAppUser.getAllMeals());//todo uneeded
+                    //} catch (e) {
+                    //print('we are here $e');
+                    //}
+                    break;
+                  }
+                }
+                //}
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    '${snapshot.error} occured',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                );
+              }
+            } else {
+              showSpinner = true;
+            }
+            /*FutureBuilder(
           future: _fireBaseStore.collection('clients').get(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
@@ -96,6 +146,7 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
             } else {
               showSpinner = true;
             }
+            */
             return Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
@@ -165,12 +216,11 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
                         quantity: 1,
                         foodImgURL: ' ');
                     cAppUser.addMeals(f);
-                    print(cAppUser.getAllMeals());
+                    //print(cAppUser.getAllMeals());
                     foodUserDataFireBaseStore();
+                    //cAppUser.removeAllFood();
                     cAppUser.printAllMeals();
-                    setState(() {
-                      //updateUserHealth(); //TODO:onTap update ui
-                    });
+                    //setState(() {//updateUserHealth(); //TODO:onTap update ui});
                     //Navigator.of(context).pop();
                     Navigator.pushReplacementNamed(context, CalorieTracker.id,
                         arguments: {

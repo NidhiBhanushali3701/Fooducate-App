@@ -37,9 +37,12 @@ class AppUser {
   void removeMeals(Food f) {
     _food.remove(f);
   }
+  void removeAllFood(){
+    _food.clear();
+  }
 
   List<Map<dynamic,dynamic>> getAllFood() {
-    List<Map<dynamic,dynamic>> foodList = List<Map>();
+    List<Map<dynamic,dynamic>> foodList = List<Map<dynamic,dynamic>>();
     for (var f in _food) {
       foodList.add({
         'name': f.name,
@@ -54,16 +57,16 @@ class AppUser {
     return foodList;
   }
 
-  List<Food> foodMapToFoodObjectArray(List<Map<dynamic,dynamic>> fm) {
-    List<Food> foodOA = List();
+  dynamic foodMapToFoodObjectArray(var fm) {
+    List<Food> foodOA = List<Food>();
     for (var f_m in fm) {
       foodOA.add(Food(
-          calories: f_m['calories'],
-          fat: f_m['fat'],
-          carbs: f_m['carbs'],
-          protein: f_m['protein'],
+          calories: f_m['calories'].toDouble(),
+          fat: f_m['fat'].toDouble(),
+          carbs: f_m['carbs'].toDouble(),
+          protein: f_m['protein'].toDouble(),
           name: f_m['name'],
-          quantity: f_m['quantity'],
+          quantity: f_m['quantity'].toDouble(),
           foodImgURL: f_m['foodImgURL']));
     }
     return foodOA;

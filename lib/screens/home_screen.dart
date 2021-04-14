@@ -88,13 +88,16 @@ class _HomeScreenState extends State<HomeScreen> {
     sSteps = cAppUserData['stepCount'].toString();
     sUserH2O = (cAppUserData['dailyH2Odone'].toInt()).toString();
   }
-  void foodUserDataFireBaseStore(){
+
+  void foodUserDataFireBaseStore() {
     //update_UserDataInFireBaseStore('food', List<Map>());
-    List<Food> food =cAppUser.getAllMeals();
+    List<Food> food = cAppUser.getAllMeals();
     _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).update({
-      'food':FieldValue.arrayUnion(cAppUser.getAllFood())//cAppUser.getAllMeals()[0])
+      'food': FieldValue.arrayUnion(
+          cAppUser.getAllFood()) //cAppUser.getAllMeals()[0])
     });
   }
+
   void addUserDataToFireBaseStore() {
     _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).set({
       'email': cAppUser.getEmail(),
@@ -127,8 +130,8 @@ class _HomeScreenState extends State<HomeScreen> {
         print(appUserData);
         cAppUser.setEmail(appUserData['email']);
         cAppUser.setDailyH2Odone(appUserData['dailyH2Odone'].toInt());
-        cAppUser.setWeight(appUserData['weight']);
-        cAppUser.setHeight(appUserData['height']);
+        cAppUser.setWeight(appUserData['weight'].toDouble());
+        cAppUser.setHeight(appUserData['height'].toDouble());
         cAppUser.setAge(appUserData['age']);
         cAppUser.setGender(appUserData['gender']);
         cAppUser.setDailyH2O(appUserData['dailyH2O']);
@@ -205,7 +208,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   IconButton(
                       icon: Icon(Icons.logout, color: Colors.white),
                       onPressed: () async {
-
                         setState(() {
                           showSpinner = true;
                         });
