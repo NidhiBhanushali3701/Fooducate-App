@@ -53,8 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final user = await _auth.currentUser;
       if (user != null) {
         //currentUser = user;
-        cAppUser.setEmail(user.email);
-        //cAppUser.setPassword();
+        cAppUser.setEmail(user.email); //cAppUser.setPassword();
         print(user.email);
         cAppUserEmail = user.email;
       }
