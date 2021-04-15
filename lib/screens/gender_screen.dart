@@ -5,14 +5,15 @@ import 'package:fooducate/constants.dart';
 import 'package:fooducate/icon_content.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fooducate/calculate_button.dart';
-import 'file:///C:/Users/Nidhi/Desktop/AndroidStudioProjects/fooducate/lib/screens/user_data_input_screen.dart';
+
+import 'package:fooducate/screens/user_data_input_screen.dart';
 
 //enum gender { female, male }
 
 class GenderSelect extends StatefulWidget {
   static String id = 'genderSelectScreen';
   AppUser cAppUser;
-  GenderSelect({Key key,@required this.cAppUser}) : super(key: key);
+  GenderSelect({Key key, @required this.cAppUser}) : super(key: key);
   @override
   _GenderSelectState createState() => _GenderSelectState();
 }
@@ -52,12 +53,14 @@ class _GenderSelectState extends State<GenderSelect> {
                       print('male');
                       cAppUser.setGender(gender.male);
                       print('male');
-                      Navigator.pushNamed(context, UserData.id,arguments: {'CurrentAppUserData': cAppUser});
+                      Navigator.pushNamed(context, UserData.id,
+                          arguments: {'CurrentAppUserData': cAppUser});
                       setState(() {
                         _gender = gender.male;
                         print('male');
                         cAppUser.setGender(gender.male);
-                        Navigator.pushNamed(context, UserData.id,arguments: {'CurrentAppUserData': cAppUser});
+                        Navigator.pushNamed(context, UserData.id,
+                            arguments: {'CurrentAppUserData': cAppUser});
                       });
                     },
                     colour: _gender == gender.male
@@ -76,12 +79,14 @@ class _GenderSelectState extends State<GenderSelect> {
                       print('female');
                       cAppUser.setGender(gender.female);
                       print('female');
-                      Navigator.pushNamed(context, UserData.id,arguments: {'CurrentAppUserData': cAppUser});
+                      Navigator.pushNamed(context, UserData.id,
+                          arguments: {'CurrentAppUserData': cAppUser});
                       setState(() {
                         _gender = gender.female;
                         print('female');
                         cAppUser.setGender(gender.female);
-                        Navigator.pushNamed(context, UserData.id,arguments: {'CurrentAppUserData': cAppUser});
+                        Navigator.pushNamed(context, UserData.id,
+                            arguments: {'CurrentAppUserData': cAppUser});
                       });
                     },
                     colour: _gender == gender.female
