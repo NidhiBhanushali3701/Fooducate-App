@@ -58,9 +58,7 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
       print(
           'in food cal ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
       cAppUserEmail = cAppUser.getEmail();
-      cAppUser.removeAllFood();
-      getCurrentUserFood();
-      print(cAppUser.getAllMeals());
+      showSpinner = false;
     }
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
@@ -111,6 +109,11 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
                     style: TextStyle(fontSize: 18),
                   ),
                 );
+              }
+              cAppUser.removeAllFood();
+              getCurrentUserFood();
+              for (var meals in cAppUser.getAllMeals()) {
+                print(meals);
               }
             } else {
               showSpinner = true;
