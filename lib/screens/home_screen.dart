@@ -53,8 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final user = await _auth.currentUser;
       if (user != null) {
         //currentUser = user;
-        cAppUser.setEmail(user.email);
-        //cAppUser.setPassword();
+        cAppUser.setEmail(user.email); //cAppUser.setPassword();
         print(user.email);
         cAppUserEmail = user.email;
       }
@@ -320,6 +319,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                           child: RaisedButton(
+                            color: Colors.white,
                             onPressed: () {
                               Navigator.pushNamed(context, StepTracker.id,
                                   arguments: {
@@ -363,6 +363,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                           child: RaisedButton(
+                            color: Colors.white,
                             onPressed: () {
                               Navigator.pushNamed(context, H2OTracker.id,
                                   arguments: {
