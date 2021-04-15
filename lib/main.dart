@@ -60,7 +60,7 @@ void main() async {
       FoodNutritionalDataScreen.id: (context) {
         return FoodNutritionalDataScreen();
       },
-      CalorieTracker.id:(context){
+      CalorieTracker.id: (context) {
         return CalorieTracker();
       }
     },
