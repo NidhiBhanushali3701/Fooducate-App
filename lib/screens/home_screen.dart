@@ -320,6 +320,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                           child: RaisedButton(
+                            color: Colors.white,
                             onPressed: () {
                               Navigator.pushNamed(context, StepTracker.id,
                                   arguments: {
@@ -363,6 +364,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                           child: RaisedButton(
+                            color: Colors.white,
                             onPressed: () {
                               Navigator.pushNamed(context, H2OTracker.id,
                                   arguments: {
