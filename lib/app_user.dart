@@ -20,13 +20,72 @@ class AppUser {
       calorieOut,
       workOutTime;
   int _age, _phoneNo, _dailyH2O, _stepsCount, _dailyH2Odone;
-  gender _gender;
+  var _gender;
   List<String> MedCond = new List(5);
   List<String> FoodPref = new List(5);
-  List<Food> food = new List(100);
+  List<Food> _food = List();
   Goal _goal, _goalPerWeek;
   //Progress progress;
   //CalculatorBrain cAppUserCalculatorBrain;
+  void addMeals(Food f) {
+    _food.add(f);
+  }
+  void setFood(List<Food> f){
+    _food = f;
+  }
+
+  void removeMeals(Food f) {
+    _food.remove(f);
+  }
+  void removeAllFood(){
+    _food.clear();
+  }
+
+  List<Map<dynamic,dynamic>> getAllFood() {
+    List<Map<dynamic,dynamic>> foodList = List<Map<dynamic,dynamic>>();
+    for (var f in _food) {
+      foodList.add({
+        'name': f.name,
+        'calories': f.calories,
+        'quantity': f.quantity,
+        'protein': f.protein,
+        'fat': f.fat,
+        'carbs': f.carbs,
+        'foodImgURL': f.foodImgURL
+      });
+    }
+    return foodList;
+  }
+
+  dynamic foodMapToFoodObjectArray(var fm) {
+    List<Food> foodOA = List<Food>();
+    for (var f_m in fm) {
+      foodOA.add(Food(
+          calories: f_m['calories'].toDouble(),
+          fat: f_m['fat'].toDouble(),
+          carbs: f_m['carbs'].toDouble(),
+          protein: f_m['protein'].toDouble(),
+          name: f_m['name'],
+          quantity: f_m['quantity'].toDouble(),
+          foodImgURL: f_m['foodImgURL']));
+    }
+    return foodOA;
+  }
+
+  int getAllFoodLength() {
+    return _food.length;
+  }
+
+  dynamic getAllMeals() {
+    return _food;
+  }
+
+  void printAllMeals() {
+    print('I had\n');
+    for (Food f in _food) {
+      print('${f.name},${f.calories}');
+    }
+  }
 
   void setHeight(double h) {
     _height = h;
@@ -131,4 +190,6 @@ class AppUser {
   int getStepsCount() {
     return _stepsCount;
   }
+
+  void setAppUser() {}
 }

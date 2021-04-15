@@ -9,6 +9,7 @@ import 'package:fooducate/trackers/h2o_tracker.dart';
 import 'package:fooducate/trackers/step_tracker.dart';
 import 'food_search_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:firebase_database/firebase_database.dart';//not present yet
 import '../constants.dart';
 import 'signup_screen.dart';
@@ -27,19 +28,24 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _auth = FirebaseAuth.instance;
+  final _fireBaseStore = FirebaseFirestore.instance;
   bool showSpinner = false;
   AppUser cAppUser = AppUser();
   CalculatorBrain cBrain = CalculatorBrain();
   String sBMI = ' ', sCalorie = ' ', sSteps = '0', sUserH2O = '0';
-
+  int currentTabIndex = 0;
+  String cAppUserEmail = '';
   @override
   void initState() {
     super.initState();
     getCurrentUser();
     verifyUserEmail();
+    getUserDataFromFireBaseStore();
+    /*
     if (sBMI == null || sCalorie == null) {
-      updateUserHealth();
+      updateUserHealth(cAppUser);
     }
+    */
   }
 
   void getCurrentUser() async {
@@ -48,7 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
       if (user != null) {
         //currentUser = user;
         cAppUser.setEmail(user.email);
+        //cAppUser.setPassword();
         print(user.email);
+        cAppUserEmail = user.email;
       }
     } catch (e) {
       print(e);
@@ -67,11 +75,82 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void updateUserHealth() {
-    sBMI = cAppUser.getBMI().toStringAsFixed(1);
-    sCalorie = cAppUser.getCalorieIn().floor().toString();
-    sSteps = cAppUser.getStepsCount().toString();
-    sUserH2O = cAppUser.getDailyH2Odone().toString();
+  void update_UserDataInFireBaseStore(String updateField, var updatedValue) {
+    _fireBaseStore
+        .collection('clients')
+        .doc(cAppUserEmail)
+        .update({updateField: updatedValue});
+  }
+
+  void updateUserHealth(var cAppUserData) {
+    sBMI = cAppUserData['bmi'].toStringAsFixed(1);
+    sCalorie = cAppUserData['caloriesIn'].floor().toString();
+    sSteps = cAppUserData['stepCount'].toString();
+    sUserH2O = (cAppUserData['dailyH2Odone'].toInt()).toString();
+  }
+
+  void foodUserDataFireBaseStore() {
+    //update_UserDataInFireBaseStore('food', List<Map>());
+    List<Food> food = cAppUser.getAllMeals();
+    _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).update({
+      'food': FieldValue.arrayUnion(
+          cAppUser.getAllFood()) //cAppUser.getAllMeals()[0])
+    });
+  }
+
+  void addUserDataToFireBaseStore() {
+    _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).set({
+      'email': cAppUser.getEmail(),
+      'password': cAppUser.getPassword(),
+      'bmi': cAppUser.getBMI(),
+      'height': cAppUser.getHeight(),
+      'weight': cAppUser.getWeight(),
+      'age': cAppUser.getAge(),
+      'caloriesIn': cAppUser.getCalorieIn(),
+      'dailyH2O': cAppUser.getDailyH2O(),
+      'dailyH2Odone': cAppUser.getDailyH2Odone(),
+      'gender': cAppUser.getGender().toString(),
+      'name': cAppUser.getName(),
+      'phoneNo': cAppUser.getPhoneNo(),
+      'stepCount': cAppUser.getStepsCount(),
+    });
+  }
+
+  void updateUserDataInFireBaseStore(
+      FirebaseFirestore _fireBaseStore, AppUser cAppUser) {
+    _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).update({});
+  }
+
+  void getUserDataFromFireBaseStore() async {
+    var appUsers = await _fireBaseStore.collection('clients').get();
+    for (var appUser in appUsers.docs) {
+      var appUserData = appUser.data();
+      print(appUserData);
+      if (cAppUserEmail == appUserData['email']) {
+        print(appUserData);
+        cAppUser.setEmail(appUserData['email']);
+        cAppUser.setDailyH2Odone(appUserData['dailyH2Odone'].toInt());
+        cAppUser.setWeight(appUserData['weight'].toDouble());
+        cAppUser.setHeight(appUserData['height'].toDouble());
+        cAppUser.setAge(appUserData['age']);
+        cAppUser.setGender(appUserData['gender']);
+        cAppUser.setDailyH2O(appUserData['dailyH2O']);
+        cAppUser.setStepsCount(appUserData['stepCount']);
+        cAppUser.setCalorieIn(appUserData['caloriesIn']);
+        cAppUser.setBMI(appUserData['bmi']);
+        updateUserHealth(appUserData);
+      }
+    }
+  }
+
+  dynamic getStreamUserDataFromFireBaseStore(
+      FirebaseFirestore _fireBaseStore, AppUser cAppUser) async {
+    await for (var appUsers
+        in _fireBaseStore.collection('clients').snapshots()) {
+      for (var appUser in appUsers.docs) {
+        print(appUser.data());
+      }
+    }
   }
 
   @override
@@ -86,128 +165,271 @@ class _HomeScreenState extends State<HomeScreen> {
       cBrain = arguments['CurrentAppUserCB'];
       print(
           'in home ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
-      updateUserHealth();
+      //updateUserHealth(cAppUser);
       print(
           'in home ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
+      cAppUserEmail = cAppUser.getEmail();
+      //updateUserHealth(cAppUser);
     }
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.purple,
-          centerTitle: true,
-          leading: null,
-          actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.logout, color: Colors.white),
-                onPressed: () async {
-                  setState(() {
-                    showSpinner = true;
-                  });
-                  await _auth.signOut();
-                  Navigator.pushNamed(context, StartScreen.id);
-                  //Navigator.pop(context);
-                  //Navigator.pop(context);
-                  setState(() {
-                    showSpinner = false;
-                  });
-                }),
-          ],
-          title: Text(
-            'FOODUCATE HOME',
-          ),
-        ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Image(
-                    image: AssetImage('images/start_img.png'),
+      child: FutureBuilder(
+          future: _fireBaseStore.collection('clients').get(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              showSpinner = false;
+              // If we got an error
+              if (snapshot.hasData) {
+                for (var appUsers in snapshot.data.docs) {
+                  if (appUsers['email'] == cAppUserEmail) {
+                    updateUserHealth(appUsers);
+                    print(appUsers['stepCount']);
+                    break;
+                  }
+                }
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    '${snapshot.error} occured',
+                    style: TextStyle(fontSize: 18),
                   ),
-                  Container(
-                    height: 200.0,
-                    width: 200.0,
-                    margin: EdgeInsets.all(20.0),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(1.0, 1.0),
-                            blurRadius: 2.0,
-                          )
-                        ]),
+                );
+              }
+            } else {
+              showSpinner = true;
+            }
+            return Scaffold(
+              backgroundColor: Colors.white,
+              appBar: AppBar(
+                backgroundColor: Colors.purple,
+                centerTitle: true,
+                leading: null,
+                actions: <Widget>[
+                  IconButton(
+                      icon: Icon(Icons.logout, color: Colors.white),
+                      onPressed: () async {
+                        setState(() {
+                          showSpinner = true;
+                        });
+                        await _auth.signOut();
+                        //clearSession();
+                        //Navigator.pop(context,true);
+                        Navigator.popUntil(
+                            context, ModalRoute.withName(StartScreen.id));
+                        //Navigator.pop(context);
+                        //Navigator.pop(context);
+                        setState(() {
+                          showSpinner = false;
+                        });
+                      }),
+                ],
+                title: Text(
+                  'FOODUCATE HOME',
+                ),
+              ),
+              body: SafeArea(
+                child: SingleChildScrollView(
+                  child: Container(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "CALORIES YOU NEED ",
-                          style: kLabelTextStyle.copyWith(color: Colors.purple),
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Image(
+                          image: AssetImage('images/start_img.png'),
                         ),
-                        SizedBox(
-                          height: 20.0,
+                        Container(
+                          height: 200.0,
+                          width: 200.0,
+                          margin: EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey,
+                                  offset: Offset(1.0, 1.0),
+                                  blurRadius: 2.0,
+                                )
+                              ]),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "CALORIES YOU NEED ",
+                                style: kLabelTextStyle.copyWith(
+                                    color: Colors.purple),
+                              ),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              Text(
+                                //TODO: Update the actual Calories value here
+                                sCalorie,
+                                style: kLabelTextStyle.copyWith(
+                                    color: Colors.purple),
+                              ),
+                            ],
+                          ),
                         ),
-                        Text(
-                          //TODO: Update the actual Calories value here
-                          sCalorie,
-                          style: kLabelTextStyle.copyWith(color: Colors.purple),
+                        Container(
+                          height: 200.0,
+                          width: 200.0,
+                          margin: EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(1.0, 1.0),
+                                blurRadius: 2.0,
+                              )
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "YOUR BMI : ",
+                                style: kLabelTextStyle.copyWith(
+                                    color: Colors.purple),
+                              ),
+                              SizedBox(
+                                height: 20.0,
+                              ),
+                              Text(
+                                sBMI, //TODO: BMI
+                                style: kLabelTextStyle.copyWith(
+                                    color: Colors.purple),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: 200.0,
+                          width: 200.0,
+                          margin: EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(1.0, 1.0),
+                                blurRadius: 2.0,
+                              )
+                            ],
+                          ),
+                          child: RaisedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, StepTracker.id,
+                                  arguments: {
+                                    'CurrentAppUserData': cAppUser,
+                                    'CurrentAppUserCB': cBrain
+                                  });
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "STEPS DONE ",
+                                  style: kLabelTextStyle.copyWith(
+                                      color: Colors.purple),
+                                ),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                Text(
+                                  sSteps, //TODO: updating steps
+                                  style: kLabelTextStyle.copyWith(
+                                      color: Colors.purple),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 200.0,
+                          width: 200.0,
+                          margin: EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(1.0, 1.0),
+                                blurRadius: 2.0,
+                              )
+                            ],
+                          ),
+                          child: RaisedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, H2OTracker.id,
+                                  arguments: {
+                                    'CurrentAppUserData': cAppUser,
+                                    'CurrentAppUserCB': cBrain
+                                  });
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "WATER TRACKER ",
+                                  style: kLabelTextStyle.copyWith(
+                                      color: Colors.purple),
+                                ),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                Text(
+                                  (' ${sUserH2O} glasses'), //TODO: updating steps
+                                  style: kLabelTextStyle.copyWith(
+                                      color: Colors.purple),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  Container(
-                    height: 200.0,
-                    width: 200.0,
-                    margin: EdgeInsets.all(20.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(1.0, 1.0),
-                          blurRadius: 2.0,
-                        )
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "YOUR BMI : ",
-                          style: kLabelTextStyle.copyWith(color: Colors.purple),
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Text(
-                          sBMI, //TODO: BMI
-                          style: kLabelTextStyle.copyWith(color: Colors.purple),
-                        ),
-                      ],
+                ),
+              ),
+              bottomNavigationBar: BottomNavigationBar(
+                selectedItemColor: Colors.purple,
+                unselectedItemColor: Colors.purple.shade100,
+                elevation: 15,
+                currentIndex: currentTabIndex,
+                onTap: (int index) {
+                  setState(() {
+                    currentTabIndex = index;
+                    addUserDataToFireBaseStore();
+                    getUserDataFromFireBaseStore();
+                    //currentPage = pages[index];
+                  });
+                },
+                items: <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    activeIcon: Icon(Icons.home_rounded),
+                    label: 'Home',
+                    icon: IconButton(
+                      icon: Icon(
+                        Icons.home_outlined,
+                      ), //Icon(Icons.account_circle_rounded)
+                      onPressed: () {
+                        setState(() {
+                          //updateUserHealth();
+                        });
+                      },
                     ),
                   ),
-                  Container(
-                    height: 200.0,
-                    width: 200.0,
-                    margin: EdgeInsets.all(20.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(1.0, 1.0),
-                          blurRadius: 2.0,
-                        )
-                      ],
-                    ),
-                    child: RaisedButton(
-                      color: Colors.white,
+                  BottomNavigationBarItem(
+                    label: 'Steps',
+                    icon: IconButton(
+                      icon: Icon(
+                        Icons.directions_walk_rounded,
+                      ), //Icon(Icons.account_circle_rounded)
+
                       onPressed: () {
                         Navigator.pushNamed(context, StepTracker.id,
                             arguments: {
@@ -215,158 +437,119 @@ class _HomeScreenState extends State<HomeScreen> {
                               'CurrentAppUserCB': cBrain
                             });
                       },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "STEPS DONE ",
-                            style:
-                                kLabelTextStyle.copyWith(color: Colors.purple),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          Text(
-                            sSteps, //TODO: updating steps
-                            style:
-                                kLabelTextStyle.copyWith(color: Colors.purple),
-                          ),
-                        ],
-                      ),
                     ),
                   ),
-                  Container(
-                    height: 200.0,
-                    width: 200.0,
-                    margin: EdgeInsets.all(20.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20.0),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
-                          offset: Offset(1.0, 1.0),
-                          blurRadius: 2.0,
-                        )
-                      ],
+                  BottomNavigationBarItem(
+                    label: 'Food',
+                    icon: IconButton(
+                      icon: Icon(
+                        Icons.restaurant_menu,
+                      ), //Icon(Icons.account_circle_rounded)
+                      onPressed: () {
+                        Navigator.pushNamed(context, FoodScreen.id, arguments: {
+                          'CurrentAppUserData': cAppUser,
+                          'CurrentAppUserCB': cBrain
+                        });
+                      },
                     ),
-                    child: RaisedButton(
-                      color: Colors.white,
+                  ),
+                  BottomNavigationBarItem(
+                    label: 'Water Tracker',
+                    icon: IconButton(
+                      icon: Icon(
+                        Icons.wine_bar_sharp,
+                      ), //Icon(Icons.account_circle_rounded)
+
                       onPressed: () {
                         Navigator.pushNamed(context, H2OTracker.id, arguments: {
                           'CurrentAppUserData': cAppUser,
                           'CurrentAppUserCB': cBrain
                         });
                       },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "WATER TRACKER ",
-                            style:
-                                kLabelTextStyle.copyWith(color: Colors.purple),
-                          ),
-                          SizedBox(
-                            height: 20.0,
-                          ),
-                          Text(
-                            (' ${sUserH2O} glasses'), //TODO: updating steps
-                            style:
-                                kLabelTextStyle.copyWith(color: Colors.purple),
-                          ),
-                        ],
+                    ),
+                  ),
+                  BottomNavigationBarItem(
+                    activeIcon: Icon(Icons.account_circle_rounded),
+                    label: 'Me',
+                    icon: IconButton(
+                      icon: Icon(
+                        Icons.account_circle_outlined,
                       ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, GenderSelect.id,
+                            arguments: {
+                              'CurrentAppUserData': cAppUser,
+                              'CurrentAppUserCB': cBrain
+                            }); //arguments: {'CurrentAppUserData': cAppUser}
+                        setState(() {
+                          //updateUserHealth();
+                        });
+                        //Navigator.pushNamed(context, routeName)
+                      },
                     ),
                   ),
                 ],
               ),
-            ),
-          ),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          selectedItemColor: Colors.purple,
-          unselectedItemColor: Colors.purple.shade100,
-          elevation: 15,
-          currentIndex: 0,
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              activeIcon: Icon(Icons.home_rounded),
-              label: 'Home',
-              icon: IconButton(
-                icon: Icon(
-                  Icons.home_outlined,
-                ), //Icon(Icons.account_circle_rounded)
-                onPressed: () {
-                  setState(() {
-                    //updateUserHealth();
-                  });
-                },
-              ),
-            ),
-            BottomNavigationBarItem(
-              label: 'Steps',
-              icon: IconButton(
-                icon: Icon(
-                  Icons.directions_walk_rounded,
-                ), //Icon(Icons.account_circle_rounded)
-                onPressed: () {
-                  Navigator.pushNamed(context, StepTracker.id, arguments: {
-                    'CurrentAppUserData': cAppUser,
-                    'CurrentAppUserCB': cBrain
-                  });
-                },
-              ),
-            ),
-            BottomNavigationBarItem(
-              label: 'Food',
-              icon: IconButton(
-                icon: Icon(
-                  Icons.restaurant_menu,
-                ), //Icon(Icons.account_circle_rounded)
-                onPressed: () {
-                  Navigator.pushNamed(context, FoodScreen.id, arguments: {
-                    'CurrentAppUserData': cAppUser,
-                    'CurrentAppUserCB': cBrain
-                  });
-                },
-              ),
-            ),
-            BottomNavigationBarItem(
-              label: 'Water Tracker',
-              icon: IconButton(
-                icon: Icon(
-                  Icons.wine_bar_sharp,
-                ), //Icon(Icons.account_circle_rounded)
-                onPressed: () {
-                  Navigator.pushNamed(context, H2OTracker.id, arguments: {
-                    'CurrentAppUserData': cAppUser,
-                    'CurrentAppUserCB': cBrain
-                  });
-                },
-              ),
-            ),
-            BottomNavigationBarItem(
-              activeIcon: Icon(Icons.account_circle_rounded),
-              label: 'Me',
-              icon: IconButton(
-                icon: Icon(
-                  Icons.account_circle_outlined,
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, GenderSelect.id, arguments: {
-                    'CurrentAppUserData': cAppUser,
-                    'CurrentAppUserCB': cBrain
-                  }); //arguments: {'CurrentAppUserData': cAppUser}
-                  setState(() {
-                    //updateUserHealth();
-                  });
-                  //Navigator.pushNamed(context, routeName)
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+            );
+          }),
     );
   }
 }
+
+/*
+
+void addUserDataToFireBaseStore(
+    FirebaseFirestore _fireBaseStore, AppUser cAppUser) {
+  _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).set({
+    'email': cAppUser.getEmail(),
+    'password': cAppUser.getPassword(),
+    'bmi': cAppUser.getBMI(),
+    'height': cAppUser.getHeight(),
+    'weight': cAppUser.getWeight(),
+    'age': cAppUser.getAge(),
+    'caloriesIn': cAppUser.getCalorieIn(),
+    'dailyH2O': cAppUser.getDailyH2O(),
+    'dailyH2Odone': cAppUser.getDailyH2Odone()/4,
+    'gender': cAppUser.getGender().toString(),
+    'name': cAppUser.getName(),
+    'phoneNo': cAppUser.getPhoneNo(),
+    'stepCount': cAppUser.getStepsCount(),
+  });
+}
+
+void updateUserDataToFireBaseStore(
+    FirebaseFirestore _fireBaseStore, AppUser cAppUser) {
+  _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).update({});
+}
+
+void getUserDataFromFireBaseStore(FirebaseFirestore _fireBaseStore,
+    AppUser cAppUser, String cAppUserEmail) async {
+  var appUsers = await _fireBaseStore.collection('clients').get();
+  for (var appUser in appUsers.docs) {
+    var appUserData = appUser.data();
+    print(appUserData);
+    if (cAppUserEmail == appUserData['email']) {
+      print(appUserData);
+      cAppUser.setEmail(appUserData['email']);
+      cAppUser.setDailyH2Odone(appUserData['dailyH2Odone'].toInt());
+      cAppUser.setWeight(appUserData['weight']);
+      cAppUser.setHeight(appUserData['height']);
+      cAppUser.setAge(appUserData['age']);
+      cAppUser.setGender(appUserData['gender']);
+      cAppUser.setDailyH2O(appUserData['dailyH2O']);
+      cAppUser.setStepsCount(appUserData['stepCount']);
+      cAppUser.setCalorieIn(appUserData['caloriesIn']);
+    }
+  }
+}
+
+dynamic getStreamUserDataFromFireBaseStore(
+    FirebaseFirestore _fireBaseStore, AppUser cAppUser) async {
+  await for (var appUsers in _fireBaseStore.collection('clients').snapshots()) {
+    for (var appUser in appUsers.docs) {
+      print(appUser.data());
+    }
+  }
+}
+
+*/

@@ -1,7 +1,8 @@
 import 'dart:async';
+import 'package:share/share.dart';
 
 mixin Tracker{
   String _type,_tip;
-  var input,output;
+  var done,toBeDone;
 
 }

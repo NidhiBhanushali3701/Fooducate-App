@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fooducate/calculator_brain.dart';
 import 'package:fooducate/screens/food_search_screen.dart';
 import 'package:fooducate/screens/gender_screen.dart';
 import 'package:fooducate/screens/home_screen.dart';
 import 'package:fooducate/app_user.dart';
 import 'package:fooducate/trackers/h2o_tracker.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 //import '../app_user.dart';
 import '../calculate_button.dart';
 import '../tracker.dart';
@@ -15,7 +17,7 @@ import 'package:fooducate/constants.dart';
 class StepTracker extends StatefulWidget {
   static String id = 'StepTracker';
   AppUser cAppUser;
-  StepTracker({Key key,@required this.cAppUser}) : super(key: key);
+  StepTracker({Key key, @required this.cAppUser}) : super(key: key);
   @override
   _StepTrackerState createState() => _StepTrackerState();
 }
@@ -26,6 +28,11 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
   String _status = '?', _steps = '0';
   AppUser cAppUser;
   CalculatorBrain cBrain;
+  int currentTabIndex = 1;
+  String cAppUserEmail = '';
+  int doneStepsCount = 0,totDoneStepsCount = 0;
+  final _fireBaseStore = FirebaseFirestore.instance;
+  bool showSpinner = false;
 
   @override
   void initState() {
@@ -33,11 +40,68 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
     initPlatformState();
   }
 
+  void addUserDataToFireBaseStore() {
+    _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).set({
+      'email': cAppUser.getEmail(),
+      'password': cAppUser.getPassword(),
+      'bmi': cAppUser.getBMI(),
+      'height': cAppUser.getHeight(),
+      'weight': cAppUser.getWeight(),
+      'age': cAppUser.getAge(),
+      'caloriesIn': cAppUser.getCalorieIn(),
+      'dailyH2O': cAppUser.getDailyH2O(),
+      'dailyH2Odone': cAppUser.getDailyH2Odone() / 4,
+      'gender': cAppUser.getGender().toString(),
+      'name': cAppUser.getName(),
+      'phoneNo': cAppUser.getPhoneNo(),
+      'stepCount': cAppUser.getStepsCount(),
+    });
+  }
+
+  void updateUserDataInFireBaseStore(String updateField, var updatedValue) {
+    _fireBaseStore
+        .collection('clients')
+        .doc(cAppUserEmail)
+        .update({updateField: updatedValue});
+  }
+
+  void getUserDataFromFireBaseStore() async {
+    var appUsers = await _fireBaseStore.collection('clients').get();
+    for (var appUser in appUsers.docs) {
+      var appUserData = appUser.data();
+      print(appUserData);
+      if (cAppUserEmail == appUserData['email']) {
+        print(appUserData);
+        cAppUser.setEmail(appUserData['email']);
+        cAppUser.setDailyH2Odone(appUserData['dailyH2Odone'].toInt());
+        cAppUser.setWeight(appUserData['weight']);
+        cAppUser.setHeight(appUserData['height']);
+        cAppUser.setAge(appUserData['age']);
+        cAppUser.setGender(appUserData['gender']);
+        cAppUser.setDailyH2O(appUserData['dailyH2O']);
+        cAppUser.setStepsCount(appUserData['stepCount']);
+        cAppUser.setCalorieIn(appUserData['caloriesIn']);
+        cAppUser.setBMI(appUserData['bmi']);
+      }
+    }
+  }
+
+  dynamic getStreamUserDataFromFireBaseStore(
+      FirebaseFirestore _fireBaseStore, AppUser cAppUser) async {
+    await for (var appUsers
+        in _fireBaseStore.collection('clients').snapshots()) {
+      for (var appUser in appUsers.docs) {
+        print(appUser.data());
+      }
+    }
+  }
+
   void onStepCount(StepCount event) {
     print(event);
     setState(() {
-      cAppUser.setStepsCount(event.steps);
-      _steps = event.steps.toString();
+      updateUserDataInFireBaseStore('stepCount', event.steps);
+      _steps = doneStepsCount.toString();
+      //_steps = event.steps.toString();
     });
   }
 
@@ -51,7 +115,7 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
   void onPedestrianStatusError(error) {
     print('onPedestrianStatusError: $error');
     setState(() {
-      _status = 'Pedestrian Status not available';
+      _status = 'Pedestrian Status Unavailable';
     });
     print(_status);
   }
@@ -60,7 +124,7 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
     print('onStepCountError: $error');
     setState(() {
       cAppUser.setStepsCount(0);
-      _steps = 'Step Count not available';
+      _steps = 'Step Count not Unavailable';
     });
   }
 
@@ -85,187 +149,263 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
       //if you passed object
       //final cAppUser = arguments['CurrentAppUserData'];
       cAppUser = arguments['CurrentAppUserData'];
-      print('in step tracker ${cAppUser.getEmail()},${cAppUser.getStepsCount()}');
+      print(
+          'in step tracker ${cAppUser.getEmail()},${cAppUser.getStepsCount()}');
+      cAppUserEmail = cAppUser.getEmail();
     }
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        leading: null,
-        title: Text('STEP TRACKER'),
-        backgroundColor: Colors.purple,
-      ),
-      body: Column(
-        children: <Widget>[
-          Center(
-            child: Container(
-              height: 300,
-              width: 400,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(1.0, 1.0),
-                      blurRadius: 2.0,
-                    )
-                  ]),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(
-                        top: 10.0,
-                      ),
-                      child: Text(
-                        'Steps taken:'.toUpperCase(),
-                        style: kLabelTextStyle.copyWith(color: Colors.purple),
-                      ),
+    return ModalProgressHUD(
+      inAsyncCall: false,//showSpinner,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          leading: null,
+          title: Text('STEP TRACKER'),
+          backgroundColor: Colors.purple,
+        ),
+        // ignore: missing_return
+        body: FutureBuilder(
+            future: _fireBaseStore.collection('clients').get(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                showSpinner = false;
+                // If we got an error
+                if (snapshot.hasData) {
+                  for (var appUsers in snapshot.data.docs) {
+                    if (appUsers['email'] == cAppUserEmail) {
+                      doneStepsCount = appUsers['stepCount'];
+                      cAppUser.setStepsCount(doneStepsCount);
+                      print(cAppUser.getStepsCount());
+                      break;
+                    }
+                  }
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      '${snapshot.error} occured',
+                      style: TextStyle(fontSize: 18),
                     ),
-                  ),
+                  );
+                }
+              } else {
+                showSpinner = true;
+              }
+              return Column(
+                children: <Widget>[
                   SizedBox(
                     height: 15,
                   ),
-                  Expanded(
-                    child: Text(
-                      _steps,
-                      style: kLabelTextStyle.copyWith(fontSize: 30.0),
+                  Center(
+                    child: Container(
+                      height: 150,
+                      width: 400,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(1.0, 1.0),
+                              blurRadius: 2.0,
+                            )
+                          ]),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(
+                                top: 10.0,
+                              ),
+                              child: Text(
+                                'Steps taken:'.toUpperCase(),
+                                style: kLabelTextStyle.copyWith(
+                                    color: Colors.purple, fontSize: 30),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Expanded(
+                            child: Text(
+                              _steps!='0'?_steps:doneStepsCount.toString(),
+                              style: kLabelTextStyle.copyWith(fontSize: 30.0),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(
                     height: 30,
                   ),
-                  Expanded(
-                    child: Text(
-                      'Pedestrian status:',
-                      style: kLabelTextStyle.copyWith(color: Colors.purple),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Expanded(
-                    child: Icon(
-                      _status == 'walking'
-                          ? Icons.directions_walk
-                          : _status == 'stopped'
-                              ? Icons.accessibility_new
-                              : Icons.error,
-                      color: Colors.purple,
-                      size: 70,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        _status,
-                        style: _status == 'walking' || _status == 'stopped'
-                            ? TextStyle(fontSize: 30)
-                            : TextStyle(fontSize: 20, color: Colors.purple),
+                  Center(
+                    child: Container(
+                      height: 216,
+                      width: 400,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey,
+                              offset: Offset(1.0, 1.0),
+                              blurRadius: 2.0,
+                            )
+                          ]),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                            child: Text(
+                              'Pedestrian status:',
+                              style:
+                                  kLabelTextStyle.copyWith(color: Colors.purple),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Expanded(
+                            child: Icon(
+                              _status == 'walking'
+                                  ? Icons.directions_walk
+                                  : _status == 'stopped'
+                                      ? Icons.accessibility_new
+                                      : Icons.error,
+                              color: Colors.purple,
+                              size: 60,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                _status,
+                                style:
+                                    _status == 'walking' || _status == 'stopped'
+                                        ? TextStyle(fontSize: 30)
+                                        : TextStyle(
+                                            fontSize: 20, color: Colors.purple),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                  )
+                  ),
+                  SizedBox(
+                    height: 21,
+                  ),
+                  CalculateButton(
+                    onTap: () {
+                      cBrain = CalculatorBrain(
+                          gender: cAppUser.getGender(), cUser: cAppUser);
+                      cBrain.calculateStepsCountProgress();
+                      print('drink ${cBrain.calculateDailyH2O()} L');
+                      updateUserDataInFireBaseStore('stepCount', cAppUser.getStepsCount());
+                      setState(() {
+                        //updateUserHealth(); //TODO:onTap update ui
+                      });
+                      //Navigator.of(context).pop();
+                      Navigator.pushReplacementNamed(context, HomeScreen.id,
+                          arguments: {'CurrentAppUserData': cAppUser});
+                    },
+                    buttonTitle: "CONTINUE",
+                  ),
                 ],
+              );
+            }),
+        bottomNavigationBar: BottomNavigationBar(
+          selectedItemColor: Colors.purple,
+          unselectedItemColor: Colors.purple.shade100,
+          elevation: 15,
+          currentIndex: currentTabIndex,
+          onTap: (int index) {
+            setState(() {
+              currentTabIndex = index;
+              //currentPage = pages[index];
+            });
+          },
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              activeIcon: Icon(Icons.home_rounded),
+              label: 'Home',
+              icon: IconButton(
+                icon: Icon(
+                    Icons.home_outlined), //Icon(Icons.account_circle_rounded)
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, HomeScreen.id);
+                },
               ),
             ),
-          ),
-          SizedBox(
-            height: 33,
-          ),
-          CalculateButton(
-            onTap: () {
-
-              cBrain = CalculatorBrain(
-                  gender: cAppUser.getGender(),
-                  cUser: cAppUser);
-              cBrain.calculateStepsCountProgress();
-              print('drink ${cBrain.calculateDailyH2O()} L');
-              setState(() {
-                //updateUserHealth(); //TODO:onTap update ui
-              });
-              //Navigator.of(context).pop();
-              Navigator.pushNamed(context, HomeScreen.id,arguments: {'CurrentAppUserData': cAppUser});
-            },
-            buttonTitle: "CONTINUE",
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.purple,
-        unselectedItemColor: Colors.purple.shade100,
-        elevation: 15,
-        currentIndex: 1,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            activeIcon: Icon(Icons.home_rounded),
-            label: 'Home',
-            icon: IconButton(
-              icon: Icon(Icons.home_outlined), //Icon(Icons.account_circle_rounded)
-              onPressed: () {
-                setState(() {
-                  //updateUserHealth();
-                });
-              },
+            BottomNavigationBarItem(
+              label: 'Steps',
+              icon: IconButton(
+                icon: Icon(Icons
+                    .directions_walk_rounded), //Icon(Icons.account_circle_rounded)
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, StepTracker.id,
+                      arguments: {
+                        'CurrentAppUserData': cAppUser,
+                        'CurrentAppUserCB': cBrain
+                      });
+                },
+              ),
             ),
-          ),
-          BottomNavigationBarItem(
-            label: 'Steps',
-            icon: IconButton(
-              icon: Icon(Icons.directions_walk_rounded), //Icon(Icons.account_circle_rounded)
-              onPressed: () {
-                Navigator.pushNamed(context, StepTracker.id, arguments: {
-                  'CurrentAppUserData': cAppUser,
-                  'CurrentAppUserCB': cBrain
-                });
-              },
+            BottomNavigationBarItem(
+              label: 'Food',
+              icon: IconButton(
+                icon: Icon(
+                    Icons.restaurant_menu), //Icon(Icons.account_circle_rounded)
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, FoodScreen.id,
+                      arguments: {
+                        'CurrentAppUserData': cAppUser,
+                        'CurrentAppUserCB': cBrain
+                      });
+                },
+              ),
             ),
-          ),
-          BottomNavigationBarItem(
-            label: 'Food',
-            icon: IconButton(
-              icon: Icon(Icons.restaurant_menu), //Icon(Icons.account_circle_rounded)
-              onPressed: () {
-                Navigator.pushNamed(context, FoodScreen.id, arguments: {
-                  'CurrentAppUserData': cAppUser,
-                  'CurrentAppUserCB': cBrain
-                });
-              },
+            BottomNavigationBarItem(
+              label: 'Water Tracker',
+              icon: IconButton(
+                icon: Icon(
+                    Icons.wine_bar_sharp), //Icon(Icons.account_circle_rounded)
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, H2OTracker.id,
+                      arguments: {
+                        'CurrentAppUserData': cAppUser,
+                        'CurrentAppUserCB': cBrain
+                      });
+                },
+              ),
             ),
-          ),
-          BottomNavigationBarItem(
-            label: 'Water Tracker',
-            icon: IconButton(
-              icon: Icon(Icons.wine_bar_sharp), //Icon(Icons.account_circle_rounded)
-              onPressed: () {
-                Navigator.pushNamed(context, H2OTracker.id, arguments: {
-                  'CurrentAppUserData': cAppUser,
-                  'CurrentAppUserCB': cBrain
-                });
-              },
+            BottomNavigationBarItem(
+              activeIcon: Icon(Icons.account_circle_rounded),
+              label: 'Me',
+              icon: IconButton(
+                icon: Icon(Icons.account_circle_outlined),
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, GenderSelect.id,
+                      arguments: {
+                        'CurrentAppUserData': cAppUser,
+                        'CurrentAppUserCB': cBrain
+                      }); //arguments: {'CurrentAppUserData': cAppUser}
+                  setState(() {
+                    //updateUserHealth();
+                  });
+                  //Navigator.pushNamed(context, routeName)
+                },
+              ),
             ),
-          ),
-          BottomNavigationBarItem(
-            activeIcon: Icon(Icons.account_circle_rounded),
-            label: 'Me',
-            icon: IconButton(
-              icon: Icon(Icons.account_circle_outlined),
-              onPressed: () {
-                Navigator.pushNamed(context, GenderSelect.id, arguments: {
-                  'CurrentAppUserData': cAppUser,
-                  'CurrentAppUserCB': cBrain
-                }); //arguments: {'CurrentAppUserData': cAppUser}
-                setState(() {
-                  //updateUserHealth();
-                });
-                //Navigator.pushNamed(context, routeName)
-              },
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

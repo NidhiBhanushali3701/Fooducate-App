@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:fooducate/app_user.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:firebase_database/firebase_database.dart';//not present yet
 import 'signup_screen.dart';
 import '../main.dart';
@@ -18,6 +20,7 @@ class LogInScreen extends StatefulWidget {
 class _LogInScreenState extends State<LogInScreen> {
   bool showSpinner = false;
   final _auth = FirebaseAuth.instance;
+  final _fireBaseStore = FirebaseFirestore.instance;
   String _email, _password;
   @override
   Widget build(BuildContext context) {
@@ -117,7 +120,10 @@ class _LogInScreenState extends State<LogInScreen> {
                                   await _auth.signInWithEmailAndPassword(
                                       email: _email, password: _password);
                               if (cUser != null) {
-                                Navigator.pushNamed(context, HomeScreen.id);
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  HomeScreen.id,
+                                );
                               }
                               setState(() {
                                 showSpinner = false;
