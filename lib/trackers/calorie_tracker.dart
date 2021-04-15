@@ -23,7 +23,7 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
   AppUser cAppUser;
   CalculatorBrain cBrain;
   final _fireBaseStore = FirebaseFirestore.instance;
-  String cAppUserEmail;
+  String cAppUserEmail, shareMSG = "I'm using FOODUCATE APP!\n";
   bool showSpinner = false;
   List<Map<dynamic, dynamic>> fm = List<Map<dynamic, dynamic>>();
   dynamic getCurrentUserFood() async {
@@ -40,6 +40,11 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
         print(cAppUser.getAllMeals());
       }
     }
+  }
+
+  void shareToOthers() {
+    Share.share(shareMSG +
+        "I had ${cAppUser.totalCaloriesOfFood().toInt().toString()}/${cAppUser.getCalorieIn()} KCal \nI had ${cAppUser.getDailyH2Odone()}/${cAppUser.getDailyH2O()} Glasses Water \n I BurntOut ${cAppUser.getCalorieOut()} KCal");
   }
 
   @override
@@ -129,6 +134,8 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
                       onPressed: () async {
                         setState(() {});
                         showSpinner = false;
+                        cAppUser.setCalorieOut();
+                        shareToOthers();
                         /*setState(() {
                         showSpinner = true;
                       });

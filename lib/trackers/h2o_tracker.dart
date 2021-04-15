@@ -69,8 +69,8 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
         print(appUserData);
         cAppUser.setEmail(appUserData['email']);
         cAppUser.setDailyH2Odone(appUserData['dailyH2Odone'].toInt());
-        cAppUser.setWeight(appUserData['weight']);
-        cAppUser.setHeight(appUserData['height']);
+        cAppUser.setWeight(appUserData['weight'].toDouble());
+        cAppUser.setHeight(appUserData['height'].toDouble());
         cAppUser.setAge(appUserData['age']);
         cAppUser.setGender(appUserData['gender']);
         cAppUser.setDailyH2O(appUserData['dailyH2O']);
