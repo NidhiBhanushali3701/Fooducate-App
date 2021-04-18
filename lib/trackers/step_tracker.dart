@@ -6,6 +6,7 @@ import 'package:fooducate/screens/home_screen.dart';
 import 'package:fooducate/app_user.dart';
 import 'package:fooducate/trackers/h2o_tracker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:share/share.dart';
 //import '../app_user.dart';
 import '../calculate_button.dart';
 import '../tracker.dart';
@@ -29,7 +30,7 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
   AppUser cAppUser;
   CalculatorBrain cBrain;
   int currentTabIndex = 1;
-  String cAppUserEmail = '';
+  String cAppUserEmail = '',shareMSG = "I'm using FOODUCATE APP!\t";
   int doneStepsCount = 0,totDoneStepsCount = 0;
   final _fireBaseStore = FirebaseFirestore.instance;
   bool showSpinner = false;
@@ -139,7 +140,10 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
 
     if (!mounted) return;
   }
-
+  void shareToOthers() {
+    Share.share(shareMSG +
+        "I BurntOut ${cAppUser.getCalorieOut()} KCal");
+  }
   @override
   Widget build(BuildContext context) {
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;
@@ -161,6 +165,28 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
           leading: null,
           title: Text('STEP TRACKER'),
           backgroundColor: Colors.purple,
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.ios_share, color: Colors.white),
+                onPressed: () async {
+                  setState(() {});
+                  showSpinner = false;
+                  cAppUser.setCalorieOut();
+                  shareToOthers();
+                  /*setState(() {
+                        showSpinner = true;
+                      });
+                      //await _auth.signOut();
+                      //clearSession();
+                      //Navigator.pop(context,true);
+                      //Navigator.popUntil(context, ModalRoute.withName(StartScreen.id));
+                      //Navigator.pop(context);
+                      //Navigator.pop(context);
+                      setState(() {
+                        showSpinner = false;
+                      });*/
+                }),
+          ],
         ),
         // ignore: missing_return
         body: FutureBuilder(
