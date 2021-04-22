@@ -81,8 +81,8 @@ class _HomeScreenState extends State<HomeScreen> {
         .update({updateField: updatedValue});
   }
 
-  void updateUserHealth(var cAppUserData) {
-    sBMI = cAppUserData['bmi'].toStringAsFixed(1);
+  void updateUserHealth(var cAppUserData) async {
+    sBMI = await cAppUserData['bmi'].toStringAsFixed(1);
     sCalorie = cAppUserData['caloriesIn'].floor().toString();
     sSteps = cAppUserData['stepCount'].toString();
     sUserH2O = (cAppUserData['dailyH2Odone'].toInt()).toString();

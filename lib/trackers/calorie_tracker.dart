@@ -58,7 +58,7 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
       print(
           'in food cal ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
       cAppUserEmail = cAppUser.getEmail();
-      cAppUser.removeAllFood();
+      // cAppUser.removeAllFood();
       getCurrentUserFood();
       print(cAppUser.getAllMeals());
     }
