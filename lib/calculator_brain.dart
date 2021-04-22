@@ -49,9 +49,9 @@ class CalculatorBrain {
     cUser.workOutTime = 0; //TODO: ask this from user
     _dailyH2O =
         ((((cUser.getWeight() * 2.205 * 2) / 3) + (cUser.workOutTime * 2.5)) ~/
-            33.814);
+            33.814)*4;
     print(_dailyH2O);
-    cUser.setDailyH2O(_dailyH2O*4);
+    cUser.setDailyH2O(_dailyH2O);
     return _dailyH2O.toStringAsFixed(0);
   }
   String calculateStepsCountProgress(){

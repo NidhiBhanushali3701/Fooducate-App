@@ -23,7 +23,7 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
   AppUser cAppUser;
   CalculatorBrain cBrain;
   final _fireBaseStore = FirebaseFirestore.instance;
-  String cAppUserEmail;
+  String cAppUserEmail = '', shareMSG = "I'm using FOODUCATE APP!\t";
   bool showSpinner = false;
   List<Map<dynamic, dynamic>> fm = List<Map<dynamic, dynamic>>();
   dynamic getCurrentUserFood() async {
@@ -42,6 +42,11 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
     }
   }
 
+  void shareToOthers() {
+    Share.share(shareMSG +
+        "I had ${cAppUser.totalCaloriesOfFood().toInt().toString()}/${cAppUser.getCalorieIn()} KCal.");
+  }
+
   @override
   Widget build(BuildContext context) {
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;
@@ -58,9 +63,12 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
       print(
           'in food cal ${cAppUser.getEmail()},${cAppUser.getGender()},${cAppUser.getStepsCount()}');
       cAppUserEmail = cAppUser.getEmail();
+
       // cAppUser.removeAllFood();
       getCurrentUserFood();
       print(cAppUser.getAllMeals());
+
+      showSpinner = false;
     }
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
@@ -112,6 +120,11 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
                   ),
                 );
               }
+              cAppUser.removeAllFood();
+              getCurrentUserFood();
+              for (var meals in cAppUser.getAllMeals()) {
+                print(meals);
+              }
             } else {
               showSpinner = true;
             }
@@ -126,6 +139,8 @@ class _CalorieTrackerState extends State<CalorieTracker> with Tracker {
                       onPressed: () async {
                         setState(() {});
                         showSpinner = false;
+                        cAppUser.setCalorieOut();
+                        shareToOthers();
                         /*setState(() {
                         showSpinner = true;
                       });

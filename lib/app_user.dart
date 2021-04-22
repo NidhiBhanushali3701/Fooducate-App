@@ -17,8 +17,9 @@ class AppUser {
       _bmi,
       targetWeight,
       _calorieIn,
-      calorieOut,
-      workOutTime;
+      _calorieOut,
+      workOutTime,
+      _totalCalorieIn;
   int _age, _phoneNo, _dailyH2O, _stepsCount, _dailyH2Odone;
   var _gender;
   List<String> MedCond = new List(5);
@@ -30,19 +31,21 @@ class AppUser {
   void addMeals(Food f) {
     _food.add(f);
   }
-  void setFood(List<Food> f){
+
+  void setFood(List<Food> f) {
     _food = f;
   }
 
   void removeMeals(Food f) {
     _food.remove(f);
   }
-  void removeAllFood(){
+
+  void removeAllFood() {
     _food.clear();
   }
 
-  List<Map<dynamic,dynamic>> getAllFood() {
-    List<Map<dynamic,dynamic>> foodList = List<Map<dynamic,dynamic>>();
+  List<Map<dynamic, dynamic>> getAllFood() {
+    List<Map<dynamic, dynamic>> foodList = List<Map<dynamic, dynamic>>();
     for (var f in _food) {
       foodList.add({
         'name': f.name,
@@ -70,6 +73,14 @@ class AppUser {
           foodImgURL: f_m['foodImgURL']));
     }
     return foodOA;
+  }
+
+  double totalCaloriesOfFood() {
+    _totalCalorieIn = 0.0;
+    for (Food fo_od in _food) {
+      _totalCalorieIn+=fo_od.calories;
+    }
+    return _totalCalorieIn;
   }
 
   int getAllFoodLength() {
@@ -190,6 +201,11 @@ class AppUser {
   int getStepsCount() {
     return _stepsCount;
   }
-
+  double getCalorieOut(){
+    return _calorieOut;
+  }
+  void setCalorieOut() {
+    _calorieOut = _stepsCount/_weight*0.57;
+  }
   void setAppUser() {}
 }

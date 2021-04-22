@@ -5,6 +5,7 @@ import 'package:fooducate/app_user.dart';
 import 'package:fooducate/calculator_brain.dart';
 import 'package:fooducate/food.dart';
 import 'package:fooducate/screens/gender_screen.dart';
+import 'package:fooducate/trackers/calorie_tracker.dart';
 import 'package:fooducate/trackers/h2o_tracker.dart';
 import 'package:fooducate/trackers/step_tracker.dart';
 import 'food_search_screen.dart';
@@ -32,7 +33,11 @@ class _HomeScreenState extends State<HomeScreen> {
   bool showSpinner = false;
   AppUser cAppUser = AppUser();
   CalculatorBrain cBrain = CalculatorBrain();
-  String sBMI = ' ', sCalorie = ' ', sSteps = '0', sUserH2O = '0';
+  String sBMI = ' ',
+      sCalorie = ' ',
+      sSteps = '0',
+      sUserH2O = '0',
+      sFoodCal = '0';
   int currentTabIndex = 0;
   String cAppUserEmail = '';
   @override
@@ -53,7 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
       final user = await _auth.currentUser;
       if (user != null) {
         //currentUser = user;
-        cAppUser.setEmail(user.email); //cAppUser.setPassword();
+        cAppUser.setEmail(user.email);
+        //cAppUser.setPassword();
         print(user.email);
         cAppUserEmail = user.email;
       }
@@ -183,6 +189,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (appUsers['email'] == cAppUserEmail) {
                     updateUserHealth(appUsers);
                     print(appUsers['stepCount']);
+                    print('foods eaten  = $sFoodCal');
+                    cAppUser.removeAllFood();
+                    cAppUser.setFood(
+                        cAppUser.foodMapToFoodObjectArray(appUsers['food']));
+                    sFoodCal =
+                        cAppUser.totalCaloriesOfFood().toInt().toString();
+                    print(sFoodCal);
                     break;
                   }
                 }
@@ -262,7 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                               Text(
                                 //TODO: Update the actual Calories value here
-                                sCalorie,
+                                ('$sCalorie kCal'),
                                 style: kLabelTextStyle.copyWith(
                                     color: Colors.purple),
                               ),
@@ -383,7 +396,51 @@ class _HomeScreenState extends State<HomeScreen> {
                                   height: 20.0,
                                 ),
                                 Text(
-                                  (' ${sUserH2O} glasses'), //TODO: updating steps
+                                  (' ${sUserH2O}/${cAppUser.getDailyH2O().toString()} glasses'), //TODO: updating steps
+                                  style: kLabelTextStyle.copyWith(
+                                      color: Colors.purple),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: 200.0,
+                          width: 200.0,
+                          margin: EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
+                                offset: Offset(1.0, 1.0),
+                                blurRadius: 2.0,
+                              )
+                            ],
+                          ),
+                          child: RaisedButton(
+                            color: Colors.white,
+                            onPressed: () {
+                              Navigator.pushReplacementNamed(
+                                  context, CalorieTracker.id, arguments: {
+                                'CurrentAppUserData': cAppUser,
+                                'CurrentAppUserCB': cBrain
+                              });
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "YOUR CALORIE INTAKE IS",
+                                  style: kLabelTextStyle.copyWith(
+                                      color: Colors.purple),
+                                ),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                Text(
+                                  (' $sFoodCal kCal'), //TODO: updating steps
                                   style: kLabelTextStyle.copyWith(
                                       color: Colors.purple),
                                 ),

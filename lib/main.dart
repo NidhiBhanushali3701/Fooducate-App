@@ -23,6 +23,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     theme: ThemeData(
       visualDensity: VisualDensity.adaptivePlatformDensity,
     ),
@@ -59,7 +60,7 @@ void main() async {
       FoodNutritionalDataScreen.id: (context) {
         return FoodNutritionalDataScreen();
       },
-      CalorieTracker.id:(context){
+      CalorieTracker.id: (context) {
         return CalorieTracker();
       }
     },

@@ -13,6 +13,7 @@ import 'package:fooducate/tracker.dart';
 import 'package:fooducate/screens/home_screen.dart';
 import 'package:fooducate/trackers/step_tracker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:share/share.dart';
 import '../calculator_brain.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 
@@ -31,7 +32,7 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
   CalculatorBrain cBrain;
   String h2oMSG = '';
   int currentTabIndex = 3;
-  String cAppUserEmail = '';
+  String cAppUserEmail = '',shareMSG = "I'm using FOODUCATE APP!\t";
   final _fireBaseStore = FirebaseFirestore.instance;
   bool showSpinner = false;
 
@@ -69,8 +70,8 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
         print(appUserData);
         cAppUser.setEmail(appUserData['email']);
         cAppUser.setDailyH2Odone(appUserData['dailyH2Odone'].toInt());
-        cAppUser.setWeight(appUserData['weight']);
-        cAppUser.setHeight(appUserData['height']);
+        cAppUser.setWeight(appUserData['weight'].toDouble());
+        cAppUser.setHeight(appUserData['height'].toDouble());
         cAppUser.setAge(appUserData['age']);
         cAppUser.setGender(appUserData['gender']);
         cAppUser.setDailyH2O(appUserData['dailyH2O']);
@@ -119,6 +120,10 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
       ..lineTo(200, 200) //and back to the origin, could not be necessary #1
       ..close();
   }
+  void shareToOthers() {
+    Share.share(shareMSG +
+        "I had ${cAppUser.getDailyH2Odone()}/${cAppUser.getDailyH2O()} Glasses Water.");
+  }
 
   @override
   void initState() {
@@ -150,6 +155,28 @@ class _H2OTrackerState extends State<H2OTracker> with Tracker {
           leading: null,
           title: Text('WATER TRACKER'),
           backgroundColor: Colors.purple,
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.ios_share, color: Colors.white),
+                onPressed: () async {
+                  setState(() {});
+                  showSpinner = false;
+                  cAppUser.setCalorieOut();
+                  shareToOthers();
+                  /*setState(() {
+                        showSpinner = true;
+                      });
+                      //await _auth.signOut();
+                      //clearSession();
+                      //Navigator.pop(context,true);
+                      //Navigator.popUntil(context, ModalRoute.withName(StartScreen.id));
+                      //Navigator.pop(context);
+                      //Navigator.pop(context);
+                      setState(() {
+                        showSpinner = false;
+                      });*/
+                }),
+          ],
         ),
         body: FutureBuilder(
             future: _fireBaseStore.collection('clients').get(),
