@@ -222,7 +222,8 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
                         height: 0,
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
+                        padding: const EdgeInsets.only(
+                            left: 15.0, right: 15.0, top: 0, bottom: 0),
                         //padding: EdgeInsets.symmetric(horizontal: 12),
                         child: TextField(
                           textAlign: TextAlign.left,
@@ -249,11 +250,11 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
                 CalculateButton(
                   onTap: () {
                     Food f = Food(
-                        calories: double.parse(calories)*amtOfItem,
-                        fat: double.parse(fats)*amtOfItem,
+                        calories: double.parse(calories) * amtOfItem,
+                        fat: double.parse(fats) * amtOfItem,
                         name: foodName,
-                        carbs: double.parse(carbs)*amtOfItem,
-                        protein: double.parse(protein)*amtOfItem,
+                        carbs: double.parse(carbs) * amtOfItem,
+                        protein: double.parse(protein) * amtOfItem,
                         quantity: amtOfItem,
                         foodImgURL: ' ');
                     cAppUser.addMeals(f);

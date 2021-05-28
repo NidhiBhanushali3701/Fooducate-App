@@ -30,8 +30,8 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
   AppUser cAppUser;
   CalculatorBrain cBrain;
   int currentTabIndex = 1;
-  String cAppUserEmail = '',shareMSG = "I'm using FOODUCATE APP!\t";
-  int doneStepsCount = 0,totDoneStepsCount = 0;
+  String cAppUserEmail = '', shareMSG = "I'm using FOODUCATE APP!\t";
+  int doneStepsCount = 0, totDoneStepsCount = 0;
   final _fireBaseStore = FirebaseFirestore.instance;
   bool showSpinner = false;
 
@@ -140,10 +140,11 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
 
     if (!mounted) return;
   }
+
   void shareToOthers() {
-    Share.share(shareMSG +
-        "I BurntOut ${cAppUser.getCalorieOut()} KCal");
+    Share.share(shareMSG + "I BurntOut ${cAppUser.getCalorieOut()} KCal");
   }
+
   @override
   Widget build(BuildContext context) {
     final Map arguments = ModalRoute.of(context).settings.arguments as Map;
@@ -158,7 +159,7 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
       cAppUserEmail = cAppUser.getEmail();
     }
     return ModalProgressHUD(
-      inAsyncCall: false,//showSpinner,
+      inAsyncCall: false, //showSpinner,
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -254,7 +255,9 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
                           ),
                           Expanded(
                             child: Text(
-                              _steps!='0'?_steps:doneStepsCount.toString(),
+                              _steps != '0'
+                                  ? _steps
+                                  : doneStepsCount.toString(),
                               style: kLabelTextStyle.copyWith(fontSize: 30.0),
                             ),
                           ),
@@ -288,8 +291,8 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
                           Expanded(
                             child: Text(
                               'Pedestrian status:',
-                              style:
-                                  kLabelTextStyle.copyWith(color: Colors.purple),
+                              style: kLabelTextStyle.copyWith(
+                                  color: Colors.purple),
                             ),
                           ),
                           SizedBox(
@@ -334,7 +337,8 @@ class _StepTrackerState extends State<StepTracker> with Tracker {
                           gender: cAppUser.getGender(), cUser: cAppUser);
                       cBrain.calculateStepsCountProgress();
                       print('drink ${cBrain.calculateDailyH2O()} L');
-                      updateUserDataInFireBaseStore('stepCount', cAppUser.getStepsCount());
+                      updateUserDataInFireBaseStore(
+                          'stepCount', cAppUser.getStepsCount());
                       setState(() {
                         //updateUserHealth(); //TODO:onTap update ui
                       });

@@ -52,13 +52,15 @@ class _FoodScreenState extends State<FoodScreen> {
       cBrain = arguments['CurrentAppUserCB'];
       print('in home ${cAppUser.getEmail()}');
     }
-    void foodUserDataFireBaseStore(){
+    void foodUserDataFireBaseStore() {
       //update_UserDataInFireBaseStore('food', List<Map>());
-      List<Food> food =cAppUser.getAllMeals();
+      List<Food> food = cAppUser.getAllMeals();
       _fireBaseStore.collection('clients').doc(cAppUser.getEmail()).update({
-        'food':FieldValue.arrayUnion(cAppUser.getAllFood())//cAppUser.getAllMeals()[0])
+        'food': FieldValue.arrayUnion(
+            cAppUser.getAllFood()) //cAppUser.getAllMeals()[0])
       });
     }
+
     return ModalProgressHUD(
       inAsyncCall: showSpinner,
       child: FutureBuilder(
