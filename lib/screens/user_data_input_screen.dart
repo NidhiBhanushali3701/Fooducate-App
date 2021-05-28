@@ -64,7 +64,7 @@ class _UserDataState extends State<UserData> {
       print(appUserData);
       if (cAppUserEmail == appUserData['email']) {
         print('init state $appUserData');
-        weight = appUserData['weight'].toInt();
+        weight = await appUserData['weight'].toInt();
         height = appUserData['height'].toInt();
         age = appUserData['age'];
         gender = appUserData['gender'];
@@ -169,8 +169,7 @@ class _UserDataState extends State<UserData> {
                             height: 12.0,
                           ),
                           Slider(
-                            value:
-                                height.toDouble(),
+                            value: height.toDouble(),
                             min: 120.0,
                             max: 220.0,
                             activeColor: Colors.purple,
@@ -324,10 +323,9 @@ class _UserDataState extends State<UserData> {
                       print('drink ${cBrain.calculateDailyH2O()} L');
                       updateUserDataInFireBaseStore(
                           'dailyH2O', int.parse(cBrain.calculateDailyH2O()));
+                      updateUserDataInFireBaseStore('bmi', cAppUser.getBMI());
                       updateUserDataInFireBaseStore(
-                          'bmi', cAppUser.getBMI());
-                      updateUserDataInFireBaseStore(
-                          'caloriesIn',cAppUser.getCalorieIn());
+                          'caloriesIn', cAppUser.getCalorieIn());
                       setState(() {
                         //updateUserHealth(); //TODO:onTap update ui
                       });

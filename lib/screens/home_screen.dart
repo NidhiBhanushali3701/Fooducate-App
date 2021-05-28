@@ -87,8 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
         .update({updateField: updatedValue});
   }
 
-  void updateUserHealth(var cAppUserData) {
-    sBMI = cAppUserData['bmi'].toStringAsFixed(1);
+  void updateUserHealth(var cAppUserData) async {
+    sBMI = await cAppUserData['bmi'].toStringAsFixed(1);
     sCalorie = cAppUserData['caloriesIn'].floor().toString();
     sSteps = cAppUserData['stepCount'].toString();
     sUserH2O = (cAppUserData['dailyH2Odone'].toInt()).toString();
@@ -487,6 +487,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: Icon(
                         Icons.directions_walk_rounded,
                       ), //Icon(Icons.account_circle_rounded)
+
                       onPressed: () {
                         Navigator.pushNamed(context, StepTracker.id,
                             arguments: {
@@ -516,6 +517,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: Icon(
                         Icons.wine_bar_sharp,
                       ), //Icon(Icons.account_circle_rounded)
+
                       onPressed: () {
                         Navigator.pushNamed(context, H2OTracker.id, arguments: {
                           'CurrentAppUserData': cAppUser,

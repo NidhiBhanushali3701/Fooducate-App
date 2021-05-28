@@ -7,6 +7,7 @@ import 'package:fooducate/constants.dart';
 import 'package:fooducate/icon_content.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fooducate/calculate_button.dart';
+
 import 'user_data_input_screen.dart';
 
 //enum gender { female, male }
@@ -89,8 +90,8 @@ class _GenderSelectState extends State<GenderSelect> {
           updateUserDataInFireBaseStore('age', 20);
           updateUserDataInFireBaseStore('caloriesIn', 0);
           updateUserDataInFireBaseStore('bmi', 0);
-          updateUserDataInFireBaseStore('dailyH2Odone',0);
-          updateUserDataInFireBaseStore('stepCount',0);
+          updateUserDataInFireBaseStore('dailyH2Odone', 0);
+          updateUserDataInFireBaseStore('stepCount', 0);
           updateUserDataInFireBaseStore('food', List<Map>());
           //updateUserDataInFireBaseStore('food', {'calories':0,'name':'food','quantity':0});
         }
