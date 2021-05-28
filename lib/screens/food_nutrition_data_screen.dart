@@ -30,6 +30,7 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
   final _fireBaseStore = FirebaseFirestore.instance;
   String cAppUserEmail;
   bool showSpinner = false;
+  double amtOfItem = 1;
   void foodUserDataFireBaseStore() {
     List<Food> food = cAppUser.getAllMeals();
     _fireBaseStore
@@ -101,7 +102,8 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
                               foodImgURL: fOM['foodImgURL']));
                         }/ */
                     //print(appUsers['food']);
-                    cAppUser.setFood(cAppUser.foodMapToFoodObjectArray(appUsers.data['food']));//Todo: works
+                    cAppUser.setFood(cAppUser.foodMapToFoodObjectArray(
+                        appUsers.data['food'])); //Todo: works
                     //print(cAppUser.getAllMeals());//todo uneeded
                     //} catch (e) {
                     //print('we are here $e');
@@ -161,7 +163,7 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
                 ),
                 Center(
                     child: Text(
-                  'Nutrition Chart',
+                  'Nutrition Chart (Quantity 1)',
                   style: kLabelTextStyle.copyWith(color: Colors.purple),
                 )),
                 DataTable(
@@ -203,17 +205,56 @@ class _FoodNutritionalDataScreenState extends State<FoodNutritionalDataScreen> {
                   ],
                 ),
                 SizedBox(
-                  height: 111,
+                  height: 27,
+                ),
+                Container(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(7.0),
+                        child: Text(
+                          'Quantity ',
+                          style: TextStyle(color: Colors.purple, fontSize: 25),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                        height: 0,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
+                        //padding: EdgeInsets.symmetric(horizontal: 12),
+                        child: TextField(
+                          textAlign: TextAlign.left,
+                          keyboardType: TextInputType.number,
+                          // ignore: missing_return
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.purple),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.purple)),
+                              labelText: 'Food Item Amount',
+                              labelStyle: TextStyle(color: Colors.purple),
+                              hintText: 'Enter valid Food Quantity as 1'),
+                          onChanged: (value) => amtOfItem = double.parse(value),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 30,
                 ),
                 CalculateButton(
                   onTap: () {
                     Food f = Food(
-                        calories: double.parse(calories),
-                        fat: double.parse(fats),
+                        calories: double.parse(calories)*amtOfItem,
+                        fat: double.parse(fats)*amtOfItem,
                         name: foodName,
-                        carbs: double.parse(carbs),
-                        protein: double.parse(protein),
-                        quantity: 1,
+                        carbs: double.parse(carbs)*amtOfItem,
+                        protein: double.parse(protein)*amtOfItem,
+                        quantity: amtOfItem,
                         foodImgURL: ' ');
                     cAppUser.addMeals(f);
                     //print(cAppUser.getAllMeals());

@@ -117,7 +117,7 @@ class _FoodScreenState extends State<FoodScreen> {
                                 padding: EdgeInsets.symmetric(horizontal: 15),
                                 child: TextField(
                                   textAlign: TextAlign.center,
-                                  keyboardType: TextInputType.emailAddress,
+                                  keyboardType: TextInputType.text,
                                   // ignore: missing_return
                                   decoration: InputDecoration(
                                       border: OutlineInputBorder(
